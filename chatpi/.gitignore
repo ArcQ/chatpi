@@ -1,0 +1,15 @@
+/_build/
+/cover/
+/deps/
+/doc/
+/.fetch
+erl_crash.dump
+*.ez
+chatpi-*.tar
+/priv/static/
+/config/*.secret.exs
+/.elixir_ls
+/uploads
+.env*
+
+.DS_Store

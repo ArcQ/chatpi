@@ -1,0 +1,25 @@
+{
+  "name": "@knotfive/chatpi-client-js",
+  "version": "0.0.12",
+  "description": "client library for chatpi",
+  "author": "eddielaw296@gmail.com",
+  "license": "ISC",
+  "source": "src/chatpi-client.js",
+  "main": "dist/chatpi-client.js",
+  "module": "dist/chatpi-client.module.js",
+  "unpkg": "dist/chatpi-client.umd.js",
+  "dependencies": {
+    "phoenixjs": "^1.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-plugin-jest": "^23.17.1",
+    "jsdoc": "^3.6.4",
+    "microbundle": "^0.12.2"
+  },
+  "scripts": {
+    "build": "microbundle",
+    "start": "microbundle watch",
+    "doc": "jsdoc ./src/chatpi-client.js --destination ../docs/chatpi-client-js"
+  }
+}

@@ -1,0 +1,1 @@
+docker run --rm -v "$PWD":/var/task:ro,delegated lambci/lambda:nodejs12.x index.handler
