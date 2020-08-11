@@ -14,6 +14,7 @@ config :chatpi,
 config :chatpi, ChatpiWeb.Endpoint,
   url: [host: "localhost"],
   http: [ip: {0, 0, 0, 0}, port: 4000],
+  server: true,
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: ChatpiWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Chatpi.PubSub, adapter: Phoenix.PubSub.PG2]

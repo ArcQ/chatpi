@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#Dev Build Only
+ECR_DOMAIN=670564539270.dkr.ecr.us-east-1.amazonaws.com
+PROJECT_NAME=chatpi
+
+#############################################
+# 1. build open-api spec and copy to docs
+#############################################
+
+cd chatpi #/chatpi
+
+#############################################
+# 2. build backenddocker container and upload
+#############################################
+
+# docker build --target builder -t gcr.io/$PROJECT_ID/chatpi:latest -f Dockerfile .
+aws ecr get-login-password --region us-east-1 --profile default | docker login --username AWS --password-stdin $ECR_DOMAIN
+docker build --target production -t $ECR_DOMAIN/$PROJECT_NAME:latest -f Dockerfile .
+docker push $ECR_DOMAIN/$PROJECT_NAME:latest

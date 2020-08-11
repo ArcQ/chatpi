@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#Dev Build Only
+PROJECT_ID=touchbase-276115
+PROJECT_NUMBER=834725213934
+CLOUD_RUN_HOSTNAME=chatpi-dev-bitfvu56tq-uk.a.run.app
+
+#############################################
+# 1. build open-api spec and copy to docs
+#############################################
+
+cd chatpi #/chatpi
+
+#############################################
+# 2. build backenddocker container and upload
+#############################################
+
+# docker build --target builder -t gcr.io/$PROJECT_ID/chatpi:latest -f Dockerfile .
+docker build --target production -t gcr.io/$PROJECT_ID/chatpi:latest -f Dockerfile .
+docker push gcr.io/$PROJECT_ID/chatpi:latest
+
+gcloud beta run deploy chatpi-dev --image gcr.io/$PROJECT_ID/chatpi --platform managed --allow-unauthenticated --project $PROJECT_ID

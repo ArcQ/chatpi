@@ -2,9 +2,7 @@ defmodule ChatpiWeb.Api.V1.UserController do
   @moduledoc false
   use ChatpiWeb, :controller
 
-  import Ecto.Query, only: [from: 2]
   alias Chatpi.Guardian.Plug, as: GuardianPlug
-  alias Chatpi.{Repo, Users, Users.User}
 
   @doc false
   def index(conn, _params) do

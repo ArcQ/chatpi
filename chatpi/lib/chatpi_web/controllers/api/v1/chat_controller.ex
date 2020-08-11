@@ -7,9 +7,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
   alias Chatpi.{Chats, Chats.Chat, Messages.Message, Users}
 
   @doc false
-  def index(conn, params) do
-    # users = conn.assigns[:current_user].auth_id
-    # get_user_by_auth_id!(user_id)
+  def index(conn, _params) do
     cuid = "129830df-f45a-46b3-b766-2101db28ea62"
     chats = Chats.list_chats_by_id!(cuid)
     render(conn, "index.json", chats: chats)
