@@ -5,7 +5,7 @@ defmodule Chatpi.Auth.VerifyHeader do
   def init(_params) do
   end
 
-  def call(conn, params) do
+  def call(conn, _params) do
     current_user = Guardian.Plug.current_resource(conn)
 
     auth_header =

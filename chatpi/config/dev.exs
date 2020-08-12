@@ -59,7 +59,7 @@ config :phoenix, :plug_init_mode, :runtime
 config :chatpi, Chatpi.Repo,
   username: System.get_env("DB_USER") || "postgres",
   password: System.get_env("DB_PASS") || "pw123",
-  database: System.get_env("DB_NAME") || "chatpi_dev",
+  database: System.get_env("CHATPI_DB_NAME") || "chatpi_dev",
   hostname: System.get_env("DB_HOST") || "localhost",
   pool_size: 10
 
