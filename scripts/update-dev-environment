@@ -1,11 +1,7 @@
 #!/bin/bash
+cd ./chatpi
+eval $(cat .env.dev)
 
-# for dev, programatically pull from heroku and update env variables
-db_credentials=$(heroku pg:credentials:url DATABASE -a touchbase-dev | grep dbname)
+mix ecto.setup
 
-env_vars=$(cat .env.dev)
-
-source .env.dev
-
-gcloud beta run services update touchbase --platform=managed \
-  --update-env-vars=$(echo $env_vars | xargs | sed -e 's/ /,/g')
+cd -
