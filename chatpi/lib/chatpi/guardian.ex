@@ -1,21 +1,10 @@
-defmodule Chatpi.Guardian do
+defmodule Chatpi.Guardian.Plug do
   @moduledoc false
 
   use Guardian, otp_app: :chatpi
 
   alias Chatpi.Users
   alias Chatpi.Users.User
-
-  def verify_claim(_mod, _key, claims, _opts) do
-    IO.inspect(claims)
-    {:ok, claims}
-    # case (Auth.Token.verify_and_validate(params["authorization"])) do
-    #   {:ok, claims} ->
-    #     {:ok, assign(socket, :claims, claims)}
-    #   {:error, reason} ->
-    #     :error
-    # end
-  end
 
   @doc false
   def subject_for_token(%User{} = subject, _claims) do

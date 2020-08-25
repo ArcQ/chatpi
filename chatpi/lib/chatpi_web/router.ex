@@ -15,32 +15,23 @@ defmodule ChatpiWeb.Router do
 
   pipeline :auth do
     plug(Chatpi.Auth.Pipeline)
-    plug(Chatpi.Auth.CurrentUser)
-    plug(:put_user_token)
+    # plug(Chatpi.Auth.CurrentUser)
   end
 
   pipeline :ensure_auth do
     plug(Guardian.Plug.EnsureAuthenticated)
   end
 
-  scope "/", ChatpiWeb do
-    pipe_through([:browser, :auth])
+  scope "/api", ChatpiWeb.Api do
+    pipe_through([:api])
 
-    get("/", RootController, :index)
-
-    get("/users/verify/:token", UserController, :verify)
-    resources("/users", UserController, only: [:index, :new, :create])
-  end
-
-  scope "/", ChatpiWeb do
-    pipe_through([:browser, :auth, :ensure_auth])
-
-    resources("/users", UserController, only: [:index, :show, :create, :update])
+    scope "/v1", V1 do
+    end
   end
 
   # Other scopes may use custom stacks.
   scope "/api", ChatpiWeb.Api do
-    pipe_through(:api)
+    pipe_through([:api, :auth, :ensure_auth])
 
     scope "/v1", V1 do
       resources("/files", FileController, only: [:show, :create])
@@ -49,18 +40,6 @@ defmodule ChatpiWeb.Router do
       resources("/chats", ChatController, only: [:index, :show, :create])
       get("/messages/:id", ChatController, :messages, as: :message)
       patch("/messages/:id/seen", ChatController, :messages_seen, as: :message_seen)
-    end
-  end
-
-  defp put_user_token(conn, _) do
-    if current_user = conn.assigns[:current_user] do
-      user_id_token = Phoenix.Token.sign(conn, "user_id", current_user.id)
-
-      conn
-      |> assign(:user_id, user_id_token)
-    else
-      conn
-      |> assign(:user_id, nil)
     end
   end
 end

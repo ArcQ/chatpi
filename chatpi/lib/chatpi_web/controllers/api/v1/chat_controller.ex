@@ -8,8 +8,9 @@ defmodule ChatpiWeb.Api.V1.ChatController do
 
   @doc false
   def index(conn, _params) do
-    cuid = "129830df-f45a-46b3-b766-2101db28ea62"
-    chats = Chats.list_chats_by_id!(cuid)
+    auth_id = Guardian.Plug.current_resource(conn, []).auth_id
+
+    chats = Chats.list_chats_for_user(auth_id)
     render(conn, "index.json", chats: chats)
   end
 
@@ -21,7 +22,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
 
   @doc false
   def create(conn, _params) do
-    auth_id = "129830df-f45a-46b3-b766-2101db28ea62"
+    auth_id = Guardian.Plug.current_resource(conn, []).auth_id
     user_ids = conn.body_params["users"]
     name = conn.body_params["name"]
 

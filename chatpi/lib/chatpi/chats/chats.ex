@@ -26,16 +26,16 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> list_chats()
+      iex> list_chats_by_auth_id(auth_id)
       [%Chat{}, ...]
 
   """
-  def list_chats_by_id!(cuser_id) do
+  def list_chats_for_user(auth_id) do
     Repo.all(
       from(c in Chat,
         distinct: true,
         left_join: u1 in assoc(c, :users),
-        where: u1.id == ^cuser_id
+        where: u1.auth_id == ^auth_id
       )
     )
   end
@@ -59,25 +59,14 @@ defmodule Chatpi.Chats do
   @doc """
   Gets a chat between 2 users
   """
-  def get_chats_between_users(cuser_id, user_id) do
+  def get_chats_between_users(cauth_id, auth_id) do
     Repo.all(
       from(c in Chat,
         distinct: true,
         left_join: u1 in assoc(c, :users),
         inner_join: u2 in assoc(c, :users),
-        on: u2.id == ^user_id,
-        where: u1.id == ^cuser_id
-      )
-    )
-  end
-
-  @doc false
-  def get_chats_for_user(user_id) do
-    Repo.all(
-      from(c in Chat,
-        distinct: true,
-        inner_join: u1 in assoc(c, :users),
-        on: u1.id == ^user_id
+        on: u2.auth_id == ^cauth_id,
+        where: u1.auth_id == ^auth_id
       )
     )
   end

@@ -1,47 +1,53 @@
 defmodule Chatpi.Auth.VerifyHeader do
   @moduledoc false
   import Plug.Conn
+  alias Chatpi.Users.User
 
   def init(_params) do
   end
 
-  def call(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
+  def take_prefix(full, prefix) do
+    base = byte_size(prefix)
+    binary_part(full, base, byte_size(full) - base)
+  end
 
+  def call(conn, _params) do
     auth_header =
       conn
       |> get_req_header("authorization")
       |> List.first()
+      |> take_prefix("Bearer ")
 
     case Chatpi.Auth.Token.verify_and_validate(auth_header) do
       {:ok, claims} ->
-        {:ok,
-         conn
-         |> assign(:claims, claims)
-         |> assign(:token, auth_header)}
+        conn
+        |> Guardian.Plug.put_current_token(auth_header, [])
+        |> Guardian.Plug.put_current_claims(claims, [])
+        |> Guardian.Plug.put_current_resource(%User{
+          username: claims["username"],
+          auth_id: claims["sub"],
+          is_inactive: false,
+          messages: []
+        }, [])
+        |> assign(:user_signed_in?, true)
 
       {:error, reason} ->
-        Chatpi.Auth.ErrorHandler.auth_error(conn, {:invalid_token, reason}, %{})
+        conn
+        |> assign(:auth_error, {:invalid_token, reason})
     end
-
-    conn
-    |> assign(:current_user, current_user)
-    |> assign(:user_signed_in?, !is_nil(current_user))
   end
 end
 
+#TODO, we should actually have a sign in route,
+#and then keep sessions through guardian instead of managing everything through jwt
 defmodule Chatpi.Auth.Pipeline do
   @moduledoc false
 
   use Guardian.Plug.Pipeline,
     otp_app: :chatpi,
-    module: Chatpi.Guardian,
     error_handler: Chatpi.Auth.ErrorHandler
 
-  # If there is a session token, validate it
-  plug(Guardian.Plug.VerifySession, claims: %{"typ" => "access"})
-  # If there is an authorization header, validate it
+  # plug(Guardian.Plug.VerifySession, claims: %{"typ" => "access"})
   plug(Chatpi.Auth.VerifyHeader, claims: %{"typ" => "access"})
-  # Load the user if either of the verifications worked
-  plug(Guardian.Plug.LoadResource, allow_blank: true)
+  # plug(Guardian.Plug.VerifyHeader, claims: %{"typ" => "access"})
 end
