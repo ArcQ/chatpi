@@ -35,9 +35,6 @@ defmodule ChatpiWeb.Api.V1.ChatController do
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "show.json", changeset: changeset)
       end
-
-      # else
-      #   {:error, :not_found}
     end
   end
 

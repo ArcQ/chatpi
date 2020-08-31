@@ -99,7 +99,6 @@ defmodule ChatpiWeb.ChatChannel do
   # end
 
   defp authorized?(socket, topic_id) do
-    # check redis
     true
   end
 

@@ -2,12 +2,11 @@ defmodule ChatpiWeb.Api.V1.UserController do
   @moduledoc false
   use ChatpiWeb, :controller
 
-  alias Chatpi.Guardian.Plug, as: GuardianPlug
+  alias Chatpi.{Users}
 
   @doc false
   def index(conn, _params) do
     users = Users.list_users()
-
     render(conn, "index.json", users: users)
   end
 
@@ -16,9 +15,7 @@ defmodule ChatpiWeb.Api.V1.UserController do
     case Users.create_user(user_params) do
       {:ok, user} ->
         conn
-        |> GuardianPlug.sign_in(user)
-        |> render(conn, "show.json", user: user)
-
+        |> render("show.json", user: user)
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "show.json", changeset: changeset)
     end
