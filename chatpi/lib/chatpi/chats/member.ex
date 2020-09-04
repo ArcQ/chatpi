@@ -5,8 +5,8 @@ defmodule Chatpi.Chats.Member do
   import Ecto.Changeset
 
   schema "chats_members" do
-    belongs_to(:chat, Chatpi.Chats.Chat, references: :uuid, type: :string)
-    belongs_to(:user, Chatpi.Users.User, references: :uuid, type: :string)
+    belongs_to(:chat, Chatpi.Chats.Chat, type: Ecto.UUID)
+    belongs_to(:user, Chatpi.Users.User, type: Ecto.UUID)
   end
 
   @doc false

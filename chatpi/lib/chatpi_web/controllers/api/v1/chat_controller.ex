@@ -18,6 +18,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
   @doc false
   def show(conn, %{"id" => id}) do
     chat = Chats.get_chat(id)
+    IO.inspect chat
     render(conn, "show.json", chat: chat)
   end
 

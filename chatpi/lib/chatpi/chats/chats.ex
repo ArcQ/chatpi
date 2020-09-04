@@ -13,8 +13,8 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> list_chats_by_auth_id(auth_id)
-      [%Chat{}, ...]
+  iex> list_chats_by_auth_id(auth_id)
+  [%Chat{}, ...]
 
   """
   def list_chats_for_user(auth_id) do
@@ -34,19 +34,18 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> get_chat(123)
-      %Chat{}
+  iex> get_chat(123)
+  %Chat{}
 
-      iex> get_chat(456)
-      ** (Ecto.NoResultsError)
+  iex> get_chat(456)
+  ** (Ecto.NoResultsError)
 
   """
   def get_chat(id) do
     Repo.all(
       from(chat in Chat,
-        left_join: members in assoc(chat, :members),
         where: chat.id == ^id,
-        preload: [members: members]
+        preload: [members: :user]
       )
     ) |> List.first
   end
@@ -71,11 +70,11 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> create_chat(%{field: value})
-      {:ok, %Chat{}}
+  iex> create_chat(%{field: value})
+  {:ok, %Chat{}}
 
-      iex> create_chat(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+  iex> create_chat(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
   """
   def create_chat(attrs \\ %{}) do
@@ -89,11 +88,11 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> update_chat(chat, %{field: new_value})
-      {:ok, %Chat{}}
+  iex> update_chat(chat, %{field: new_value})
+  {:ok, %Chat{}}
 
-      iex> update_chat(chat, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+  iex> update_chat(chat, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
   """
   def update_chat(%Chat{} = chat, attrs) do
@@ -107,11 +106,11 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> delete_chat(chat)
-      {:ok, %Chat{}}
+  iex> delete_chat(chat)
+  {:ok, %Chat{}}
 
-      iex> delete_chat(chat)
-      {:error, %Ecto.Changeset{}}
+  iex> delete_chat(chat)
+  {:error, %Ecto.Changeset{}}
 
   """
   def delete_chat(%Chat{} = chat) do
@@ -123,8 +122,8 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> change_chat(chat)
-      %Ecto.Changeset{source: %Chat{}}
+  iex> change_chat(chat)
+  %Ecto.Changeset{source: %Chat{}}
 
   """
   def change_chat(%Chat{} = chat) do
@@ -136,8 +135,8 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> list_chats()
-      [%Chat{}, ...]
+  iex> list_chats()
+  [%Chat{}, ...]
 
   """
   def is_member(auth_id, chat_id) do
