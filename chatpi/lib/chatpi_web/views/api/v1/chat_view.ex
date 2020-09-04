@@ -3,17 +3,17 @@ defmodule ChatpiWeb.Api.V1.ChatView do
   use Timex
 
   @public_attributes ~W(id name)a
-  @base_attributes ~W(id name)a
+  @details_attributes ~W(id name members inserted_at)a
 
   def render("index.json", %{chats: chats}) do
     %{
       chats:
-        Enum.map(chats, fn chat -> render_one(chat, ChatpiWeb.Api.V1.ChatView, "chat.json") end)
+        render_many(chats, ChatpiWeb.Api.V1.ChatView, "chat.json")
     }
   end
 
   def render("show.json", %{chat: chat}) do
-    %{chat: render_one(chat, ChatpiWeb.Api.V1.ChatView, "chat.json")}
+    %{chat: render_one(chat, ChatpiWeb.Api.V1.ChatView, "chat_with_details.json")}
   end
 
   def render("chat.json", %{chat: chat}) do
@@ -21,8 +21,9 @@ defmodule ChatpiWeb.Api.V1.ChatView do
     |> Map.take(@public_attributes)
   end
 
-  def render("modified_chat.json", %{chat: chat}) do
+  def render("chat_with_details.json", %{chat: chat}) do
     chat
-    |> Map.take(@base_attributes)
+    |> Map.take(@details_attributes)
+    |> Map.put(:members, render_many(chat.members, ChatpiWeb.Api.V1.UserView, "user.json"))
   end
 end

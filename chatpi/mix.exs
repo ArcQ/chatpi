@@ -53,6 +53,7 @@ defmodule Chatpi.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      {:uuid, "~> 1.1.8"},
 
       # Authentication
       {:bcrypt_elixir, "~> 1.0"},
@@ -76,7 +77,7 @@ defmodule Chatpi.MixProject do
       # {:hackney, "~> 1.9"},
       {:hackney, "~> 1.15.2"},
       {:sweet_xml, "~> 0.6.5"},
-      {:timex, "~> 3.1"},
+      {:timex, "~> 3.6.2"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]

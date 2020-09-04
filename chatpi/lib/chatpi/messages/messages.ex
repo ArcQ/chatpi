@@ -9,33 +9,25 @@ defmodule Chatpi.Messages do
   alias Chatpi.Messages.Message
 
   @doc """
-  Returns the list of messages.
+  Returns the list of messages for a chat paginated
 
   ## Examples
 
-      iex> list_messages()
+      iex> list_messages_by_chat_id(chat_id)
       [%Message{}, ...]
 
   """
-  def list_messages do
-    Repo.all(Message)
+  def list_messages(chat_id, cursor) do
+    [message_id, iso_date_time] = Base.decode64(cursor) |> String.split(",")
+    date_time = Timex.parse!(iso_date_time, "{ISO:Extended}")
+    Repo.all(
+      from(m in Message,
+        distinct: true,
+        inner_join: c in assoc(m, :chats),
+        where: c.id == ^chat_id or (c.inserted_at < ^date_time and m.id < ^message_id),
+        order_by: [desc: :inserted_at, desc: :id])
+    )
   end
-
-  @doc """
-  Gets a single message.
-
-  Raises `Ecto.NoResultsError` if the Message does not exist.
-
-  ## Examples
-
-      iex> get_message!(123)
-      %Message{}
-
-      iex> get_message!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_message!(id), do: Repo.get!(Message, id)
 
   @doc """
   Creates a message.

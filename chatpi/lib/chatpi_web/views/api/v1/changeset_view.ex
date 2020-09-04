@@ -8,7 +8,7 @@ defmodule ChatpiWeb.Api.V1.ChangesetView do
   `ChatpiWeb.ErrorHelpers.translate_error/1` for more details.
   """
   def translate_errors(changeset) do
-    Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
+    Chatpi.Utils.Error.normalize(changeset)
   end
 
   def render("error.json", %{changeset: changeset}) do

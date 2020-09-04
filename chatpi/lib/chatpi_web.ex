@@ -40,7 +40,7 @@ defmodule ChatpiWeb do
       use Phoenix.HTML
       use PhoenixHtmlSanitizer, :basic_html
 
-      import ChatpiWeb.ErrorHelpers
+      import Chatpi.Utils.Error
       import ChatpiWeb.Gettext
       alias ChatpiWeb.Router.Helpers, as: Routes
     end

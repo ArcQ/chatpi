@@ -9,20 +9,7 @@ defmodule Chatpi.Chats do
   alias Chatpi.Chats.Chat
 
   @doc """
-  Returns the list of chats.
-
-  ## Examples
-
-      iex> list_chats()
-      [%Chat{}, ...]
-
-  """
-  def list_chats do
-    Repo.all(Chat)
-  end
-
-  @doc """
-  Returns the list of chats by id.
+  Returns the list of chats by auth_id
 
   ## Examples
 
@@ -34,7 +21,7 @@ defmodule Chatpi.Chats do
     Repo.all(
       from(c in Chat,
         distinct: true,
-        left_join: u1 in assoc(c, :users),
+        inner_join: u1 in assoc(c, :users),
         where: u1.auth_id == ^auth_id
       )
     )
@@ -47,14 +34,22 @@ defmodule Chatpi.Chats do
 
   ## Examples
 
-      iex> get_chat!(123)
+      iex> get_chat(123)
       %Chat{}
 
-      iex> get_chat!(456)
+      iex> get_chat(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_chat!(id), do: Repo.get!(Chat, id)
+  def get_chat(id) do
+    Repo.all(
+      from(chat in Chat,
+        left_join: members in assoc(chat, :members),
+        where: chat.id == ^id,
+        preload: [members: members]
+      )
+    ) |> List.first
+  end
 
   @doc """
   Gets a chat between 2 users

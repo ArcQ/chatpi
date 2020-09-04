@@ -7,7 +7,7 @@ defmodule ChatpiWeb.Api.V1.FileController do
   action_fallback(ChatpiWeb.Api.V1.FallbackController)
 
   def create(conn, %{"file" => file_params}) do
-    chat = Chatpi.Chats.get_chat!(file_params["chat_id"])
+    chat = Chatpi.Chats.get_chat(file_params["chat_id"])
 
     user = Chatpi.Users.get_user_by_token!(file_params["user_token"])
 

@@ -9,10 +9,11 @@ services:
       - "5432:5432"
     volumes:
       - db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
-      - POSTGRES_USER=chatpi
+      - POSTGRES_USER=postgres
       - POSTGRES_DB=chatpi
-      - POSTGRES_PASSWORD=chatpi
+      - POSTGRES_PASSWORD=Pw123
 
   app:
     image: chatpi:latest
@@ -23,8 +24,8 @@ services:
     env_file: .env.docker
     environment:
       - DB_HOST=db
-      - DB_USER=chatpi
-      - DB_PASS=chatpi
+      - DB_USER=postgres
+      - DB_PASS=pw123
       - DB_NAME=chatpi
     command: ["./wait-for.sh", "db:5432", "--", "./run.sh"]
 

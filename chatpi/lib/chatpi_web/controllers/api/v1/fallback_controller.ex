@@ -26,4 +26,21 @@ defmodule ChatpiWeb.Api.V1.FallbackController do
     |> put_view(ChatpiWeb.ErrorView)
     |> render(:"400")
   end
+
+  def call(conn, error) do
+    errors =
+      error
+      |> Chatpi.Utils.Error.normalize()
+      |> List.wrap()
+
+    status = hd(errors).status_code
+    messages = Enum.map(errors, & &1.message)
+
+    conn
+    |> put_status(status)
+    |> json(%{errors: messages})
+
+    json(conn, %{error: 500})
+  end
+
 end

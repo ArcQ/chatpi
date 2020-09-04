@@ -16,7 +16,7 @@ config :chatpi, ChatpiWeb.Endpoint,
   http: [ip: {0, 0, 0, 0}, port: 4000],
   server: true,
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
-  render_errors: [view: ChatpiWeb.ErrorView, accepts: ~w(html json)],
+  render_errors: [view: ChatpiWeb.ErrorView, accepts: ~w(json), layout: false],
   pubsub: [name: Chatpi.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
