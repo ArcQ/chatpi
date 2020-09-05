@@ -10,9 +10,7 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 #
-alias Chatpi.Users.User
-alias Chatpi.Chats.Chat
-alias Chatpi.Repo
+alias Chatpi.{Repo, Chats.Chat, Users.User}
 
 Repo.transaction(fn ->
   {:ok, arcq} = Repo.insert %User{
@@ -36,7 +34,7 @@ Repo.transaction(fn ->
     messages: []
   }
 
-  Repo.insert %Chat{
+  chat_1 = Repo.insert %Chat{
     id: 'cf4aeae1-cda7-41f3-adf7-9b2bb377be7d',
     name: "chat_1",
     users: [arcq, sita],
@@ -52,5 +50,18 @@ Repo.transaction(fn ->
     id: '2cb426af-fe08-4168-8844-521c65e6d860 ',
     name: "chat_3",
     users: [arcq, donkers],
+  }
+
+  Repo.insert %Chat{
+    id: '2cb426af-fe08-4168-8844-521c65e6d860 ',
+    name: "chat_3",
+    users: [arcq, donkers],
+  }
+
+  Repo.insert %Message{
+    id: '2cd55c64-f3c2-4d7f-a7da-a27f56e1e713',
+    text: "hi this is a test mesage",
+    user: arcq,
+    chat: chat_1,
   }
 end)
