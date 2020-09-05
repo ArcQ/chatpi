@@ -9,8 +9,8 @@ defmodule Chatpi.Messages.Message do
     field(:seen_by_id, :integer)
     field(:seen_at, :naive_datetime)
 
-    belongs_to(:user, Chatpi.Users.User, references: :uuid, type: :string)
-    belongs_to(:chat, Chatpi.Chats.Chat, references: :uuid, type: :string)
+    belongs_to(:chat, Chatpi.Chats.Chat, type: Ecto.UUID)
+    belongs_to(:user, Chatpi.Users.User, type: :string, references: :auth_id)
     has_one(:file, Chatpi.Uploads.File)
 
     timestamps()

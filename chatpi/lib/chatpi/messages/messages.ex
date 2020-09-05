@@ -4,9 +4,7 @@ defmodule Chatpi.Messages do
   """
 
   import Ecto.Query, warn: false
-  alias Chatpi.Repo
-
-  alias Chatpi.Messages.Message
+  alias Chatpi.{Repo, Messages.Message}
 
   @doc """
   Returns the list of messages for a chat paginated with cursor
@@ -24,7 +22,6 @@ defmodule Chatpi.Messages do
     |> preload([:file])
     |> limit(20)
     |> Repo.all
-    |> List.first
   end
 
   @doc """

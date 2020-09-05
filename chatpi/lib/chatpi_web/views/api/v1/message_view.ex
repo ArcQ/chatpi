@@ -6,8 +6,7 @@ defmodule ChatpiWeb.Api.V1.MessageView do
 
   def render("index.json", %{messages: messages}) do
     %{
-      messages:
-        Enum.map(messages, fn message -> render_one(message, ChatpiWeb.Api.V1.MessageView, "message.json") end)
+      messages: render_many(messages, ChatpiWeb.Api.V1.MessageView, "message.json")
     }
   end
 

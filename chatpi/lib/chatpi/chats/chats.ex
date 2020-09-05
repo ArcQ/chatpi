@@ -6,7 +6,7 @@ defmodule Chatpi.Chats do
   import Ecto.Query, warn: false
   alias Chatpi.Repo
 
-  alias Chatpi.Chats.Chat
+  alias Chatpi.{Chats.Chat, Users.User}
 
   @doc """
   Returns the list of chats by auth_id
@@ -139,12 +139,9 @@ defmodule Chatpi.Chats do
 
   """
   def is_member(auth_id, chat_id) do
-    Repo.exists?(
-      from(c in Chat,
-        distinct: true,
-        where: c.id == ^chat_id,
-        inner_join: u2 in assoc(c, :users),
-        on: u2.auth_id == ^auth_id
-      ))
+    Chat
+    |> where([chat], chat.id == ^chat_id)
+    |> join(:inner, [chat], user in User, on: user.auth_id == ^auth_id)
+    |> Repo.exists?
   end
 end
