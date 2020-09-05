@@ -9,24 +9,54 @@ defmodule Chatpi.Messages do
   alias Chatpi.Messages.Message
 
   @doc """
-  Returns the list of messages for a chat paginated
+  Returns the list of messages for a chat paginated with cursor
 
   ## Examples
 
-      iex> list_messages_by_chat_id(chat_id)
-      [%Message{}, ...]
+  iex> list_messages_by_chat_id(chat_id, cursor)
+  [%Message{}, ...]
 
   """
-  def list_messages(chat_id, cursor) do
-    [message_id, iso_date_time] = Base.decode64(cursor) |> String.split(",")
-    date_time = Timex.parse!(iso_date_time, "{ISO:Extended}")
-    Repo.all(
-      from(m in Message,
-        distinct: true,
-        inner_join: c in assoc(m, :chats),
-        where: c.id == ^chat_id or (c.inserted_at < ^date_time and m.id < ^message_id),
-        order_by: [desc: :inserted_at, desc: :id])
-    )
+  def list_messages_by_chat_id(chat_id) do
+    Message
+    |> where([message], message.chat_id == ^chat_id)
+    |> order_by([asc: :inserted_at])
+    |> preload([:file])
+    |> limit(20)
+    |> Repo.all
+    |> List.first
+  end
+
+  @doc """
+  Returns the list of messages for a chat paginated with cursor
+
+  ## Examples
+
+  iex> list_messages_by_chat_id(chat_id, cursor)
+  [%Message{}, ...]
+
+  """
+  def list_messages_by_chat_id(chat_id, cursor) do
+    # [message_id, iso_date_time] = cursor
+    #                               |> Base.decode64()
+    #                               |> String.split(",")
+    # date_time = Timex.parse!(iso_date_time, "{ISO:Extended}")
+
+    # Repo.all(
+    #   from(c in Chat,
+    #     distinct: true,
+    #     inner_join: u1 in assoc(c, :users),
+    #     where: u1.auth_id == ^auth_id
+    #   )
+    # )
+
+    # Repo.all(
+    #   from(m in Message,
+    #     distinct: true,
+    #     inner_join: c in assoc(m, :chats),
+    #     where: c.id == ^chat_id or (c.inserted_at < ^date_time and m.id < ^message_id),
+    #     order_by: [desc: :inserted_at, desc: :id])
+    # )
   end
 
   @doc """
@@ -34,11 +64,11 @@ defmodule Chatpi.Messages do
 
   ## Examples
 
-      iex> create_message(%{field: value})
-      {:ok, %Message{}}
+  iex> create_message(%{field: value})
+  {:ok, %Message{}}
 
-      iex> create_message(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+  iex> create_message(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
   """
   def create_message(attrs \\ %{}) do
@@ -52,11 +82,11 @@ defmodule Chatpi.Messages do
 
   ## Examples
 
-      iex> update_message(message, %{field: new_value})
-      {:ok, %Message{}}
+  iex> update_message(message, %{field: new_value})
+  {:ok, %Message{}}
 
-      iex> update_message(message, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+  iex> update_message(message, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
   """
   def update_message(%Message{} = message, attrs) do
@@ -70,11 +100,11 @@ defmodule Chatpi.Messages do
 
   ## Examples
 
-      iex> delete_message(message)
-      {:ok, %Message{}}
+  iex> delete_message(message)
+  {:ok, %Message{}}
 
-      iex> delete_message(message)
-      {:error, %Ecto.Changeset{}}
+  iex> delete_message(message)
+  {:error, %Ecto.Changeset{}}
 
   """
   def delete_message(%Message{} = message) do
@@ -86,8 +116,8 @@ defmodule Chatpi.Messages do
 
   ## Examples
 
-      iex> change_message(message)
-      %Ecto.Changeset{source: %Message{}}
+  iex> change_message(message)
+  %Ecto.Changeset{source: %Message{}}
 
   """
   def change_message(%Message{} = message) do

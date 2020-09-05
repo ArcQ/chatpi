@@ -5,7 +5,7 @@ defmodule Chatpi.Repo.Migrations.CreateFiles do
     create table(:files, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :file, :string
-      add :message_id, references(:messages, type: :uuid, on_delete: :delete_all)
+      add :message_id, references(:messages, type: :uuid, on_delete: :delete_all, on_update: :update_all)
 
       timestamps()
     end

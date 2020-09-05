@@ -42,12 +42,11 @@ defmodule Chatpi.Chats do
 
   """
   def get_chat(id) do
-    Repo.all(
-      from(chat in Chat,
-        where: chat.id == ^id,
-        preload: [members: :user]
-      )
-    ) |> List.first
+    Chat
+    |> where([chat], chat.id == ^id)
+    |> preload([members: :user])
+    |> Repo.all
+    |> List.first
   end
 
   @doc """

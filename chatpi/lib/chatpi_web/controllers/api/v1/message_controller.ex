@@ -1,4 +1,4 @@
-defmodule ChatpiWeb.Api.V1.ChatController do
+defmodule ChatpiWeb.Api.V1.MessageController do
   @moduledoc false
   use ChatpiWeb, :controller
   use Plug.ErrorHandler
@@ -8,39 +8,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
   import Plug.ErrorHandler
 
   @doc false
-  def index(conn, _params) do
-    auth_id = Guardian.Plug.current_resource(conn, []).auth_id
-
-    chats = Chats.list_chats_for_user(auth_id)
-    render(conn, "index.json", chats: chats)
-  end
-
-  @doc false
-  def show(conn, %{"id" => id}) do
-    chat = Chats.get_chat(id)
-    render(conn, "show.json", chat: chat)
-  end
-
-  @doc false
-  def create(conn, _params) do
-    auth_id = Guardian.Plug.current_resource(conn, []).auth_id
-    user_ids = conn.body_params["users"]
-    name = conn.body_params["name"]
-
-    users = [auth_id | user_ids] |> Users.list_users_by_ids()
-    if length(users) == length(users) do
-      case Chats.create_chat(%{users: users, name: name}) do
-        {:ok, chat} ->
-          render(conn, "modified_chat.json", chat: chat)
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "show.json", changeset: changeset)
-      end
-    end
-  end
-
-  @doc false
-  def messages(conn, %{"id" => id}) do
+  def index(conn, %{"chat_id" => chat_id}) do
     messages_query =
       from(m in Message, order_by: [desc: :inserted_at], limit: 10, preload: [:file])
 
@@ -83,6 +51,30 @@ defmodule ChatpiWeb.Api.V1.ChatController do
       conn
       |> put_flash(:error, "You are not in this chat!")
       |> redirect(to: Routes.user_path(conn, :index))
+    end
+  end
+
+  @doc false
+  def show(conn, %{"id" => id}) do
+    chat = Chats.get_chat(id)
+    render(conn, "show.json", chat: chat)
+  end
+
+  @doc false
+  def create(conn, _params) do
+    auth_id = Guardian.Plug.current_resource(conn, []).auth_id
+    user_ids = conn.body_params["users"]
+    name = conn.body_params["name"]
+
+    users = [auth_id | user_ids] |> Users.list_users_by_ids()
+    if length(users) == length(users) do
+      case Chats.create_chat(%{users: users, name: name}) do
+        {:ok, chat} ->
+          render(conn, "modified_chat.json", chat: chat)
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "show.json", changeset: changeset)
+      end
     end
   end
 

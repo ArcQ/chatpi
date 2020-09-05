@@ -6,7 +6,7 @@ defmodule Chatpi.Chats.Member do
 
   schema "chats_members" do
     belongs_to(:chat, Chatpi.Chats.Chat, type: Ecto.UUID)
-    belongs_to(:user, Chatpi.Users.User, type: Ecto.UUID)
+    belongs_to(:user, Chatpi.Users.User, type: :string, references: :auth_id)
   end
 
   @doc false
