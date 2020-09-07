@@ -4,7 +4,7 @@ defmodule Chatpi.Messages.Message do
   use Chatpi.Schema
   import Ecto.Changeset
 
-  schema "messages" do
+  schema "message" do
     field(:text, :string)
     field(:seen_by_id, :integer)
     field(:seen_at, :naive_datetime)

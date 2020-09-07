@@ -5,7 +5,7 @@ defmodule Chatpi.Uploads.File do
   use Arc.Ecto.Schema
   import Ecto.Changeset
 
-  schema "files" do
+  schema "file" do
     field(:file, Chatpi.File.Type)
 
     belongs_to(:message, Chatpi.Messages.Message)

@@ -5,12 +5,12 @@ defmodule Chatpi.Users.User do
   use Arc.Ecto.Schema
   import Ecto.Changeset
 
-  schema "users" do
+  schema "user" do
     field(:auth_key, :string)
     field(:username, :string)
     field(:is_inactive, :boolean)
 
-    many_to_many(:chats, Chatpi.Chats.Chat, join_through: "chats_members")
+    many_to_many(:chats, Chatpi.Chats.Chat, join_through: "chat_member")
 
     has_many(:messages, Chatpi.Messages.Message)
 
