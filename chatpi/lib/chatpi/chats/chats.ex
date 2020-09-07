@@ -9,20 +9,20 @@ defmodule Chatpi.Chats do
   alias Chatpi.{Chats.Chat, Users.User}
 
   @doc """
-  Returns the list of chats by auth_id
+  Returns the list of chats by auth_key
 
   ## Examples
 
-  iex> list_chats_by_auth_id(auth_id)
+  iex> list_chats_by_auth_key(auth_key)
   [%Chat{}, ...]
 
   """
-  def list_chats_for_user(auth_id) do
+  def list_chats_for_user(auth_key) do
     Repo.all(
       from(c in Chat,
         distinct: true,
         inner_join: u1 in assoc(c, :users),
-        where: u1.auth_id == ^auth_id
+        where: u1.auth_key == ^auth_key
       )
     )
   end
@@ -52,14 +52,14 @@ defmodule Chatpi.Chats do
   @doc """
   Gets a chat between 2 users
   """
-  def get_chats_between_users(cauth_id, auth_id) do
+  def get_chats_between_users(cauth_key, auth_key) do
     Repo.all(
       from(c in Chat,
         distinct: true,
         left_join: u1 in assoc(c, :users),
         inner_join: u2 in assoc(c, :users),
-        on: u2.auth_id == ^cauth_id,
-        where: u1.auth_id == ^auth_id
+        on: u2.auth_key == ^cauth_key,
+        where: u1.auth_key == ^auth_key
       )
     )
   end
@@ -130,7 +130,7 @@ defmodule Chatpi.Chats do
   end
 
   @doc """
-  Checks if auth_id is a member of chat_id
+  Checks if auth_key is a member of chat_id
 
   ## Examples
 
@@ -138,10 +138,10 @@ defmodule Chatpi.Chats do
   [%Chat{}, ...]
 
   """
-  def is_member(auth_id, chat_id) do
+  def is_member(auth_key, chat_id) do
     Chat
     |> where([chat], chat.id == ^chat_id)
-    |> join(:inner, [chat], user in User, on: user.auth_id == ^auth_id)
+    |> join(:inner, [chat], user in User, on: user.auth_key == ^auth_key)
     |> Repo.exists?
   end
 end

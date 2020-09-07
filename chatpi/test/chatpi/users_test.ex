@@ -7,13 +7,13 @@ defmodule Chatpi.UsersTest do
   describe "users" do
     alias Chatpi.Users.User
 
-    @valid_attrs %{auth_id: "129830df-f45a-46b3-b766-2101db28ea62", username: "username"}
+    @valid_attrs %{auth_key: "129830df-f45a-46b3-b766-2101db28ea62", username: "username"}
     @update_attrs %{
       username: "username",
-      auth_id: "129830df-f45a-46b3-b766-2101db28ea62"
+      auth_key: "129830df-f45a-46b3-b766-2101db28ea62"
     }
     @invalid_attrs %{
-      auth_id: "updated-129830df-f45a-46b3-b766-2101db28ea62",
+      auth_key: "updated-129830df-f45a-46b3-b766-2101db28ea62",
       username: "updated-username"
     }
 
@@ -38,7 +38,7 @@ defmodule Chatpi.UsersTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Users.create_user(@valid_attrs)
-      assert user.auth_id == "129830df-f45a-46b3-b766-2101db28ea62"
+      assert user.auth_key == "129830df-f45a-46b3-b766-2101db28ea62"
       assert user.username == "username"
     end
 
@@ -50,7 +50,7 @@ defmodule Chatpi.UsersTest do
       user = user_fixture()
       assert {:ok, user} = Users.update_user(user, @update_attrs)
       assert %User{} = user
-      assert user.auth_id == "updated-129830df-f45a-46b3-b766-2101db28ea62"
+      assert user.auth_key == "updated-129830df-f45a-46b3-b766-2101db28ea62"
       assert user.username == "updated-username"
     end
 
@@ -76,14 +76,14 @@ defmodule Chatpi.UsersTest do
     alias Chatpi.Users.User
 
     @valid_attrs %{
-      auth_id: "129830df-f45a-46b3-b766-2101db28ea62",
+      auth_key: "129830df-f45a-46b3-b766-2101db28ea62",
       username: "username"
     }
     @update_attrs %{
-      auth_id: "updated-129830df-f45a-46b3-b766-2101db28ea62",
+      auth_key: "updated-129830df-f45a-46b3-b766-2101db28ea62",
       username: "updated-username"
     }
-    @invalid_attrs %{auth_id: nil, username: nil}
+    @invalid_attrs %{auth_key: nil, username: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -106,7 +106,7 @@ defmodule Chatpi.UsersTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Users.create_user(@valid_attrs)
-      assert user.auth_id == "129830df-f45a-46b3-b766-2101db28ea62"
+      assert user.auth_key == "129830df-f45a-46b3-b766-2101db28ea62"
       assert user.username == "username"
     end
 
@@ -118,7 +118,7 @@ defmodule Chatpi.UsersTest do
       user = user_fixture()
       assert {:ok, user} = Users.update_user(user, @update_attrs)
       assert %User{} = user
-      assert user.auth_id == "updated-129830df-f45a-46b3-b766-2101db28ea62"
+      assert user.auth_key == "updated-129830df-f45a-46b3-b766-2101db28ea62"
       assert user.username == "updated-username"
     end
 

@@ -10,8 +10,8 @@ defmodule ChatpiWeb.Api.V1.MessageController do
 
   @doc false
   def index(conn, %{"chat_id" => chat_id}) do
-    auth_id = Guardian.Plug.current_resource(conn, []).auth_id
-    if Chats.is_member(auth_id, chat_id) do
+    auth_key = Guardian.Plug.current_resource(conn, []).auth_key
+    if Chats.is_member(auth_key, chat_id) do
       IO.inspect Messages.list_messages_by_chat_id(chat_id)
       render(conn, "index.json",
         messages: Messages.list_messages_by_chat_id(chat_id)

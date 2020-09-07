@@ -43,7 +43,7 @@ defmodule Chatpi.Messages do
     #   from(c in Chat,
     #     distinct: true,
     #     inner_join: u1 in assoc(c, :users),
-    #     where: u1.auth_id == ^auth_id
+    #     where: u1.auth_key == ^auth_key
     #   )
     # )
 

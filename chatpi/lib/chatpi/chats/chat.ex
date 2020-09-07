@@ -9,7 +9,7 @@ defmodule Chatpi.Chats.Chat do
 
     many_to_many(:users, Chatpi.Users.User,
       join_through: "chats_members",
-      join_keys: [chat_id: :id, user_id: :auth_id])
+      join_keys: [chat_id: :id, user_id: :auth_key])
     has_many(:messages, Chatpi.Messages.Message)
     has_many(:members, Chatpi.Chats.Member)
 

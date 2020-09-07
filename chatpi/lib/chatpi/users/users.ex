@@ -33,11 +33,11 @@ defmodule Chatpi.Users do
       [%User{}, ...]
 
   """
-  def list_users_by_ids(user_auth_ids) do
+  def list_users_by_ids(user_auth_keys) do
     Repo.all(
       from(
         u in User,
-        where: u.is_inactive != true and u.auth_id in ^user_auth_ids
+        where: u.is_inactive != true and u.auth_key in ^user_auth_keys
       )
     )
   end
@@ -77,7 +77,7 @@ defmodule Chatpi.Users do
     case Chatpi.Auth.Token.verify_and_validate(token) do
       {:ok, claims} ->
         user_id = claims["sub"]
-        get_user_by_auth_id!(user_id)
+        get_user_by_auth_key!(user_id)
 
       {:error, _} ->
         raise Ecto.NoResultsError
@@ -85,26 +85,26 @@ defmodule Chatpi.Users do
   end
 
   @doc """
-  Gets a single user with auth_id verification.
+  Gets a single user with auth_key verification.
 
   Raises `Ecto.NoResultsError` if the User does not exist.
 
   ## Examples
 
-      iex> get_user_by_auth_id!("auth_id")
+      iex> get_user_by_auth_key!("auth_key")
       %User{}
 
-      iex> get_user_by_auth_id!("auth_id")
+      iex> get_user_by_auth_key!("auth_key")
       ** (Ecto.NoResultsError)
 
   """
 
-  def get_user_by_auth_id!(auth_id) do
-    Repo.get_by!(User, auth_id: auth_id)
+  def get_user_by_auth_key!(auth_key) do
+    Repo.get_by!(User, auth_key: auth_key)
   end
 
-  def do_all_users_exist(auth_ids) do
-    length(list_users_by_ids(auth_ids)) == length(auth_ids)
+  def do_all_users_exist(auth_keys) do
+    length(list_users_by_ids(auth_keys)) == length(auth_keys)
   end
 
   @doc """

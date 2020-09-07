@@ -22,15 +22,15 @@ defmodule ChatpiWeb.UserSocket do
     #
     case Chatpi.Auth.Token.verify_and_validate(params["token"]) do
       {:ok, claims} ->
-        auth_id = claims["sub"]
+        auth_key = claims["sub"]
 
-        IO.puts("Socket connection requested from auth_id: " <> auth_id)
+        IO.puts("Socket connection requested from auth_key: " <> auth_key)
 
         {:ok,
          socket
          |> assign(
            :user,
-           Users.get_user_by_auth_id!(auth_id) |> Map.take([:id, :username, :is_inactive])
+           Users.get_user_by_auth_key!(auth_key) |> Map.take([:id, :username, :is_inactive])
          )}
 
       {:error, reason} ->

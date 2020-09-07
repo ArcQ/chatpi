@@ -16,7 +16,7 @@ defmodule Chatpi.MessagesTest do
       {:ok, user} =
         Users.create_user(%{
           username: "username",
-          auth_id: "129830df-f45a-46b3-b766-2101db28ea62"
+          auth_key: "129830df-f45a-46b3-b766-2101db28ea62"
         })
 
       user

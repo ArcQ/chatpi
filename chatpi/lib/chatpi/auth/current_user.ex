@@ -14,7 +14,7 @@ defmodule Chatpi.Auth.CurrentUser do
       |> Plug.Conn.assign(:current_user,
         %User{
           username: claims["sub"],
-          auth_id: claims["sub"],
+          auth_key: claims["sub"],
           is_inactive: false,
           messages: []
         })

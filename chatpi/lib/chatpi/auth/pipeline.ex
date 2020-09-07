@@ -25,7 +25,7 @@ defmodule Chatpi.Auth.VerifyHeader do
         |> Guardian.Plug.put_current_claims(claims, [])
         |> Guardian.Plug.put_current_resource(%User{
           username: claims["username"],
-          auth_id: claims["sub"],
+          auth_key: claims["sub"],
           is_inactive: false,
           messages: []
         }, [])

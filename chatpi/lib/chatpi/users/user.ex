@@ -6,7 +6,7 @@ defmodule Chatpi.Users.User do
   import Ecto.Changeset
 
   schema "users" do
-    field(:auth_id, :string)
+    field(:auth_key, :string)
     field(:username, :string)
     field(:is_inactive, :boolean)
 
@@ -19,12 +19,12 @@ defmodule Chatpi.Users.User do
 
   @permitted_params ~w(
     username
-    auth_id
+    auth_key
     is_inactive
   )
 
   @required_params ~w(
-    auth_id
+    auth_key
     username
   )a
 

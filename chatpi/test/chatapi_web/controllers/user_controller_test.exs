@@ -4,13 +4,13 @@ defmodule ChatpiWeb.UserControllerTest do
 
   alias Chatpi.Users
 
-  @create_attrs %{auth_id: "129830df-f45a-46b3-b766-2101db28ea62", username: "some name"}
+  @create_attrs %{auth_key: "129830df-f45a-46b3-b766-2101db28ea62", username: "some name"}
 
   @update_attrs %{
-    auth_id: "some updated auth_id",
+    auth_key: "some updated auth_key",
     username: "some updated name"
   }
-  @invalid_attrs %{auth_id: nil, username: nil}
+  @invalid_attrs %{auth_key: nil, username: nil}
 
   def fixture(:user) do
     {:ok, user} = Users.create_user(@create_attrs)
@@ -65,7 +65,7 @@ defmodule ChatpiWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
 
       conn = get(conn, Routes.user_path(conn, :show, user))
-      assert html_response(conn, 200) =~ "some updated auth_id"
+      assert html_response(conn, 200) =~ "some updated auth_key"
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
