@@ -39,6 +39,8 @@ export const createChannel = async ({
   authorizationToken,
   channelId,
 }) => {
+  console.info('--- Connecting to chatpi ---');
+
   const socket = new Socket(`ws://${url}/socket`, {
     params: {
       userToken,
@@ -48,6 +50,18 @@ export const createChannel = async ({
   socket.connect();
 
   const channel = socket.channel(`chat:${channelId}`, {});
+
+  channel
+    .join()
+    .receive('ok', () => console.log('Connected to chatpi!'))
+    .receive('error', ({ reason }) =>
+      console.log(`Failed to join channel: ${channelId} with reason: `, reason),
+    )
+    .receive('timeout', () =>
+      console.log(
+        'Server response timed out: Networking issues or configuration not set up properly',
+      ),
+    );
 
   return channel;
 };
@@ -78,8 +92,12 @@ export const createChannel = async ({
 export const sendMessageAsync = ({ channel, action, message }) =>
   new Promise((resolve, reject) => {
     channel
-      .push(action, message)
+      .push(action, { text: message })
       .receive('ok', response => resolve({ response }))
       .receive('error', reasons => reject({ reasons }))
-      .receive('timeout', () => console.log('Networking issue...'));
+      .receive('timeout', () =>
+        console.log(
+          'Send message timed out: Networking issues or configuration not set up properly',
+        ),
+      );
   });

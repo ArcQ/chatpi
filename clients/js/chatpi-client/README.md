@@ -4,7 +4,7 @@
 Create a channel. And then push to that channel
 
 `js
-const channel = createChannel({ url, userToken, authorizationToken });
+const channel = joinChannel({ url, userToken, authorizationToken });
 channel
   .join()
   .receive('ok', ({ messages }) => console.log('catching up', messages))

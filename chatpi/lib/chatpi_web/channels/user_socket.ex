@@ -16,10 +16,7 @@ defmodule ChatpiWeb.UserSocket do
 
         {:ok,
           socket
-          |> assign(
-            :user,
-            Users.get_user_by_auth_key!(auth_key) |> Map.take([:id, :username, :is_inactive])
-          )}
+          |> assign(:user, Users.get_user_by_auth_key!(auth_key))}
 
       {:error, reason} ->
         IO.puts(inspect(reason))

@@ -52,7 +52,7 @@ defmodule ChatpiWeb.ChatChannel do
 
     text = "#{text}\n" <> get_random_gif(text)
 
-    save_message!(
+    create_message!(
       get_chat_id(socket),
       user,
       text
@@ -64,9 +64,10 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def handle_in("message:new", %{"text" => text}, socket) do
     user = get_in(socket.assigns, [:user])
+    IO.puts inspect user
 
     if String.length(text) > 0 do
-      message = save_message!(
+      message = create_message!(
         get_chat_id(socket),
         user,
         text
@@ -125,10 +126,11 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  defp save_message!(id, user, text) do
+  defp create_message!(id, user, text) do
+    IO.puts inspect user
     case Messages.create_message(%{
            text: text,
-           user_id: user.id,
+           user_id: user.auth_key,
            chat_id: id
          }) do
       {:ok, message} -> message
