@@ -2,7 +2,7 @@ defmodule Chatpi.Repo.Migrations.CreateUser do
   use Ecto.Migration
 
   def change do
-    create table(:user, primary_key: false) do
+    create table(:chatpi_user, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :username, :string
       add :auth_key, :string
@@ -11,6 +11,6 @@ defmodule Chatpi.Repo.Migrations.CreateUser do
       timestamps()
     end
 
-    create unique_index(:user, [:auth_key])
+    create unique_index(:chatpi_user, [:auth_key])
   end
 end

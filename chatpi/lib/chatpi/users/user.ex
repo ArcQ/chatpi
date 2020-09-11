@@ -5,7 +5,7 @@ defmodule Chatpi.Users.User do
   use Arc.Ecto.Schema
   import Ecto.Changeset
 
-  schema "user" do
+  schema "chatpi_user" do
     field(:auth_key, :string)
     field(:username, :string)
     field(:is_inactive, :boolean)

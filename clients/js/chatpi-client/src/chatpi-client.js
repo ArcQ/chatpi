@@ -47,7 +47,7 @@ export const createChannel = async ({
   });
   socket.connect();
 
-  channel = socket.channel(`chat:${channelId}`, {});
+  const channel = socket.channel(`chat:${channelId}`, {});
 
   return channel;
 };

@@ -6,6 +6,27 @@ defmodule ChatpiWeb.UserSocket do
   ## Channels
   channel("chat:*", ChatpiWeb.ChatChannel)
 
+
+  defp validate_token_and_retrieve_user(token, socket) do
+    case Chatpi.Auth.Token.verify_and_validate(token) do
+      {:ok, claims} ->
+        auth_key = claims["sub"]
+
+        IO.puts("Socket connection requested from auth_key: " <> auth_key)
+
+        {:ok,
+          socket
+          |> assign(
+            :user,
+            Users.get_user_by_auth_key!(auth_key) |> Map.take([:id, :username, :is_inactive])
+          )}
+
+      {:error, reason} ->
+        IO.puts(inspect(reason))
+        {:error, reason}
+    end
+  end
+
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
   # verification, you can put default assigns into
@@ -20,22 +41,10 @@ defmodule ChatpiWeb.UserSocket do
   def connect(params, socket) do
     # TODO use context
     #
-    case Chatpi.Auth.Token.verify_and_validate(params["token"]) do
-      {:ok, claims} ->
-        auth_key = claims["sub"]
-
-        IO.puts("Socket connection requested from auth_key: " <> auth_key)
-
-        {:ok,
-         socket
-         |> assign(
-           :user,
-           Users.get_user_by_auth_key!(auth_key) |> Map.take([:id, :username, :is_inactive])
-         )}
-
-      {:error, reason} ->
-        IO.puts(inspect(reason))
-        {:error, reason}
+    if params["token"] != nil do
+      validate_token_and_retrieve_user(params["token"], socket)
+    else
+      {:unauthenticated}
     end
   end
 
