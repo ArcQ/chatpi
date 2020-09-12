@@ -7,7 +7,7 @@ erl_crash.dump
 *.ez
 chatpi-*.tar
 /priv/static/
-/config/*.secret.exs
+/config/*.secret.exs*
 /.elixir_ls
 /uploads
 .env*

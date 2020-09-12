@@ -8,7 +8,7 @@ config :chatpi, Chatpi.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: System.get_env("DB_USER"),
   password: System.get_env("DB_PASS"),
-  database: System.get_env("CHATPI_DB_NAME")|| "chatpi_dev",
+  database: System.get_env("CHATPI_DB_NAME") || "chatpi_dev",
   hostname: System.get_env("DB_HOST"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
   # ssl: true

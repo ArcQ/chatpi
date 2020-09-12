@@ -36,18 +36,14 @@ defmodule ChatpiWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(params, socket) do
-    # TODO use context
-    #
     if params["token"] != nil do
       validate_token_and_retrieve_user(params["token"], socket)
     else
-      {:unauthenticated}
+      {:error}
     end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
-  #
-  #     def id(socket), do: "user_socket:#{socket.assigns.user_id}"
   #
   # Would allow you to broadcast a "disconnect" event and terminate
   # all active sockets and channels for a given user:
