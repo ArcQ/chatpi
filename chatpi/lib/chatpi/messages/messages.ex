@@ -4,7 +4,7 @@ defmodule Chatpi.Messages do
   """
 
   import Ecto.Query, warn: false
-  alias Chatpi.{Repo, Messages.Message}
+  alias Chatpi.{Repo, Messages.Message, Chats.Chat}
 
   @doc """
   Returns the list of messages for a chat paginated with cursor
@@ -18,7 +18,7 @@ defmodule Chatpi.Messages do
   def list_messages_by_chat_id(chat_id) do
     Message
     |> where([message], message.chat_id == ^chat_id)
-    |> order_by([asc: :inserted_at])
+    |> order_by([desc: :inserted_at])
     |> preload([:file])
     |> limit(20)
     |> Repo.all
@@ -33,27 +33,23 @@ defmodule Chatpi.Messages do
   [%Message{}, ...]
 
   """
-  def list_messages_by_chat_id(chat_id, cursor) do
-    # [message_id, iso_date_time] = cursor
-    #                               |> Base.decode64()
-    #                               |> String.split(",")
-    # date_time = Timex.parse!(iso_date_time, "{ISO:Extended}")
+  def list_messages_by_chat_id_query(chat_id, query_type, inserted_at) do
+    query = Message
+            |> join(:inner, [message], chat in Chat, on: chat.id == ^chat_id)
+            |> order_by([desc: :inserted_at])
+            |> preload([:file])
 
-    # Repo.all(
-    #   from(c in Chat,
-    #     distinct: true,
-    #     inner_join: u1 in assoc(c, :users),
-    #     where: u1.auth_key == ^auth_key
-    #   )
-    # )
-
-    # Repo.all(
-    #   from(m in Message,
-    #     distinct: true,
-    #     inner_join: c in assoc(m, :chats),
-    #     where: c.id == ^chat_id or (c.inserted_at < ^date_time and m.id < ^message_id),
-    #     order_by: [desc: :inserted_at, desc: :id])
-    # )
+    if query_type == "after" do
+      query
+      |> where([message], message.inserted_at > ^inserted_at)
+      |> limit(20)
+      |> Repo.all
+    else
+      query
+      |> where([message], message.inserted_at < ^inserted_at)
+      |> limit(20)
+      |> Repo.all
+    end
   end
 
   @doc """

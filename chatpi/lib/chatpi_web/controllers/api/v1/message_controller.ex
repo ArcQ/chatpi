@@ -9,10 +9,23 @@ defmodule ChatpiWeb.Api.V1.MessageController do
   import Plug.ErrorHandler
 
   @doc false
+  def index(conn, %{"chat_id" => chat_id, "query_type" => query_type, "inserted_at" => inserted_at}) do
+    auth_key = Guardian.Plug.current_resource(conn, []).auth_key
+    if Chats.is_member(auth_key, chat_id) do
+      render(conn, "index.json",
+        messages: Messages.list_messages_by_chat_id_query(chat_id, query_type, inserted_at)
+      )
+    else
+      render(conn, "index.json",
+        messages: []
+      )
+    end
+  end
+
+  @doc false
   def index(conn, %{"chat_id" => chat_id}) do
     auth_key = Guardian.Plug.current_resource(conn, []).auth_key
     if Chats.is_member(auth_key, chat_id) do
-      IO.inspect Messages.list_messages_by_chat_id(chat_id)
       render(conn, "index.json",
         messages: Messages.list_messages_by_chat_id(chat_id)
       )
@@ -44,7 +57,7 @@ defmodule ChatpiWeb.Api.V1.MessageController do
     end
   end
 
-  defp handle_errors(conn, %{kind: kind, reason: reason, stack: stack}) do
-    json(conn, %{error: 500})
+  defp handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do
+    json(conn, %{error: 500, reason: reason})
   end
 end
