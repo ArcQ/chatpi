@@ -6,7 +6,6 @@ defmodule ChatpiWeb.UserSocket do
   ## Channels
   channel("chat:*", ChatpiWeb.ChatChannel)
 
-
   defp validate_token_and_retrieve_user(token, socket) do
     case Chatpi.Auth.Token.verify_and_validate(token) do
       {:ok, claims} ->
@@ -15,8 +14,8 @@ defmodule ChatpiWeb.UserSocket do
         IO.puts("Socket connection requested from auth_key: " <> auth_key)
 
         {:ok,
-          socket
-          |> assign(:user, Users.get_user_by_auth_key!(auth_key))}
+         socket
+         |> assign(:user, Users.get_user_by_auth_key!(auth_key))}
 
       {:error, reason} ->
         IO.puts(inspect(reason))

@@ -18,10 +18,10 @@ defmodule Chatpi.Messages do
   def list_messages_by_chat_id(chat_id) do
     Message
     |> where([message], message.chat_id == ^chat_id)
-    |> order_by([desc: :inserted_at])
+    |> order_by(desc: :inserted_at)
     |> preload([:file])
     |> limit(20)
-    |> Repo.all
+    |> Repo.all()
   end
 
   @doc """
@@ -34,21 +34,22 @@ defmodule Chatpi.Messages do
 
   """
   def list_messages_by_chat_id_query(chat_id, query_type, inserted_at) do
-    query = Message
-            |> join(:inner, [message], chat in Chat, on: chat.id == ^chat_id)
-            |> order_by([desc: :inserted_at])
-            |> preload([:file])
+    query =
+      Message
+      |> join(:inner, [message], chat in Chat, on: chat.id == ^chat_id)
+      |> order_by(desc: :inserted_at)
+      |> preload([:file])
 
     if query_type == "after" do
       query
       |> where([message], message.inserted_at > ^inserted_at)
       |> limit(20)
-      |> Repo.all
+      |> Repo.all()
     else
       query
       |> where([message], message.inserted_at < ^inserted_at)
       |> limit(20)
-      |> Repo.all
+      |> Repo.all()
     end
   end
 
@@ -116,5 +117,4 @@ defmodule Chatpi.Messages do
   def change_message(%Message{} = message) do
     Message.changeset(message, %{})
   end
-
 end

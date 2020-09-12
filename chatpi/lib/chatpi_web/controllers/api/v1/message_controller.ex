@@ -5,34 +5,34 @@ defmodule ChatpiWeb.Api.V1.MessageController do
   import Ecto.Query, only: [from: 2]
   alias Chatpi.Repo
   alias Chatpi.{Chats, Messages.Message, Messages}
-  action_fallback FallbackController
+  action_fallback(FallbackController)
   import Plug.ErrorHandler
 
   @doc false
-  def index(conn, %{"chat_id" => chat_id, "query_type" => query_type, "inserted_at" => inserted_at}) do
+  def index(conn, %{
+        "chat_id" => chat_id,
+        "query_type" => query_type,
+        "inserted_at" => inserted_at
+      }) do
     auth_key = Guardian.Plug.current_resource(conn, []).auth_key
+
     if Chats.is_member(auth_key, chat_id) do
       render(conn, "index.json",
         messages: Messages.list_messages_by_chat_id_query(chat_id, query_type, inserted_at)
       )
     else
-      render(conn, "index.json",
-        messages: []
-      )
+      render(conn, "index.json", messages: [])
     end
   end
 
   @doc false
   def index(conn, %{"chat_id" => chat_id}) do
     auth_key = Guardian.Plug.current_resource(conn, []).auth_key
+
     if Chats.is_member(auth_key, chat_id) do
-      render(conn, "index.json",
-        messages: Messages.list_messages_by_chat_id(chat_id)
-      )
+      render(conn, "index.json", messages: Messages.list_messages_by_chat_id(chat_id))
     else
-      render(conn, "index.json",
-        messages: []
-      )
+      render(conn, "index.json", messages: [])
     end
   end
 

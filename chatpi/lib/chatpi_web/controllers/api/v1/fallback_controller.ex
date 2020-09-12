@@ -42,5 +42,4 @@ defmodule ChatpiWeb.Api.V1.FallbackController do
 
     json(conn, %{error: 500})
   end
-
 end

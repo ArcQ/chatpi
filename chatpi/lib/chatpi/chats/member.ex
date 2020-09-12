@@ -14,6 +14,7 @@ defmodule Chatpi.Chats.Member do
     member
     |> cast(attrs, [:chat_id, :user_id])
     |> validate_required([:chat_id, :user_id])
+
     # |> put_change(:id, Ecto.UUID.bingenerate())
   end
 end

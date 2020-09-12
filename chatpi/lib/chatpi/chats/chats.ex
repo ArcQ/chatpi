@@ -44,9 +44,9 @@ defmodule Chatpi.Chats do
   def get_chat(id) do
     Chat
     |> where([chat], chat.id == ^id)
-    |> preload([members: :user])
-    |> Repo.all
-    |> List.first
+    |> preload(members: :user)
+    |> Repo.all()
+    |> List.first()
   end
 
   @doc """
@@ -142,6 +142,6 @@ defmodule Chatpi.Chats do
     Chat
     |> where([chat], chat.id == ^chat_id)
     |> join(:inner, [chat], user in User, on: user.auth_key == ^auth_key)
-    |> Repo.exists?
+    |> Repo.exists?()
   end
 end

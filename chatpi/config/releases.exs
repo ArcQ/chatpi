@@ -11,7 +11,8 @@ config :chatpi, Chatpi.Repo,
   database: System.get_env("CHATPI_DB_NAME") || "chatpi_dev",
   hostname: System.get_env("DB_HOST"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
-  # ssl: true
+
+# ssl: true
 
 config :arc,
   storage: Arc.Storage.S3,

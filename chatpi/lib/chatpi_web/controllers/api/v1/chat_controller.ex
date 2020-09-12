@@ -2,9 +2,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
   @moduledoc false
   use ChatpiWeb, :controller
   use Plug.ErrorHandler
-  import Ecto.Query, only: [from: 2]
-  alias Chatpi.Repo
-  alias Chatpi.{Chats, Chats.Chat, Messages.Message, Users}
+  alias Chatpi.{Chats, Users}
   import Plug.ErrorHandler
 
   @doc false
@@ -28,6 +26,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
     name = conn.body_params["name"]
 
     users = [auth_key | user_ids] |> Users.list_users_by_ids()
+
     if length(users) == length(users) do
       case Chats.create_chat(%{users: users, name: name}) do
         {:ok, chat} ->
@@ -39,7 +38,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
     end
   end
 
-  defp handle_errors(conn, %{kind: kind, reason: reason, stack: stack}) do
-    json(conn, %{error: 500})
+  defp handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do
+    json(conn, %{error: 500, reason: reason})
   end
 end

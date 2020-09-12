@@ -23,12 +23,15 @@ defmodule Chatpi.Auth.VerifyHeader do
         conn
         |> Guardian.Plug.put_current_token(auth_header, [])
         |> Guardian.Plug.put_current_claims(claims, [])
-        |> Guardian.Plug.put_current_resource(%User{
-          username: claims["username"],
-          auth_key: claims["sub"],
-          is_inactive: false,
-          messages: []
-        }, [])
+        |> Guardian.Plug.put_current_resource(
+          %User{
+            username: claims["username"],
+            auth_key: claims["sub"],
+            is_inactive: false,
+            messages: []
+          },
+          []
+        )
         |> assign(:user_signed_in?, true)
 
       {:error, reason} ->
@@ -38,8 +41,8 @@ defmodule Chatpi.Auth.VerifyHeader do
   end
 end
 
-#TODO, we should actually have a sign in route,
-#and then keep sessions through guardian instead of managing everything through jwt
+# TODO, we should actually have a sign in route,
+# and then keep sessions through guardian instead of managing everything through jwt
 defmodule Chatpi.Auth.Pipeline do
   @moduledoc false
 

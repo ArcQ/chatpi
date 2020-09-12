@@ -16,6 +16,7 @@ defmodule ChatpiWeb.Api.V1.UserController do
       {:ok, user} ->
         conn
         |> render("show.json", user: user)
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "show.json", changeset: changeset)
     end

@@ -64,14 +64,15 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def handle_in("message:new", %{"text" => text}, socket) do
     user = get_in(socket.assigns, [:user])
-    IO.puts inspect user
+    IO.puts(inspect(user))
 
     if String.length(text) > 0 do
-      message = create_message!(
-        get_chat_id(socket),
-        user,
-        text
-      )
+      message =
+        create_message!(
+          get_chat_id(socket),
+          user,
+          text
+        )
 
       broadcast!(socket, "message:new", MessageView.render("message.json", %{message: message}))
     end
@@ -127,7 +128,8 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   defp create_message!(id, user, text) do
-    IO.puts inspect user
+    IO.puts(inspect(user))
+
     case Messages.create_message(%{
            text: text,
            user_id: user.auth_key,
