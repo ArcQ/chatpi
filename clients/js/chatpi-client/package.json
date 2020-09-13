@@ -1,6 +1,6 @@
 {
   "name": "@knotfive/chatpi-client-js",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "client library for chatpi",
   "author": "eddielaw296@gmail.com",
   "license": "ISC",
@@ -32,6 +32,6 @@
     "start": "microbundle watch",
     "doc": "typedoc --ignoreCompilerErrors --plugin typedoc-plugin-markdown --target ES6 --exclude node_modules --mode modules src",
     "lint": "eslint . --ext .ts",
-    "publish": "yarn build && yarn doc && yarn publish"
+    "deploy": "yarn build && yarn doc && yarn publish"
   }
 }
