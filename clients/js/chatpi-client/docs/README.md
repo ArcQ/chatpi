@@ -1,3 +1,7 @@
+[@knotfive/chatpi-client-js](README.md) › [Globals](globals.md)
+
+# @knotfive/chatpi-client-js
+
 # Javascript Client for ChatPi
 
 For api docs: [Globals](docs/globals.md)

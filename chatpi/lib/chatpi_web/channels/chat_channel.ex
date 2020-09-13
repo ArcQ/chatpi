@@ -28,8 +28,7 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def handle_info(:after_join, socket) do
     Presence.track(socket, "user:#{socket.assigns.user.auth_key}", %{
-      typing: false,
-      name: socket.assigns.user.username
+      isTyping: false,
     })
 
     push(socket, "presence_state", Presence.list(socket))
@@ -37,10 +36,9 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  def handle_in("user:typing", %{"typing" => typing}, socket) do
+  def handle_in("user:typing", %{"isTyping" => isTyping}, socket) do
     Presence.update(socket, socket.assigns.user.auth_key, %{
-      typing: typing,
-      name: socket.assigns.user.username
+      isTyping: isTyping,
     })
 
     {:noreply, socket}
