@@ -17,6 +17,7 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   def join("chat:touchbase:" <> private_topic_id, payload, socket) do
+    IO.puts private_topic_id
     if authorized?(socket, "touchbase", private_topic_id) do
       send(self(), :after_join)
       {:ok, socket}

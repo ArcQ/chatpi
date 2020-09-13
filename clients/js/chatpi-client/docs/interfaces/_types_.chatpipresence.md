@@ -18,4 +18,4 @@
 
 • **isTyping**: *boolean*
 
-Defined in types.ts:8
+*Defined in [types.ts:8](https://github.com/ArcQ/chatpi/blob/360e07f/clients/js/chatpi-client/src/types.ts#L8)*

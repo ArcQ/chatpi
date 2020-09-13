@@ -56,7 +56,7 @@ export class Connection {
     this.socket.connect();
 
     this.channels = config.channelIds.reduce(
-      (prev, [channelId]) => ({
+      (prev, channelId) => ({
         ...prev,
         [channelId]: this.createChannel(channelId),
       }),

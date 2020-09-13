@@ -20,7 +20,7 @@
 
 • **action**: *[BroadcastAction](../enums/_types_.broadcastaction.md)*
 
-Defined in types.ts:39
+*Defined in [types.ts:39](https://github.com/ArcQ/chatpi/blob/360e07f/clients/js/chatpi-client/src/types.ts#L39)*
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 • **channelId**: *[ChannelId](../modules/_types_.md#channelid)*
 
-Defined in types.ts:38
+*Defined in [types.ts:38](https://github.com/ArcQ/chatpi/blob/360e07f/clients/js/chatpi-client/src/types.ts#L38)*
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 • **message**: *[Message](_types_.message.md)*
 
-Defined in types.ts:40
+*Defined in [types.ts:40](https://github.com/ArcQ/chatpi/blob/360e07f/clients/js/chatpi-client/src/types.ts#L40)*
