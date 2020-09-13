@@ -1,106 +1,158 @@
 /** @module chatpi-client */
-import { Socket } from 'phoenixjs';
+import { Socket, Presence } from 'phoenixjs';
 
 export const BROADCAST_ACTION = 'message:new';
 
 /**
- * ## Channel
+ * ## Chatpi Connection
  *
- * Channels are isolated, concurrent processes on the server that
- * subscribe to topics and broker events between the client and server.
  *
- * @typedef {Object} Channel~chatpi-client
- * @property {boolean} join(timeout)
- * @property {boolean} on(event, callback) - event can be any of 'ok'|'error'|'timeout'
- * @property {boolean} leave(callback)
+ * Wrapped Channel Obj around a phoenix socket
+ *
+ * @typedef {Object} Connection~chatpi-client
+ * @property {Channel} channel
+ * @property {Array} presences
  */
 
-/**
- * creates a channel
- * @param {Object} chanelConfig - Config object to connect to a specific channel
- * @param {string} chanelConfig.url - Url assigned for environment
- * @param {string} chanelConfig.userToken - User token assigned
- * @param {string} chanelConfig.authorizationToken - Authorization token that includes id field
- * @return {Channel}
- * @example <caption>Join a channel</caption>
- * const channel = createChannel({ url, userToken, authorizationToken })
-   channel
-       .join()
-       .receive('ok', ({ messages }) => console.log('catching up', messages))
-       .receive('error', ({ reason }) => console.log('failed join', reason))
-       .receive('timeout', () =>
-         console.log('Networking issue. Still waiting...'),
-       );
-  channel.on(BROADCAST_ACTION, msg => console.log('Got message', msg));
- */
-export const createChannel = async ({
-  url,
-  userToken,
-  authorizationToken,
-  channelId,
-}) => {
-  console.info('--- Connecting to chatpi ---');
+export default class Connection {
+  /**
+   * creates a connection with channelIds
+   * @param {Object} chanelConfig - Config object to connect to a specific channel
+   * @param {string} chanelConfig.url - Url assigned for environment
+   * @param {string} chanelConfig.apiKey - Apikey assigned to your application
+   * @param {string} chanelConfig.channelIds - ChannelIds you would like to join
+   * @param {string} chanelConfig.userToken - User token assigned
+   * @param {string} chanelConfig.authorizationToken - Authorization token that includes id field
+   * @param {string} chanelConfig.onPresenceChange - When state about one of your presences changes
+   * @param {string} chanelConfig.onMessageReceive - When a messages is received in a channel
+   * @return {Channel}
+   * @example <caption>Join a channel</caption>
+   * const connection = new Connection({
+    url,
+    apiKey,
+    channelIds,
+    userToken,
+    authorizationToken,
+    onPresenceChange });
+  */
+  constructor({
+    url,
+    apiKey,
+    channelIds,
+    userToken,
+    authorizationToken,
+    onPresencesChange,
+    onMessageReceive,
+  }) {
+    console.info('--- Connecting to chatpi ---');
 
-  const socket = new Socket(`ws://${url}/socket`, {
-    params: {
-      userToken,
-      token: authorizationToken,
-    },
-  });
-  socket.connect();
+    this._apiKey = apiKey;
 
-  const channel = socket.channel(`chat:${channelId}`, {});
+    this._socket = new Socket(`ws://${url}/socket`, {
+      params: {
+        userToken,
+        token: authorizationToken,
+      },
+    });
 
-  channel
-    .join()
-    .receive('ok', () => console.log('Connected to chatpi!'))
-    .receive('error', ({ reason }) =>
-      console.info(
-        `Failed to join channel: ${channelId} with reason: `,
-        reason,
-      ),
-    )
-    .receive('timeout', () =>
-      console.info(
-        'Server response timed out: Networking issues or configuration not set up properly',
-      ),
+    this._socket.connect();
+
+    this.channels = channelIds.reduce(
+      (prev, [channelId]) => ({
+        ...prev,
+        [channelId]: this._createChannel(channelId),
+      }),
+      {},
     );
 
-  return channel;
-};
+    this.presences = {};
+    this.onPresencesChange = onPresencesChange;
+    this.onMessageReceive = onMessageReceive;
+  }
 
-/**
- * send a message
- * @param {Channel} channel - Pass in the channel object created by createChannel
- * @param {string} chanelConfig.url - Url assigned for environment
- * @param {string} chanelConfig.userToken - User token assigned
- * @param {string} chanelConfig.authorizationToken - Authorization token that includes id field
- * @return {Channel}
- * @example <caption>Join a channel</caption>
- * const channel = createChannel({ url, userToken, authorizationToken })
-   channel
-       .join()
-       .receive('ok', ({ messages }) => console.log('catching up', messages))
-       .receive('error', ({ reason }) => console.log('failed join', reason))
-       .receive('timeout', () =>
-         console.log('Networking issue. Still waiting...'),
-       );
-  channel.on(BROADCAST_ACTION, msg => console.log('Got message', msg));
- * @example <caption>Example of push a message onto a socket</caption>
- * const action = BROADCAST_ACTION;
- * sendMessageAsync({ channel, action, message })
-        .then((response) => console.log(response));
- *
- */
-export const sendMessageAsync = ({ channel, action, message }) =>
-  new Promise((resolve, reject) => {
+  _createChannel(channelId) {
+    const channel = this._socket.channel(
+      `chat:${this.apiKey}:${channelId}`,
+      {},
+    );
     channel
-      .push(action, { text: message.text })
-      .receive('ok', response => resolve({ response }))
-      .receive('error', reasons => reject({ reasons }))
+      .join()
+      .receive('ok', () => console.log('Connected to chatpi!'))
+      .receive('error', ({ reason }) =>
+        console.info(
+          `Failed to join channel: ${channelId} with reason: `,
+          reason,
+        ),
+      )
       .receive('timeout', () =>
         console.info(
-          'Send message timed out: Networking issues or configuration not set up properly',
+          'Server response timed out: Networking issues or configuration not set up properly',
         ),
       );
-  });
+
+    channel.on(BROADCAST_ACTION, msg => this.onMessageReceive(msg));
+
+    channel.on('presence_state', state => {
+      this.presences[channelId] = Presence.syncState(
+        this.presences[channelId],
+        state,
+      );
+      this.onPresencesChange(this.presences[channelId]);
+    });
+
+    channel.on('presence_diff', diff => {
+      this.presences[channelId] = Presence.syncDiff(
+        this.presences[channelId],
+        diff,
+      );
+      this.onPresencesChange(this.presences[channelId]);
+    });
+
+    return channel;
+  }
+
+  /**
+   * send a message
+   * @param {Channel} channelId - Pass in the channel object created by createChannel
+   * @param {string} chanelConfig.url - Url assigned for environment
+   * @param {string} chanelConfig.userToken - User token assigned
+   * @param {string} chanelConfig.authorizationToken - Authorization token that includes id field
+   * @return {Channel}
+   * @example <caption>Join a channel</caption>
+   * sendMessage({ channel: 'cf4aeae1-cda7-41f3-adf7-9b2bb377be7d4', action, message })
+        .then((response) => console.log(response));
+   *
+   */
+  sendMessage = ({ channelId, action, message }) =>
+    new Promise((resolve, reject) => {
+      this.channels[channelId]
+        .push(action, { text: message.text })
+        .receive('ok', response => resolve({ response }))
+        .receive('error', reasons => reject(new Error(reasons)))
+        .receive('timeout', () =>
+          console.info(
+            'Send message timed out: Networking issues or configuration not set up properly',
+          ),
+        );
+    });
+
+  joinChannel(channelId) {
+    this.channel[channelId] = createChannel(channelId);
+  }
+
+  leaveChannel(channelId) {
+    delete this.channel[channelId];
+  }
+
+  watchPresence() {}
+
+  removePresenceWatcher() {}
+
+  getChannelById(channelId) {
+    return this.channels[channelId];
+  }
+
+  getPresenceById(channelId) {
+    return this.presences[channelId];
+  }
+}

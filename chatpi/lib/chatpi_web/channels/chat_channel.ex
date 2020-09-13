@@ -6,8 +6,8 @@ defmodule ChatpiWeb.ChatChannel do
   alias ChatpiWeb.Api.V1.MessageView
 
   @doc false
-  def join("chat:lobby", payload, socket) do
-    if authorized?(socket, "lobby") do
+  def join("chat:touchbase:lobby", payload, socket) do
+    if authorized?(socket, "touchbbase", "lobby") do
       send(self(), :after_join)
       {:ok, socket}
     else
@@ -16,8 +16,8 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  def join("chat:" <> private_topic_id, payload, socket) do
-    if authorized?(socket, private_topic_id) do
+  def join("chat:touchbase:" <> private_topic_id, payload, socket) do
+    if authorized?(socket, "touchbase", private_topic_id) do
       send(self(), :after_join)
       {:ok, socket}
     else
@@ -27,7 +27,7 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   def handle_info(:after_join, socket) do
-    Presence.track(socket, socket.assigns.user.id, %{
+    Presence.track(socket, "user:#{socket.assigns.user.auth_key}", %{
       typing: false,
       name: socket.assigns.user.username
     })
@@ -38,7 +38,7 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   def handle_in("user:typing", %{"typing" => typing}, socket) do
-    Presence.update(socket, socket.assigns.user.id, %{
+    Presence.update(socket, socket.assigns.user.auth_key, %{
       typing: typing,
       name: socket.assigns.user.username
     })
@@ -100,8 +100,12 @@ defmodule ChatpiWeb.ChatChannel do
   #   if String.length(token) > 0, do: true, else: false
   # end
 
-  defp authorized?(socket, topic_id) do
-    true
+  defp authorized?(socket, _api_key, topic_id) do
+    if topic_id == "lobby" do
+      true
+    else
+      Chats.is_member(socket.assigns.user.auth_key, topic_id)
+    end
   end
 
   @doc false
