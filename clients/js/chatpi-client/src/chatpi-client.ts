@@ -114,7 +114,7 @@ export class Connection {
     });
   }
 
-  getChannelById(channelId): Channel {
+  getChannelById(channelId: ChannelId): Channel {
     return this.channels[channelId];
   }
 
@@ -155,5 +155,12 @@ export class Connection {
     channel.on('presence_state', () => void 0);
     channel.on('presence_diff', () => void 0);
     delete this.presences[channelId];
+  }
+
+  disconnect(): void {
+    Object.values(this.channels).forEach(channel => channel.leave());
+    this.channels = {};
+    this.presences = {};
+    this.socket.disconnect();
   }
 }
