@@ -27,4 +27,4 @@
 
 Ƭ **ChannelId**: *string*
 
-*Defined in [types.ts:5](https://github.com/ArcQ/chatpi/blob/1a5d498/clients/js/chatpi-client/src/types.ts#L5)*
+*Defined in [types.ts:5](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L5)*

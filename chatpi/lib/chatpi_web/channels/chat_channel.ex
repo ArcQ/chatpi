@@ -28,11 +28,11 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   def handle_info(:after_join, socket) do
-    Presence.track(socket, "user:#{socket.assigns.user.auth_key}", %{
+    push(socket, "presence_state", Presence.list(socket))
+    {:ok, _} = Presence.track(socket, "user:#{socket.assigns.user.auth_key}", %{
       isTyping: false,
     })
 
-    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 

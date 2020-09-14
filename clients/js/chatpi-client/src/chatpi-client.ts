@@ -135,7 +135,7 @@ export class Connection {
     const channel = this.getChannelById(channelId);
     channel.on('presence_state', state => {
       this.presences[channelId] = Presence.syncState(
-        this.presences[channelId],
+        this.presences[channelId] || {},
         state,
       );
       this.onPresenceChange(channelId, this.presences[channelId]);

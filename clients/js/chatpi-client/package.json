@@ -1,6 +1,6 @@
 {
   "name": "@knotfive/chatpi-client-js",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "description": "client library for chatpi",
   "author": "eddielaw296@gmail.com",
   "license": "ISC",
