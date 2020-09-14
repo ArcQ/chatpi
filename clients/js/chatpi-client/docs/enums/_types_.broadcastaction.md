@@ -14,4 +14,4 @@
 
 • **NEW_MESSAGE**: = "message:new"
 
-*Defined in [types.ts:2](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L2)*
+*Defined in [types.ts:2](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L2)*

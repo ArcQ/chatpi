@@ -24,7 +24,7 @@
 
 • **apiKey**: *string*
 
-*Defined in [types.ts:25](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L25)*
+*Defined in [types.ts:25](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L25)*
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 • **authorizationToken**: *string*
 
-*Defined in [types.ts:28](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L28)*
+*Defined in [types.ts:28](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L28)*
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 • **channelIds**: *Array‹[ChannelId](../modules/_types_.md#channelid)›*
 
-*Defined in [types.ts:26](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L26)*
+*Defined in [types.ts:26](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L26)*
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 • **onMessageReceive**: *[onMessageReceive](_types_.onmessagereceive.md)*
 
-*Defined in [types.ts:30](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L30)*
+*Defined in [types.ts:30](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L30)*
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 • **onPresenceChange**: *[onPresenceChangeCb](_types_.onpresencechangecb.md)*
 
-*Defined in [types.ts:29](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L29)*
+*Defined in [types.ts:29](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L29)*
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 • **url**: *string*
 
-*Defined in [types.ts:24](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L24)*
+*Defined in [types.ts:24](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L24)*
 
 ___
 
@@ -72,4 +72,4 @@ ___
 
 • **userToken**: *string*
 
-*Defined in [types.ts:27](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L27)*
+*Defined in [types.ts:27](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L27)*

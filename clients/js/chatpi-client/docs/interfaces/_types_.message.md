@@ -19,7 +19,7 @@
 
 • **isTyping**: *boolean*
 
-*Defined in [types.ts:12](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L12)*
+*Defined in [types.ts:12](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L12)*
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 • **text**: *string*
 
-*Defined in [types.ts:34](https://github.com/ArcQ/chatpi/blob/acd00b8/clients/js/chatpi-client/src/types.ts#L34)*
+*Defined in [types.ts:34](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L34)*
