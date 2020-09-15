@@ -28,6 +28,7 @@ export interface ConnectionConfig {
   authorizationToken: string;
   onPresenceChange: onPresenceChangeCb;
   onMessageReceive: onMessageReceive;
+  typingTimeout: number;
 }
 
 export interface Message {

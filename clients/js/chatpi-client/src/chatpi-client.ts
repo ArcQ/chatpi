@@ -27,9 +27,11 @@ export class Connection {
   private presences: Record<ChannelId, ChatpiPresence>;
   private onPresenceChange: onPresenceChangeCb;
   private onMessageReceive: onMessageReceive;
+  private typingTimeout = 10000;
+  private timeouts = {};
 
   /**
-   * @remarks creates a connection with channelIds
+   * @remarks creates a connection with channelIds, default typing timoute is 10 seconds
    * @example <caption>Connect via apiKey</caption>
    * const connection = new Connection({
     url,
@@ -37,7 +39,9 @@ export class Connection {
     channelIds,
     userToken,
     authorizationToken,
-    onPresenceChange });
+    onPresenceChange 
+    typingTimeout  
+    });
   */
   constructor(config: ConnectionConfig) {
     console.info('--- Connecting to chatpi ---');
@@ -125,6 +129,23 @@ export class Connection {
   leaveChannel(channelId: ChannelId): void {
     this.channels[channelId].leave();
     delete this.channels[channelId];
+  }
+
+  startTyping(channelId: ChannelId): void {
+    if (this.timeouts[channelId]) {
+      clearTimeout(this.timeouts[channelId]);
+
+      this.channels[channelId].push('user:typing', { isTyping: true });
+
+      this.timeouts[channelId] = setTimeout(
+        () => this.stopTyping(channelId),
+        this.typingTimeout,
+      );
+    }
+  }
+
+  stopTyping(channelId: ChannelId): void {
+    this.channels[channelId].push('user:typing', { isTyping: false });
   }
 
   getPresenceById(channelId: ChannelId): ChatpiPresence {
