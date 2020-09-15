@@ -26,13 +26,18 @@ defmodule ChatpiWeb.Api.V1.MessageController do
   end
 
   @doc false
-  def index(conn, %{"chat_id" => chat_id}) do
-    auth_key = Guardian.Plug.current_resource(conn, []).auth_key
-
-    if Chats.is_member(auth_key, chat_id) do
-      render(conn, "index.json", messages: Messages.list_messages_by_chat_id(chat_id))
+  def create_system_message(conn, %{
+    "chat_id" => chat_id,
+    "auth_key" => auth_key,
+    "event" => event,
+    "message" => msg,
+  }) do
+    admin = Guardian.Plug.current_resource(conn, [])
+    # TODO need to add admin functionality when ready
+    if is_admin(chat_id, admin.auth_key) do
+      ChatpiWeb.Endpoint.broadcast_from(admin.id, chat_id, event, msg)
     else
-      render(conn, "index.json", messages: [])
+      %{error: "unauthorized"}
     end
   end
 
@@ -55,6 +60,10 @@ defmodule ChatpiWeb.Api.V1.MessageController do
       |> put_flash(:error, "You have to sign in before!")
       |> redirect(to: Routes.session_path(conn, :new))
     end
+  end
+
+  defp is_admin(_chat_id, _auth_key) do
+    true
   end
 
   defp handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do
