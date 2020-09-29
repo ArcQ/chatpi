@@ -2,6 +2,7 @@
 cd ./chatpi
 eval $(cat .env.dev)
 
+mix ecto.reset
 mix ecto.setup
 
 cd -
