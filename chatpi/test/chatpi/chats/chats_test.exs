@@ -1,32 +1,23 @@
 defmodule Chatpi.ChatsTest do
   use Chatpi.DataCase
 
+  alias Ecto.Changeset
   alias Chatpi.Chats
 
   describe "chats" do
+    use Chatpi.Fixtures, [:user, :chat]
+    import Chatpi.FixtureConstants
+
     alias Chatpi.Chats.Chat
 
-    @valid_attrs %{id: "some id", name: "some name"}
-    @update_attrs %{id: "some updated id", name: "some updated name"}
-    @invalid_attrs %{id: nil, name: nil}
-
-    def chat_fixture(attrs \\ %{}) do
-      {:ok, chat} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Chats.create_chat()
-
-      chat
+    test "list_chats_for_user/1 returns all chats" do
+      chat = chat_fixture()
+      assert Chats.list_chats_for_user(:auth_key_c) == [chat]
     end
 
-    test "list_chats/0 returns all chats" do
+    test "get_chat/1 returns the chat with given id" do
       chat = chat_fixture()
-      assert Chats.list_chats() == [chat]
-    end
-
-    test "get_chat!/1 returns the chat with given id" do
-      chat = chat_fixture()
-      assert Chats.get_chat!(chat.id) == chat
+      assert Chats.get_chat(chat.id) == chat
     end
 
     test "create_chat/1 with valid data creates a chat" do
@@ -45,14 +36,6 @@ defmodule Chatpi.ChatsTest do
       assert {:ok, %Chat{} = chat} = Chats.update_chat(chat, @update_attrs)
 
       assert chat.id == "some updated id"
-    end
-
-    test "update_chat/2 with invalid data returns error changeset" do
-      chat = chat_fixture()
-
-      assert {:error, %Ecto.Changeset{}} = Chats.update_chat(chat, @invalid_attrs)
-
-      assert chat == Chats.get_chat!(chat.id)
     end
 
     test "delete_chat/1 deletes the chat" do

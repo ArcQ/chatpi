@@ -22,26 +22,6 @@ defmodule ChatpiWeb.Api.V1.UserController do
     end
   end
 
-  @doc false
-  def show(conn, %{"id" => id}) do
-    user = Users.get_user!(id)
-    render(conn, "index.json", user: user)
-  end
-
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Users.get_user!(id)
-
-    case Users.update_user(user, user_params) do
-      {:ok, user} ->
-        conn
-        |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "index.json", user: user, changeset: changeset)
-    end
-  end
-
   def delete(conn, %{"id" => id}) do
     user = Users.get_user!(id)
     {:ok, _user} = Users.set_user_inactive(user)

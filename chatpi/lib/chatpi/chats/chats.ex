@@ -21,8 +21,8 @@ defmodule Chatpi.Chats do
     Repo.all(
       from(c in Chat,
         distinct: true,
-        inner_join: u1 in assoc(c, :users),
-        where: u1.auth_key == ^auth_key
+        inner_join: m1 in assoc(c, :members),
+        where: m1.user_auth_key == ^auth_key
       )
     )
   end
@@ -56,10 +56,10 @@ defmodule Chatpi.Chats do
     Repo.all(
       from(c in Chat,
         distinct: true,
-        left_join: u1 in assoc(c, :users),
-        inner_join: u2 in assoc(c, :users),
-        on: u2.auth_key == ^cauth_key,
-        where: u1.auth_key == ^auth_key
+        inner_join: m1 in assoc(c, :members),
+        inner_join: m2 in assoc(c, :members),
+        on: m2.user_auth_key == ^cauth_key,
+        where: m1.user_auth_key == ^auth_key
       )
     )
   end

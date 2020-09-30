@@ -7,12 +7,6 @@ defmodule Chatpi.Chats.Chat do
   schema "chat" do
     field(:name, :string)
 
-    many_to_many(:users, Chatpi.Users.User,
-      join_through: "chat_member",
-      join_keys: [chat_id: :id, user_id: :auth_key]
-    )
-
-    has_many(:messages, Chatpi.Messages.Message)
     has_many(:members, Chatpi.Chats.Member)
 
     timestamps()
@@ -23,6 +17,6 @@ defmodule Chatpi.Chats.Chat do
     chat
     |> cast(attrs, [:name])
     |> validate_required([:name])
-    |> put_assoc(:users, attrs.users)
+    |> put_assoc(:members, attrs.members)
   end
 end

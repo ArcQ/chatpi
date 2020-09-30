@@ -9,7 +9,7 @@ defmodule Chatpi.Repo.Migrations.CreateChatMember do
       )
 
       add(
-        :user_id,
+        :user_auth_id,
         references(:chatpi_user,
           column: :auth_key,
           type: :string,
@@ -20,6 +20,6 @@ defmodule Chatpi.Repo.Migrations.CreateChatMember do
     end
 
     create(index(:chat_member, [:chat_id]))
-    create(index(:chat_member, [:user_id]))
+    create(index(:chat_member, [:user_auth_id]))
   end
 end

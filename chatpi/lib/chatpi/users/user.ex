@@ -21,7 +21,7 @@ defmodule Chatpi.Users.User do
     username
     auth_key
     is_inactive
-  )
+  )a
 
   @required_params ~w(
     auth_key

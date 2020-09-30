@@ -42,14 +42,14 @@ end
     messages: []
   })
 
-chat_1 =
+{:ok, chat_1} =
   Repo.insert(%Chat{
     id: "cf4aeae1-cda7-41f3-adf7-9b2bb377be7d",
     name: "chat_1",
     users: [arcq, sita]
   })
 
-Repo.insert(%Chat{
+{:ok, chat_1} = Repo.insert(%Chat{
   id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
   name: "chat_2",
   users: [arcq, sita, donkers]
