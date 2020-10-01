@@ -76,8 +76,8 @@ defmodule Chatpi.Users do
   def get_user_by_token!(token) do
     case Chatpi.Auth.Token.verify_and_validate(token) do
       {:ok, claims} ->
-        user_id = claims["sub"]
-        get_user_by_auth_key!(user_id)
+        auth_key = claims["sub"]
+        get_user_by_auth_key!(auth_key)
 
       {:error, _} ->
         raise Ecto.NoResultsError

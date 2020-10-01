@@ -1,3 +1,15 @@
+defmodule Unpreloader do
+  def forget(struct, field, cardinality \\ :one) do
+    %{struct |
+      field => %Ecto.Association.NotLoaded{
+        __field__: field,
+        __owner__: struct.__struct__,
+        __cardinality__: cardinality
+      }
+    }
+  end
+end
+
 defmodule Chatpi.ChatsTest do
   use Chatpi.DataCase
 
@@ -9,10 +21,11 @@ defmodule Chatpi.ChatsTest do
     import Chatpi.FixtureConstants
 
     alias Chatpi.Chats.Chat
+    alias Chatpi.Chats.Member
 
-    test "list_chats_for_user/1 returns all chats" do
+    test "list_chats_for_user/1 returns all chats for user" do
       chat = chat_fixture()
-      assert Chats.list_chats_for_user(:auth_key_c) == [chat]
+      assert Chats.list_chats_for_user(auth_key_c()) |> List.first |> Map.get(:id) == chat.id
     end
 
     test "get_chat/1 returns the chat with given id" do

@@ -10,7 +10,7 @@ defmodule Chatpi.Fixtures do
     alias Chatpi.Users
 
     quote do
-      @valid_attrs %{auth_key: auth_key_c, username: "some name"}
+      @valid_attrs %{auth_key: auth_key_c(), username: "some name"}
 
       @update_attrs %{
         username: "some updated name"
@@ -31,10 +31,12 @@ defmodule Chatpi.Fixtures do
 
   def chat do
     alias Chatpi.Chats
+    alias Chatpi.Chats.Member
+
     apply(__MODULE__, :user, [])
 
     quote do
-      @valid_attrs %{id: "some id", name: "some name", members: []}
+      @valid_attrs %{id: "somechatid", name: "fixture chat 1", members: []}
 
       @update_attrs %{name: "some updated name"}
 
@@ -42,11 +44,17 @@ defmodule Chatpi.Fixtures do
 
       def chat_fixture(attrs \\ %{}) do
         user = user_fixture()
+
         {:ok, chat} =
           attrs
-          |> Map.update(:members, [user], &(&1 ++ [user]))
           |> Enum.into(@valid_attrs)
           |> Chats.create_chat()
+
+        member = %Member{user: user, chat: chat}
+
+        {:ok, chat} =
+          chat
+          |> Chats.update_chat(%{members: Enum.concat(chat.members, [member])})
 
         chat
       end

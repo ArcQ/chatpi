@@ -45,7 +45,7 @@ defmodule ChatpiWeb.Api.V1.MessageController do
     if conn.assigns[:user_signed_in?] do
       from(m in Message,
         join: c in assoc(m, :chat),
-        where: c.id == ^id and is_nil(m.seen_at) and m.user_id != ^conn.assigns[:current_user].id
+        where: c.id == ^id and is_nil(m.seen_at) and m.user_auth_key != ^conn.assigns[:current_user].id
       )
       |> Repo.update_all(
         set: [

@@ -7,7 +7,7 @@ defmodule Chatpi.Repo.Migrations.CreateMessage do
       add(:text, :text)
 
       add(
-        :user_id,
+        :user_auth_key,
         references(:chatpi_user,
           column: :auth_key,
           type: :string,
@@ -28,7 +28,7 @@ defmodule Chatpi.Repo.Migrations.CreateMessage do
       timestamps()
     end
 
-    create(index(:message, [:user_id]))
+    create(index(:message, [:user_auth_key]))
     create(index(:message, [:chat_id]))
     create(index(:message, [:seen_by_id]))
   end

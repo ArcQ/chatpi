@@ -10,7 +10,7 @@ defmodule Chatpi.Messages.Message do
     field(:seen_at, :naive_datetime)
 
     belongs_to(:chat, Chatpi.Chats.Chat, type: Ecto.UUID)
-    belongs_to(:user, Chatpi.Users.User, type: :string, references: :auth_key)
+    belongs_to(:user, Chatpi.Users.User, type: :string, references: :auth_key, foreign_key: :user_auth_key)
     has_one(:file, Chatpi.Uploads.File)
 
     timestamps()
@@ -19,8 +19,8 @@ defmodule Chatpi.Messages.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:text, :user_id, :chat_id, :seen_by_id, :seen_at])
-    |> validate_required([:text, :user_id, :chat_id])
+    |> cast(attrs, [:text, :user_auth_key, :chat_id, :seen_by_id, :seen_at])
+    |> validate_required([:text, :user_auth_key, :chat_id])
     |> cast_assoc(:user)
     |> cast_assoc(:chat)
     |> cast_assoc(:file)
