@@ -1,3 +1,11 @@
+defmodule Cursor do
+  @moduledoc """
+  cusor for querying messages
+  """
+  defstruct query_type: "after", inserted_at: "2020-09-12T05:29:57"
+  # field :bar, type: Bar
+end
+
 defmodule Chatpi.Messages do
   @moduledoc """
   The Messages context.
@@ -33,7 +41,10 @@ defmodule Chatpi.Messages do
   [%Message{}, ...]
 
   """
-  def list_messages_by_chat_id_query(chat_id, query_type, inserted_at) do
+  def list_messages_by_chat_id_query(
+        chat_id,
+        %Cursor{query_type: query_type, inserted_at: inserted_at}
+      ) do
     query =
       Message
       |> join(:inner, [message], chat in Chat, on: chat.id == ^chat_id)
@@ -42,7 +53,7 @@ defmodule Chatpi.Messages do
 
     if query_type == "after" do
       query
-      |> where([message], message.inserted_at > ^inserted_at)
+      |> where([message], message.inserted_at > ^inserted_at and message.chat_id == ^chat_id)
       |> limit(20)
       |> Repo.all()
     else

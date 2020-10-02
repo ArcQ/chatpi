@@ -18,7 +18,11 @@ defmodule ChatpiWeb.Api.V1.MessageController do
 
     if Chats.is_member(auth_key, chat_id) do
       render(conn, "index.json",
-        messages: Messages.list_messages_by_chat_id_query(chat_id, query_type, inserted_at)
+        messages:
+          Messages.list_messages_by_chat_id_query(chat_id, %Cursor{
+            query_type: query_type,
+            inserted_at: inserted_at
+          })
       )
     else
       render(conn, "index.json", messages: [])
@@ -27,11 +31,11 @@ defmodule ChatpiWeb.Api.V1.MessageController do
 
   @doc false
   def create_system_message(conn, %{
-    "chat_id" => chat_id,
-    "auth_key" => auth_key,
-    "event" => event,
-    "message" => msg,
-  }) do
+        "chat_id" => chat_id,
+        "auth_key" => auth_key,
+        "event" => event,
+        "message" => msg
+      }) do
     admin = Guardian.Plug.current_resource(conn, [])
     # TODO need to add admin functionality when ready
     if is_admin(chat_id, admin.auth_key) do
@@ -45,7 +49,8 @@ defmodule ChatpiWeb.Api.V1.MessageController do
     if conn.assigns[:user_signed_in?] do
       from(m in Message,
         join: c in assoc(m, :chat),
-        where: c.id == ^id and is_nil(m.seen_at) and m.user_auth_key != ^conn.assigns[:current_user].id
+        where:
+          c.id == ^id and is_nil(m.seen_at) and m.user_auth_key != ^conn.assigns[:current_user].id
       )
       |> Repo.update_all(
         set: [

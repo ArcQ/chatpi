@@ -10,7 +10,7 @@ defmodule Chatpi.MessagesTest do
 
     use Chatpi.Fixtures, [:user, :chat, :message]
 
-    test "list_messages/0 returns all messages" do
+    test "list_messages_by_chat_id/0 returns all messages" do
       {:ok, user, chat, message} = message_fixture()
 
       message =
@@ -18,6 +18,18 @@ defmodule Chatpi.MessagesTest do
         |> Map.put(:file, nil)
 
       assert Messages.list_messages_by_chat_id(chat.id) == [message]
+    end
+
+    test "list_messages_by_chat_id_query/0 returns all messages" do
+      {:ok, user, chat, message} = message_fixture()
+
+      message =
+        message
+        |> Map.put(:file, nil)
+
+      assert Messages.list_messages_by_chat_id_query(chat.id, %Cursor{query_type: "after"}) == [
+               message
+             ]
     end
 
     test "create_message/1 with valid data creates a message" do
@@ -29,9 +41,9 @@ defmodule Chatpi.MessagesTest do
 
       assert {:ok, %Message{} = message} =
                Messages.create_message(%{
-                 @valid_attrs
-                 | user_auth_key: user.auth_key,
-                   chat_id: chat.id
+                 text: "text",
+                 user_auth_key: user.auth_key,
+                 chat_id: chat.id
                })
     end
 
