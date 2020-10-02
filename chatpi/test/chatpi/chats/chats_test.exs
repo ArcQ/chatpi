@@ -12,21 +12,20 @@ defmodule Chatpi.ChatsTest do
     alias Chatpi.Chats.Member
 
     test "list_chats_for_user/1 returns all chats for user" do
-      chat = chat_fixture()
-      result = Chats.list_chats_for_user(auth_key_c()) |> List.first
+      {:ok, user, chat} = chat_fixture()
+      result = Chats.list_chats_for_user(auth_key_c()) |> List.first()
       assert result |> Map.get(:id) == chat.id
       assert result |> Map.get(:name) == chat.name
-      assert result |> Map.get(:members) |> List.first |> Map.get(:id) ==
-        chat |> Map.get(:members) |> List.first |> Map.get(:id)
+      assert result |> Map.get(:members) |> List.first() |> Map.get(:user) == user
     end
 
     test "get_chat/1 returns the chat with given id" do
-      chat = chat_fixture()
+      {:ok, user, chat} = chat_fixture()
       result = Chats.get_chat(chat.id)
       assert result |> Map.get(:id) == chat.id
       assert result |> Map.get(:name) == chat.name
-      assert result |> Map.get(:members) |> List.first |> Map.get(:id) ==
-        chat |> Map.get(:members) |> List.first |> Map.get(:id)
+
+      assert result |> Map.get(:members) |> List.first() |> Map.get(:user) == user
     end
 
     test "create_chat/1 with valid data creates a chat" do
@@ -40,7 +39,7 @@ defmodule Chatpi.ChatsTest do
     end
 
     test "update_chat/2 with valid data updates the chat" do
-      chat = chat_fixture()
+      {:ok, user, chat} = chat_fixture()
 
       assert {:ok, %Chat{} = chat} = Chats.update_chat(chat, @update_attrs)
 
@@ -48,13 +47,13 @@ defmodule Chatpi.ChatsTest do
     end
 
     test "delete_chat/1 deletes the chat" do
-      chat = chat_fixture()
+      {:ok, user, chat} = chat_fixture()
       assert {:ok, %Chat{}} = Chats.delete_chat(chat)
       assert Enum.empty?(Chats.list_chats_for_user(chat.id))
     end
 
     test "change_chat/1 returns a chat changeset" do
-      chat = chat_fixture()
+      {:ok, user, chat} = chat_fixture()
       assert %Ecto.Changeset{} = Chats.change_chat(chat)
     end
   end

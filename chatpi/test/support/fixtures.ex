@@ -33,8 +33,6 @@ defmodule Chatpi.Fixtures do
     alias Chatpi.Chats
     alias Chatpi.Chats.Member
 
-    apply(__MODULE__, :user, [])
-
     quote do
       @valid_attrs %{id: "somechatid", name: "fixture chat 1", members: []}
 
@@ -52,14 +50,37 @@ defmodule Chatpi.Fixtures do
 
         member = %Member{user: user, chat: chat}
 
-        # companies = chat.members ++ [member]
-        #             |> Enum.map(&Ecto.Changeset.change/1)
-
         {:ok, chat} =
           chat
           |> Chats.update_chat(%{members: Enum.concat(chat.members, [member])})
 
-        chat
+        {:ok, user, chat}
+      end
+    end
+  end
+
+  def message do
+    alias Chatpi.Messages
+
+    quote do
+      @valid_attrs %{text: "text", user_auth_key: nil, chat_id: nil}
+
+      @update_attrs %{text: "updated text"}
+
+      @invalid_attrs %{text: nil}
+
+      def message_fixture(attrs \\ %{}) do
+        {:ok, user, chat} = chat_fixture()
+
+        new_message = Map.merge(%{user_auth_key: user.auth_key, chat_id: chat.id}, attrs)
+        IO.puts(chat.id)
+
+        {:ok, message} =
+          new_message
+          |> Enum.into(@valid_attrs)
+          |> Messages.create_message()
+
+        {:ok, user, chat, message}
       end
     end
   end
@@ -68,7 +89,6 @@ defmodule Chatpi.Fixtures do
   Apply the `fixtures`.
   """
   defmacro __using__(fixtures) when is_list(fixtures) do
-    for fixture <- fixtures, is_atom(fixture),
-      do: apply(__MODULE__, fixture, [])
+    for fixture <- fixtures, is_atom(fixture), do: apply(__MODULE__, fixture, [])
   end
 end

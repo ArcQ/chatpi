@@ -72,24 +72,6 @@ defmodule Chatpi.Messages do
   end
 
   @doc """
-  Updates a message.
-
-  ## Examples
-
-  iex> update_message(message, %{field: new_value})
-  {:ok, %Message{}}
-
-  iex> update_message(message, %{field: bad_value})
-  {:error, %Ecto.Changeset{}}
-
-  """
-  def update_message(%Message{} = message, attrs) do
-    message
-    |> Message.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a Message.
 
   ## Examples
