@@ -1,15 +1,3 @@
-defmodule Unpreloader do
-  def forget(struct, field, cardinality \\ :one) do
-    %{struct |
-      field => %Ecto.Association.NotLoaded{
-        __field__: field,
-        __owner__: struct.__struct__,
-        __cardinality__: cardinality
-      }
-    }
-  end
-end
-
 defmodule Chatpi.ChatsTest do
   use Chatpi.DataCase
 
@@ -25,18 +13,26 @@ defmodule Chatpi.ChatsTest do
 
     test "list_chats_for_user/1 returns all chats for user" do
       chat = chat_fixture()
-      assert Chats.list_chats_for_user(auth_key_c()) |> List.first |> Map.get(:id) == chat.id
+      result = Chats.list_chats_for_user(auth_key_c()) |> List.first
+      assert result |> Map.get(:id) == chat.id
+      assert result |> Map.get(:name) == chat.name
+      assert result |> Map.get(:members) |> List.first |> Map.get(:id) ==
+        chat |> Map.get(:members) |> List.first |> Map.get(:id)
     end
 
     test "get_chat/1 returns the chat with given id" do
       chat = chat_fixture()
-      assert Chats.get_chat(chat.id) == chat
+      result = Chats.get_chat(chat.id)
+      assert result |> Map.get(:id) == chat.id
+      assert result |> Map.get(:name) == chat.name
+      assert result |> Map.get(:members) |> List.first |> Map.get(:id) ==
+        chat |> Map.get(:members) |> List.first |> Map.get(:id)
     end
 
     test "create_chat/1 with valid data creates a chat" do
       assert {:ok, %Chat{} = chat} = Chats.create_chat(@valid_attrs)
 
-      assert chat.id == "some id"
+      assert chat.name == "fixture chat 1"
     end
 
     test "create_chat/1 with invalid data returns error changeset" do
@@ -48,13 +44,13 @@ defmodule Chatpi.ChatsTest do
 
       assert {:ok, %Chat{} = chat} = Chats.update_chat(chat, @update_attrs)
 
-      assert chat.id == "some updated id"
+      assert chat.name == "some updated name"
     end
 
     test "delete_chat/1 deletes the chat" do
       chat = chat_fixture()
       assert {:ok, %Chat{}} = Chats.delete_chat(chat)
-      assert_raise Ecto.NoResultsError, fn -> Chats.get_chat!(chat.id) end
+      assert Enum.empty?(Chats.list_chats_for_user(chat.id))
     end
 
     test "change_chat/1 returns a chat changeset" do

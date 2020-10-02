@@ -40,7 +40,7 @@ defmodule Chatpi.Fixtures do
 
       @update_attrs %{name: "some updated name"}
 
-      @invalid_attrs %{id: nil, name: nil}
+      @invalid_attrs %{id: nil, name: nil, members: []}
 
       def chat_fixture(attrs \\ %{}) do
         user = user_fixture()
@@ -51,6 +51,9 @@ defmodule Chatpi.Fixtures do
           |> Chats.create_chat()
 
         member = %Member{user: user, chat: chat}
+
+        # companies = chat.members ++ [member]
+        #             |> Enum.map(&Ecto.Changeset.change/1)
 
         {:ok, chat} =
           chat

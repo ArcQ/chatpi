@@ -1,8 +1,10 @@
-defmodule ChatpiWeb.UserControllerTest do
+defmodule ChatpiWeb.ChatControllerTest do
   @moduledoc false
   use ChatpiWeb.ConnCase
 
   alias Chatpi.Chats
+
+  use Chatpi.Fixtures, [:user, :chat]
 
   describe "index" do
     test "lists all users", %{conn: conn} do
@@ -29,9 +31,8 @@ defmodule ChatpiWeb.UserControllerTest do
   end
 
   describe "delete user" do
-    setup [:create_user]
-
     test "deletes chosen user", %{conn: conn, user: user} do
+      user = user_fixture()
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.user_path(conn, :index)
 
@@ -39,10 +40,5 @@ defmodule ChatpiWeb.UserControllerTest do
         get(conn, Routes.user_path(conn, :show, user))
       end)
     end
-  end
-
-  defp create_user(_) do
-    user = fixture(:user)
-    {:ok, user: user}
   end
 end

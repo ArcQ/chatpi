@@ -95,7 +95,7 @@ defmodule Chatpi.Chats do
   """
   def update_chat(%Chat{} = chat, attrs) do
     chat
-    |> Chat.changeset(attrs)
+    |> Chat.update_changeset(attrs)
     |> Repo.update()
   end
 
