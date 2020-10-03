@@ -55,5 +55,6 @@ defmodule Chatpi.Users.User do
   def make_inactive_changset(user, params \\ %{}) do
     user
     |> cast(params, @make_inactive_params)
+    |> validate_required([:id])
   end
 end

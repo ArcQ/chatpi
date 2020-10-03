@@ -33,7 +33,7 @@ defmodule Chatpi.Users do
       [%User{}, ...]
 
   """
-  def list_users_by_ids(user_auth_keys) do
+  def list_users_by_ids(user_auth_keys \\ []) do
     Repo.all(
       from(
         u in User,
@@ -155,9 +155,9 @@ defmodule Chatpi.Users do
       {:error}
 
   """
-  def set_user_inactive(%User{} = user) do
-    user
-    |> User.make_inactive_changset(%{inactive: true})
+  def set_user_inactive(user_id) do
+    %User{id: user_id}
+    |> User.make_inactive_changset(%{is_inactive: true})
     |> Repo.update()
   end
 

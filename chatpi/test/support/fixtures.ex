@@ -10,7 +10,7 @@ defmodule Chatpi.Fixtures do
     alias Chatpi.Users
 
     quote do
-      @valid_attrs %{auth_key: auth_key_c(), username: "some name"}
+      @valid_attrs %{auth_key: auth_key_c(), username: "some name", is_inactive: false}
 
       @update_attrs %{
         username: "some updated name"
@@ -23,8 +23,6 @@ defmodule Chatpi.Fixtures do
           attrs
           |> Enum.into(@valid_attrs)
           |> Users.create_user()
-
-        user
       end
     end
   end
@@ -41,7 +39,7 @@ defmodule Chatpi.Fixtures do
       @invalid_attrs %{id: nil, name: nil, members: []}
 
       def chat_fixture(attrs \\ %{}) do
-        user = user_fixture()
+        {:ok, user} = user_fixture()
 
         {:ok, chat} =
           attrs

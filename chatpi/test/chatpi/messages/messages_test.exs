@@ -10,7 +10,7 @@ defmodule Chatpi.MessagesTest do
 
     use Chatpi.Fixtures, [:user, :chat, :message]
 
-    test "list_messages_by_chat_id/0 returns all messages" do
+    test "list_messages_by_chat_id/1 returns all messages" do
       {:ok, user, chat, message} = message_fixture()
 
       message =
@@ -20,7 +20,7 @@ defmodule Chatpi.MessagesTest do
       assert Messages.list_messages_by_chat_id(chat.id) == [message]
     end
 
-    test "list_messages_by_chat_id_query/0 returns all messages" do
+    test "list_messages_by_chat_id_query/2 returns all messages" do
       {:ok, user, chat, message} = message_fixture()
 
       message =
