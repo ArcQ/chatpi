@@ -65,3 +65,23 @@ config :chatpi, Chatpi.Repo,
 
 config :arc,
   storage: Arc.Storage.Local
+
+config :kaffe,
+  consumer: [
+    endpoints: [{"pkc-4nym6.us-east-1.aws.confluent.cloud", 9092}],
+    topics: ["touchbase-app"],
+    consumer_group: "chatpi-consumer",
+    message_handler: Chatpi.MessageProcessor,
+    offset_reset_policy: :reset_to_latest,
+    max_bytes: 500_000,
+    worker_allocation_strategy: :worker_per_topic_partition,
+    ssl: true,
+
+    # optional
+    sasl: %{
+      mechanism: :plain,
+      login: System.get_env("KAFKA_USER"),
+      password:
+        System.get_env("KAFKA_PASSWORD")
+    }
+  ]

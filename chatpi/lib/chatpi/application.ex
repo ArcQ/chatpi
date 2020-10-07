@@ -17,7 +17,12 @@ defmodule Chatpi.Application do
       # {Chatpi.Worker, arg},
 
       ChatpiWeb.Presence,
-      {Chatpi.Auth.FetchStrategy, time_interval: 20_000}
+      {Chatpi.Auth.FetchStrategy, time_interval: 20_000},
+      %{
+        id: Kaffe.GroupMemberSupervisor,
+        start: {Kaffe.GroupMemberSupervisor, :start_link, []},
+        type: :supervisor
+      }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

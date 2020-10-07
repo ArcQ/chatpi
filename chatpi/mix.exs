@@ -79,7 +79,8 @@ defmodule Chatpi.MixProject do
       {:sweet_xml, "~> 0.6.5"},
       {:timex, "~> 3.6.2"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
+      {:kaffe, "~> 1.0"}
     ]
   end
 
