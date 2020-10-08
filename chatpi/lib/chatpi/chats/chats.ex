@@ -49,6 +49,18 @@ defmodule Chatpi.Chats do
     |> Repo.update()
   end
 
+  def add_chat_members(attrs \\ %{}) do
+    %Chat{}
+    |> Chat.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def remove_chat_members(attrs \\ %{}) do
+    %Chat{}
+    |> Chat.changeset(attrs)
+    |> Repo.insert()
+  end
+
   def delete_chat(%Chat{} = chat) do
     Repo.delete(chat)
   end

@@ -45,19 +45,20 @@ end
 {:ok, chat_1} =
   Repo.insert(%Chat{
     id: "cf4aeae1-cda7-41f3-adf7-9b2bb377be7d",
-    name: "chat_1",
+    name: "chat_1"
     # users: [arcq, sita]
   })
 
-{:ok, chat_2} = Repo.insert(%Chat{
-  id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
-  name: "chat_2",
-  # users: [arcq, sita, donkers]
-})
+{:ok, chat_2} =
+  Repo.insert(%Chat{
+    id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
+    name: "chat_2"
+    # users: [arcq, sita, donkers]
+  })
 
 Repo.insert(%Chat{
   id: "7a6ad1d6-551c-453a-9a66-879c2587ca0d",
-  name: "chat_3",
+  name: "chat_3"
   # users: [arcq, donkers]
 })
 
@@ -65,24 +66,24 @@ Repo.insert(%Chat{
   Repo.insert(%Member{
     id: "41cb74b9-db13-4931-835f-0234152bcd94",
     chat: chat_1,
-    user: arcq,
+    user: arcq
   })
 
 {:ok, member_2} =
   Repo.insert(%Member{
     id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
     chat: chat_1,
-    user: sita,
+    user: sita
   })
 
 Repo.insert(%Member{
   id: "1277f9f1-6ef9-4379-8e06-c5bf12075e62",
   chat: chat_1,
-  user: donkers,
+  user: donkers
 })
 
 Repo.insert(%Message{
   id: "bd4333f7-7017-4b2c-ac33-d11a3abc579d",
   text: "hi this is a test mesage",
-  user: arcq,
+  user: arcq
 })

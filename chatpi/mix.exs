@@ -98,11 +98,15 @@ defmodule Chatpi.MixProject do
       check: [
         "format --check-formatted",
         "credo --strict",
+        "sobelow --verbose"
+      ],
+      check_ci: [
+        # "check",
         "ecto.create --quiet",
         "ecto.migrate",
-        "test"
-      ],
-      check: "sobelow --verbose"
+        "run priv/repo/seeds.exs",
+        "test test/chatpi"
+      ]
     ]
   end
 end

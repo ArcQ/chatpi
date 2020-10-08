@@ -4,6 +4,7 @@ defmodule Chatpi.Repo.Migrations.CreateChatMember do
   def change do
     create table(:chat_member, primary_key: false) do
       add(:id, :uuid, primary_key: true)
+
       add(
         :chat_id,
         references(:chat, type: :uuid, on_delete: :delete_all, on_update: :update_all)

@@ -69,7 +69,7 @@ config :arc,
 config :kaffe,
   consumer: [
     endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
-    topics: ["touchbase-app"],
+    topics: ["chatpi"],
     consumer_group: "chatpi-consumer",
     message_handler: Chatpi.MessageProcessor,
     offset_reset_policy: :reset_to_latest,

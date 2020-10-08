@@ -1,4 +1,4 @@
-defmodule Chatpi.MessagesTest do
+defmodule Chatpi.UsersTest do
   use Chatpi.DataCase
 
   alias Chatpi.Users

@@ -13,7 +13,7 @@ defmodule Chatpi.ChatsTest do
 
     test "list_chats_for_user/1 returns all chats for user" do
       {:ok, user, chat} = chat_fixture()
-      result = Chats.list_chats_for_user(auth_key_c()) |> List.first()
+      result = auth_key_c() |> Chats.list_chats_for_user() |> List.first()
       assert result |> Map.get(:id) == chat.id
       assert result |> Map.get(:name) == chat.name
       assert result |> Map.get(:members) |> List.first() |> Map.get(:user) == user
