@@ -68,7 +68,7 @@ config :arc,
 
 config :kaffe,
   consumer: [
-    endpoints: [{"pkc-4nym6.us-east-1.aws.confluent.cloud", 9092}],
+    endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
     topics: ["touchbase-app"],
     consumer_group: "chatpi-consumer",
     message_handler: Chatpi.MessageProcessor,
@@ -81,7 +81,6 @@ config :kaffe,
     sasl: %{
       mechanism: :plain,
       login: System.get_env("KAFKA_USER"),
-      password:
-        System.get_env("KAFKA_PASSWORD")
+      password: System.get_env("KAFKA_PASSWORD")
     }
   ]

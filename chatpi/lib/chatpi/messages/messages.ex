@@ -14,15 +14,6 @@ defmodule Chatpi.Messages do
   import Ecto.Query, warn: false
   alias Chatpi.{Repo, Messages.Message, Chats.Chat}
 
-  @doc """
-  Returns the list of messages for a chat paginated with cursor
-
-  ## Examples
-
-  iex> list_messages_by_chat_id(chat_id, cursor)
-  [%Message{}, ...]
-
-  """
   def list_messages_by_chat_id(chat_id) do
     Message
     |> where([message], message.chat_id == ^chat_id)
@@ -32,15 +23,6 @@ defmodule Chatpi.Messages do
     |> Repo.all()
   end
 
-  @doc """
-  Returns the list of messages for a chat paginated with cursor
-
-  ## Examples
-
-  iex> list_messages_by_chat_id(chat_id, cursor)
-  [%Message{}, ...]
-
-  """
   def list_messages_by_chat_id_query(
         chat_id,
         %Cursor{query_type: query_type, inserted_at: inserted_at}
@@ -64,49 +46,16 @@ defmodule Chatpi.Messages do
     end
   end
 
-  @doc """
-  Creates a message.
-
-  ## Examples
-
-  iex> create_message(%{field: value})
-  {:ok, %Message{}}
-
-  iex> create_message(%{field: bad_value})
-  {:error, %Ecto.Changeset{}}
-
-  """
   def create_message(attrs \\ %{}) do
     %Message{}
     |> Message.changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Deletes a Message.
-
-  ## Examples
-
-  iex> delete_message(message)
-  {:ok, %Message{}}
-
-  iex> delete_message(message)
-  {:error, %Ecto.Changeset{}}
-
-  """
   def delete_message(%Message{} = message) do
     Repo.delete(message)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking message changes.
-
-  ## Examples
-
-  iex> change_message(message)
-  %Ecto.Changeset{source: %Message{}}
-
-  """
   def change_message(%Message{} = message) do
     Message.changeset(message, %{})
   end

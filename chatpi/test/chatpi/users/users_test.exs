@@ -23,9 +23,30 @@ defmodule Chatpi.MessagesTest do
     test "create_user/1 with valid data creates user" do
       assert {:ok, user} =
                Users.create_user(%{
-                 auth_key: auth_key_c,
+                 auth_key: auth_key_c(),
                  username: "new_username"
                })
+    end
+
+    test "create_or_update_user/2 creates or updates user" do
+      assert {:ok, user} =
+               Users.create_or_update_user(%{
+                 auth_key: auth_key_c(),
+                 username: "new_username"
+               })
+
+      id = user.id
+      assert user.username == "new_username"
+
+      assert {:ok, updated_user} =
+               Users.create_or_update_user(%{
+                 username: "blah",
+                 is_inactive: false,
+                 auth_key: auth_key_c()
+               })
+
+      assert updated_user.username == "blah"
+      assert updated_user.id == id
     end
 
     test "update_user/2 updates user" do

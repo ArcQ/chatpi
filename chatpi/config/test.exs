@@ -12,8 +12,8 @@ config :logger, level: :warn
 config :chatpi, Chatpi.Repo,
   hostname: "localhost",
   database: "chatpi_test",
-  username: System.get_env("DB_USER") || "postgres",
-  password: System.get_env("DB_PASS") || "pw123",
+  username: System.get_env("TEST_DB_USER") || "postgres",
+  password: System.get_env("TEST_DB_PASS") || "pw123",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :arc,

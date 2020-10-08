@@ -16,19 +16,32 @@ defmodule Chatpi.Application do
       # Starts a worker by calling: Chatpi.Worker.start_link(arg)
       # {Chatpi.Worker, arg},
 
-      ChatpiWeb.Presence,
-      {Chatpi.Auth.FetchStrategy, time_interval: 20_000},
-      %{
-        id: Kaffe.GroupMemberSupervisor,
-        start: {Kaffe.GroupMemberSupervisor, :start_link, []},
-        type: :supervisor
-      }
+      ChatpiWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Chatpi.Supervisor]
-    Supervisor.start_link(children, opts)
+
+    if Mix.env() == :test do
+      Supervisor.start_link(
+        children,
+        opts
+      )
+    else
+      Supervisor.init(
+        children ++
+          [
+            {Chatpi.Auth.FetchStrategy, time_interval: 20_000},
+            %{
+              id: Kaffe.GroupMemberSupervisor,
+              start: {Kaffe.GroupMemberSupervisor, :start_link, []},
+              type: :supervisor
+            }
+          ],
+        opts
+      )
+    end
   end
 
   # Tell Phoenix to update the endpoint configuration
