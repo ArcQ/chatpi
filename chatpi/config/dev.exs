@@ -67,6 +67,9 @@ config :arc,
   storage: Arc.Storage.Local
 
 config :kaffe,
+  producer: [
+    endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
+    topics: ["chatpi-out"],
   consumer: [
     endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
     topics: ["chatpi"],

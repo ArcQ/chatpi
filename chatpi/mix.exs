@@ -81,7 +81,8 @@ defmodule Chatpi.MixProject do
       {:timex, "~> 3.6.2"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:kaffe, "~> 1.0"}
+      {:kaffe, "~> 1.0"},
+      {:mox, "~> 1.0"}
     ]
   end
 

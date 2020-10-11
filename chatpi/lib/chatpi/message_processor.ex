@@ -4,20 +4,20 @@ defmodule Chatpi.MessageProcessor do
   """
   alias Chatpi.{Users, Chats}
 
-  defp handle_message("upsert user", %{"user" => user_params}) do
+  defp handle_message("upsert-user", %{"user" => user_params}) do
     IO.puts("MessageProcessor upserting user")
     Users.create_or_update_user(user_params)
   end
 
-  defp handle_message("create base", %{"data" => user_params}) do
+  defp handle_message("upsert-chat-entity", %{"data" => user_params}) do
     Chats.create_chat(user_params)
   end
 
-  defp handle_message("add member", %{"data" => user_params}) do
+  defp handle_message("add-member-to-chat-entity", %{"data" => user_params}) do
     Chats.add_chat_members(user_params)
   end
 
-  defp handle_message("remove member", %{"data" => user_params}) do
+  defp handle_message("remove-member-from-chat-entity", %{"data" => user_params}) do
     Chats.remove_chat_members(user_params)
   end
 

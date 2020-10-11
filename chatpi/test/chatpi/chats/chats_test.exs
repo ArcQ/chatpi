@@ -1,8 +1,12 @@
 defmodule Chatpi.ChatsTest do
+  import Mox
   use Chatpi.DataCase
 
   alias Ecto.Changeset
   alias Chatpi.Chats
+
+  setup :set_mox_global
+  setup :verify_on_exit!
 
   describe "chats" do
     use Chatpi.Fixtures, [:user, :chat]
@@ -30,6 +34,11 @@ defmodule Chatpi.ChatsTest do
 
     test "create_chat/1 with valid data creates a chat" do
       assert {:ok, %Chat{} = chat} = Chats.create_chat(@valid_attrs)
+
+      Chatpi.MockMessageProducer
+      |> expect(:publish, fn {"create-chat", _value} ->
+        {:ok, "created-chat", chat}
+      end)
 
       assert chat.name == "fixture chat 1"
     end
