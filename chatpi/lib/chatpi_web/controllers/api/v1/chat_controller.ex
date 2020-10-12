@@ -25,16 +25,22 @@ defmodule ChatpiWeb.Api.V1.ChatController do
     user_ids = conn.body_params["users"]
     name = conn.body_params["name"]
 
-    users = [auth_key | user_ids] |> Users.list_users_by_ids()
+    users =
+      [auth_key | user_ids]
+      |> Users.list_users_by_ids()
 
     if length(users) == length(users) do
-      case Chats.create_chat(%{users: users, name: name}) do
-        {:ok, chat} ->
-          render(conn, "modified_chat.json", chat: chat)
+      {:ok, chat} = Chats.create_chat(%{name: name})
 
-        {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "show.json", changeset: changeset)
-      end
+      members =
+        users
+        |> Enum.map(fn user -> %Chats.Member{user: user, chat: chat} end)
+
+      {:ok, chat} =
+        chat
+        |> Chats.update_chat(%{members: Enum.concat(chat.members, members)})
+
+      render(conn, "show.json", chat: chat)
     end
   end
 

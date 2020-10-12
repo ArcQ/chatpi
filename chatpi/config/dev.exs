@@ -70,6 +70,14 @@ config :kaffe,
   producer: [
     endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
     topics: ["chatpi-out"],
+    ssl: true,
+    partition_strategy: :md5,
+    sasl: %{
+      mechanism: :plain,
+      login: System.get_env("KAFKA_USER"),
+      password: System.get_env("KAFKA_PASSWORD")
+    }
+  ],
   consumer: [
     endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
     topics: ["chatpi"],
@@ -79,8 +87,6 @@ config :kaffe,
     max_bytes: 500_000,
     worker_allocation_strategy: :worker_per_topic_partition,
     ssl: true,
-
-    # optional
     sasl: %{
       mechanism: :plain,
       login: System.get_env("KAFKA_USER"),

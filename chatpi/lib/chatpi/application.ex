@@ -29,7 +29,7 @@ defmodule Chatpi.Application do
         opts
       )
     else
-      Supervisor.init(
+      Supervisor.start_link(
         children ++
           [
             {Chatpi.Auth.FetchStrategy, time_interval: 20_000},

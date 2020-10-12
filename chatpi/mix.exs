@@ -82,7 +82,7 @@ defmodule Chatpi.MixProject do
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:kaffe, "~> 1.0"},
-      {:mox, "~> 1.0"}
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 
