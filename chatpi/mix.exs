@@ -103,9 +103,7 @@ defmodule Chatpi.MixProject do
       ],
       check_ci: [
         # "check",
-        "ecto.create --quiet",
-        "ecto.migrate",
-        "run priv/repo/seeds.exs",
+        "ecto.reset",
         "test test/chatpi"
       ]
     ]

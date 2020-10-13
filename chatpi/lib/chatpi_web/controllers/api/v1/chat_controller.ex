@@ -30,7 +30,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
       |> Users.list_users_by_ids()
 
     if length(users) == length(users) do
-      {:ok, chat} = Chats.create_chat(%{name: name})
+      {:ok, chat} = Chats.create_chat(%{name: name, members: []})
 
       members =
         users

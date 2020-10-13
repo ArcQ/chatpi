@@ -49,12 +49,11 @@ end
     # users: [arcq, sita]
   })
 
-{:ok, chat_2} =
-  Repo.insert(%Chat{
-    id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
-    name: "chat_2"
-    # users: [arcq, sita, donkers]
-  })
+Repo.insert(%Chat{
+  id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
+  name: "chat_2"
+  # users: [arcq, sita, donkers]
+})
 
 Repo.insert(%Chat{
   id: "7a6ad1d6-551c-453a-9a66-879c2587ca0d",
@@ -62,19 +61,17 @@ Repo.insert(%Chat{
   # users: [arcq, donkers]
 })
 
-{:ok, member_1} =
-  Repo.insert(%Member{
-    id: "41cb74b9-db13-4931-835f-0234152bcd94",
-    chat: chat_1,
-    user: arcq
-  })
+Repo.insert(%Member{
+  id: "41cb74b9-db13-4931-835f-0234152bcd94",
+  chat: chat_1,
+  user: arcq
+})
 
-{:ok, member_2} =
-  Repo.insert(%Member{
-    id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
-    chat: chat_1,
-    user: sita
-  })
+Repo.insert(%Member{
+  id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
+  chat: chat_1,
+  user: sita
+})
 
 Repo.insert(%Member{
   id: "1277f9f1-6ef9-4379-8e06-c5bf12075e62",

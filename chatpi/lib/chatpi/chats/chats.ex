@@ -6,7 +6,7 @@ defmodule Chatpi.Chats do
   import Ecto.Query, warn: false
   alias Chatpi.Repo
 
-  alias Chatpi.{Chats.Chat, Users.User, Chats.Member, MessageProducer}
+  alias Chatpi.{Chats.Chat, Users.User, Chats.Member, MessagePublisher}
 
   def list_chats_for_user(auth_key) do
     Chat
@@ -38,13 +38,16 @@ defmodule Chatpi.Chats do
   end
 
   def create_chat(attrs \\ %{}) do
-    chat =
-      %Chat{}
-      |> Chat.changeset(attrs)
-      |> Repo.insert()
+    case %Chat{}
+         |> Chat.changeset(attrs)
+         |> Repo.insert() do
+      {:ok, chat} ->
+        MessagePublisher.publish("created-chat", chat)
+        {:ok, chat}
 
-    MessageProducer.publish("created-chat", chat)
-    chat
+      {:error, %Ecto.Changeset{}} ->
+        {:error, %Ecto.Changeset{}}
+    end
   end
 
   def update_chat(%Chat{} = chat, attrs) do

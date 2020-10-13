@@ -37,8 +37,8 @@ defmodule ChatpiWeb.Api.V1.MessageController do
         "message" => msg
       }) do
     admin = Guardian.Plug.current_resource(conn, [])
-    # TODO need to add admin functionality when ready
-    if is_admin(chat_id, admin.auth_key) do
+
+    if is_admin(chat_id, auth_key) do
       ChatpiWeb.Endpoint.broadcast_from(admin.id, chat_id, event, msg)
     else
       %{error: "unauthorized"}
