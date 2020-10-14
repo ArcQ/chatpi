@@ -28,8 +28,8 @@ defmodule Chatpi.Fixtures do
   end
 
   def chat do
-    alias Chatpi.Chats
-    alias Chatpi.Chats.Member
+    alias Chatpi.{Chats, Repo}
+    alias Chatpi.Chats.{Member, Chat}
 
     quote do
       @valid_attrs %{id: "somechatid", name: "fixture chat 1", members: []}
@@ -42,9 +42,9 @@ defmodule Chatpi.Fixtures do
         {:ok, user} = user_fixture()
 
         {:ok, chat} =
-          attrs
-          |> Enum.into(@valid_attrs)
-          |> Chats.create_chat()
+          %Chat{}
+          |> Chat.changeset(Enum.into(attrs, @valid_attrs))
+          |> Repo.insert()
 
         member = %Member{user: user, chat: chat}
 

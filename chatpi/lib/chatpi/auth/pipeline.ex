@@ -41,8 +41,6 @@ defmodule Chatpi.Auth.VerifyHeader do
   end
 end
 
-# TODO, we should actually have a sign in route,
-# and then keep sessions through guardian instead of managing everything through jwt
 defmodule Chatpi.Auth.Pipeline do
   @moduledoc false
 
