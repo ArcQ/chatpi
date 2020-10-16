@@ -43,5 +43,5 @@ jobs:
 
       - run: mix format --check-formatted
         working-directory: chatpi
-      - run: mix check_ci
+      - run: MIX_ENV=test mix check_ci
         working-directory: chatpi
