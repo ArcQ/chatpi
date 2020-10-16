@@ -9,7 +9,6 @@ chatpi-*.tar
 /priv/static/
 /config/*.secret.exs*
 /.elixir_ls
-/uploads
 .env*
 
 .DS_Store

@@ -21,7 +21,6 @@ defmodule Chatpi.Repo.Migrations.CreateChatMember do
       )
     end
 
-    create(index(:chat_member, [:chat_id]))
-    create(index(:chat_member, [:user_auth_key]))
+    create(index(:chat_member, [:chat_id, :user_auth_key]))
   end
 end

@@ -4,7 +4,7 @@ defmodule Chatpi.Repo.Migrations.CreateFile do
   def change do
     create table(:file, primary_key: false) do
       add(:id, :uuid, primary_key: true)
-      add(:file, :string)
+      add(:url, :string)
 
       add(
         :message_id,

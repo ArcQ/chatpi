@@ -15,7 +15,7 @@ defmodule Chatpi.MessagesTest do
 
       message =
         message
-        |> Map.put(:file, nil)
+        |> Map.put(:files, [])
 
       assert Messages.list_messages_by_chat_id(chat.id) == [message]
     end
@@ -25,7 +25,7 @@ defmodule Chatpi.MessagesTest do
 
       message =
         message
-        |> Map.put(:file, nil)
+        |> Map.put(:files, [])
 
       assert Messages.list_messages_by_chat_id_query(chat.id, %Cursor{query_type: "after"}) == [
                message
@@ -37,7 +37,22 @@ defmodule Chatpi.MessagesTest do
 
       message =
         message
-        |> Map.put(:file, nil)
+        |> Map.put(:files, [])
+
+      assert {:ok, %Message{} = message} =
+               Messages.create_message(%{
+                 text: "text",
+                 user_auth_key: user.auth_key,
+                 chat_id: chat.id
+               })
+    end
+
+    test "create_message/1 with file works" do
+      {:ok, user, chat, message} = message_fixture()
+
+      message =
+        message
+        |> Map.put(:files, [])
 
       assert {:ok, %Message{} = message} =
                Messages.create_message(%{

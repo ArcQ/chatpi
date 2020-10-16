@@ -18,7 +18,7 @@ defmodule Chatpi.Messages do
     Message
     |> where([message], message.chat_id == ^chat_id)
     |> order_by(desc: :inserted_at)
-    |> preload([:file])
+    |> preload([:files])
     |> limit(20)
     |> Repo.all()
   end
@@ -31,7 +31,7 @@ defmodule Chatpi.Messages do
       Message
       |> join(:inner, [message], chat in Chat, on: chat.id == ^chat_id)
       |> order_by(desc: :inserted_at)
-      |> preload([:file])
+      |> preload([:files])
 
     if query_type == "after" do
       query

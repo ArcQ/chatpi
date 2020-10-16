@@ -8,6 +8,7 @@ defmodule Chatpi.Messages.Message do
     field(:text, :string)
     field(:seen_by_id, :integer)
     field(:seen_at, :naive_datetime)
+    has_many(:files, Chatpi.Messages.File)
 
     belongs_to(:chat, Chatpi.Chats.Chat, type: Ecto.UUID)
 
@@ -17,7 +18,7 @@ defmodule Chatpi.Messages.Message do
       foreign_key: :user_auth_key
     )
 
-    has_one(:file, Chatpi.Uploads.File)
+    belongs_to(:reply_target, Chatpi.Messages.Message)
 
     timestamps()
   end
@@ -29,6 +30,7 @@ defmodule Chatpi.Messages.Message do
     |> validate_required([:text, :user_auth_key, :chat_id])
     |> cast_assoc(:user)
     |> cast_assoc(:chat)
-    |> cast_assoc(:file)
+    |> cast_assoc(:reply_target, required: false)
+    |> cast_assoc(:files, required: false)
   end
 end

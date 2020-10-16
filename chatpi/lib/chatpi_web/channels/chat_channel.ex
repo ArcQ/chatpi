@@ -2,7 +2,7 @@ defmodule ChatpiWeb.ChatChannel do
   @moduledoc false
   use ChatpiWeb, :channel
   alias ChatpiWeb.Presence
-  alias Chatpi.{Chats, Messages, Uploads, File}
+  alias Chatpi.{Chats, Messages}
   alias ChatpiWeb.Api.V1.MessageView
   alias Presence
 
@@ -18,8 +18,6 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   def join("chat:touchbase:" <> private_topic_id, _payload, socket) do
-    IO.puts(private_topic_id)
-
     if authorized?(socket, "touchbase", private_topic_id) do
       send(self(), :after_join)
       {:ok, socket}
@@ -65,35 +63,20 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  def handle_in("message:new", %{"text" => text}, socket) do
+  def handle_in("message:new", message_payload, socket) do
     user = get_in(socket.assigns, [:user])
-    IO.puts(inspect(user))
 
-    if String.length(text) > 0 do
+    if String.length(message_payload.text) > 0 do
       message =
         create_message!(
           get_chat_id(socket),
           user,
-          text
+          message_payload.text,
+          message_payload.file
         )
 
       broadcast!(socket, "message:new", MessageView.render("message.json", %{message: message}))
     end
-
-    {:noreply, socket}
-  end
-
-  @doc false
-  def handle_in("file:new", %{"file_id" => file_id}, socket) do
-    file = Uploads.get_file!(file_id)
-
-    broadcast!(socket, "file:new", %{
-      user: get_in(socket.assigns, [:user]),
-      file: %{
-        file_name: file.file.file_name,
-        file_url: File.url({file.file.file_name, file}, signed: true)
-      }
-    })
 
     {:noreply, socket}
   end
@@ -134,11 +117,10 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  defp create_message!(id, user, text) do
-    IO.puts(inspect(user))
-
+  defp create_message!(id, user, text, file \\ nil) do
     case Messages.create_message(%{
            text: text,
+           file: file,
            user_id: user.auth_key,
            chat_id: id
          }) do

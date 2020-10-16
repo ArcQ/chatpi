@@ -2,7 +2,7 @@ defmodule ChatpiWeb.Api.V1.MessageView do
   use ChatpiWeb, :view
   use Timex
 
-  @public_attributes ~W(id text user_id chat_id inserted_at)a
+  @public_attributes ~W(id text user_id chat_id inserted_at files)a
 
   def render("index.json", %{messages: messages}) do
     %{
@@ -17,5 +17,10 @@ defmodule ChatpiWeb.Api.V1.MessageView do
   def render("message.json", %{message: message}) do
     message
     |> Map.take(@public_attributes)
+    |> Map.replace!("files", &render_many(&1, ChatpiWeb.Api.V1.MessageView, "file.json"))
+  end
+
+  def render("file.json", %{url: url}) do
+    url
   end
 end

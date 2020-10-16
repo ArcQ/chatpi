@@ -58,10 +58,10 @@ defmodule Chatpi.Fixtures do
   end
 
   def message do
-    alias Chatpi.Messages
+    alias Chatpi.{Messages}
 
     quote do
-      @valid_attrs %{text: "text", user_auth_key: nil, chat_id: nil}
+      @valid_attrs %{text: "text", user_auth_key: nil, chat_id: nil, files: []}
 
       @update_attrs %{text: "updated text"}
 
@@ -71,12 +71,34 @@ defmodule Chatpi.Fixtures do
         {:ok, user, chat} = chat_fixture()
 
         new_message = Map.merge(%{user_auth_key: user.auth_key, chat_id: chat.id}, attrs)
-        IO.puts(chat.id)
 
         {:ok, message} =
           new_message
           |> Enum.into(@valid_attrs)
           |> Messages.create_message()
+
+        {:ok, user, chat, message}
+      end
+
+      def message_fixture_reply_with_file(attrs \\ %{}) do
+        {:ok, user, chat} = chat_fixture()
+
+        new_message = Map.merge(%{user_auth_key: user.auth_key, chat_id: chat.id}, attrs)
+
+        message =
+          new_message
+          |> Enum.into(@valid_attrs)
+          |> Messages.create_message()
+          |> (fn {:ok, message} ->
+                {message,
+                 %Messages.File{
+                   url: "https://unsplash.com/photos/G85VuTpw6jg",
+                   message: new_message
+                 }}
+              end).()
+          |> (fn {message, file} ->
+                Chats.update_message(message, %{files: Enum.concat(message.file, [file])})
+              end).()
 
         {:ok, user, chat, message}
       end
