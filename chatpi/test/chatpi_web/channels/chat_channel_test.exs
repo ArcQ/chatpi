@@ -41,8 +41,20 @@ defmodule ChatpiWeb.ChatChannelTest do
     assert_reply(ref, :ok)
   end
 
-  test "send text messages should work", %{socket: socket} do
+  test "send text messages should work", %{user: user, socket: socket} do
     push(socket, "message:new", %{"text" => "test a message"})
-    assert_broadcast("message:new", %{message: %{text: "test a message"}})
+
+    assert_broadcast(
+      "message:new",
+      %{
+        id: id,
+        user_auth_key: user_auth_key,
+        text: "test a message",
+        inserted_at: inserted_at
+      } = broadcasted_message
+    )
+
+    assert !Map.has_key?(broadcasted_message, :file)
+    assert broadcasted_message[:user_auth_key] == user.auth_key
   end
 end

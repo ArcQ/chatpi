@@ -31,17 +31,14 @@ defmodule Chatpi.Messages.Message do
     |> cast_assoc(:user)
     |> cast_assoc(:chat)
     |> cast_assoc(:reply_target, required: false)
-    |> cast_assoc(:files, required: false)
+
+    # |> cast_assoc(:files, required: false)
   end
 
   @doc false
   def update_changeset(message, attrs) do
     message
-    |> cast(attrs, [:text, :user_auth_key, :chat_id, :seen_by_id, :seen_at])
-    |> validate_required([:text, :user_auth_key, :chat_id])
-    |> cast_assoc(:user)
-    |> cast_assoc(:chat)
-    |> cast_assoc(:reply_target, required: false)
-    |> put_assoc(:files, attrs[:files] || message.files)
+    |> cast(attrs, [])
+    |> put_assoc(:files, attrs[:files], required: false)
   end
 end

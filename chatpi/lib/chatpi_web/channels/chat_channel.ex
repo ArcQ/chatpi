@@ -72,15 +72,22 @@ defmodule ChatpiWeb.ChatChannel do
     user = get_in(socket.assigns, [:user])
 
     if String.length(message_payload["text"]) > 0 do
-      message =
-        create_message!(
-          get_chat_id(socket),
-          user,
-          message_payload["text"],
-          message_payload["files"]
-        )
+      case Messages.create_message(%{
+             text: message_payload["text"],
+             files: message_payload["files"],
+             user_auth_key: user.auth_key,
+             chat_id: get_chat_id(socket)
+           }) do
+        {:ok, message} ->
+          broadcast!(
+            socket,
+            "message:new",
+            MessageView.render("message.json", %{message: message})
+          )
 
-      broadcast!(socket, "message:new", MessageView.render("message.json", %{message: message}))
+        {:error, reason} ->
+          raise "Your message could not sent, because: " <> reason
+      end
     end
 
     {:noreply, socket}
@@ -123,13 +130,6 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   defp create_message!(id, user, text \\ "", files) do
-    attr = %{
-      text: text,
-      files: files,
-      user_auth_key: user.auth_key,
-      chat_id: id
-    }
-
     case Messages.create_message(%{
            text: text,
            files: files,

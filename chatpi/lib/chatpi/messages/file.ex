@@ -7,13 +7,14 @@ defmodule Chatpi.Messages.File do
   schema "file" do
     field(:url, :string)
     belongs_to(:message, Chatpi.Messages.Message)
+
+    timestamps()
   end
 
   @doc false
   def changeset(member, attrs) do
     member
-    |> cast(attrs, [:chat_id, :user_auth_key])
-    |> validate_required([:chat_id, :user_auth_key])
-    |> put_change(:id, Ecto.UUID.bingenerate())
+    |> cast(attrs, [:message_id])
+    |> validate_required([:message_id])
   end
 end

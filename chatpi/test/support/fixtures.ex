@@ -90,14 +90,12 @@ defmodule Chatpi.Fixtures do
           |> Messages.Message.changeset(Enum.into(new_message, @valid_attrs))
           |> Repo.insert()
           |> (fn {:ok, message} ->
-                {message,
-                 %Messages.File{
-                   url: "https://unsplash.com/photos/G85VuTpw6jg",
-                   message: new_message
-                 }}
-              end).()
-          |> (fn {message, file} ->
-                Messages.update_message(message, %{files: [file]})
+                %Messages.File{}
+                |> Messages.File.changeset(%{
+                  url: "https://unsplash.com/photos/G85VuTpw6jg",
+                  message_id: message.id
+                })
+                |> Repo.insert()
               end).()
 
         {:ok, user, chat, message}

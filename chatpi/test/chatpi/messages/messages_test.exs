@@ -11,7 +11,7 @@ defmodule Chatpi.MessagesTest do
     use Chatpi.Fixtures, [:user, :chat, :message]
 
     test "list_messages_by_chat_id/1 returns all messages" do
-      {:ok, user, chat, message} = message_fixture()
+      {:ok, _user, chat, message} = message_fixture()
 
       message =
         message
@@ -48,7 +48,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "create_message/1 with file works" do
-      assert {:ok, message} = message_fixture_reply_with_file()
+      assert {:ok, _user, _chat, message} = message_fixture_reply_with_file()
     end
 
     test "create_message/1 with invalid data returns error changeset" do
@@ -56,14 +56,14 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "delete_message/1 deletes the message" do
-      {:ok, user, chat, message} = message_fixture()
+      {:ok, _user, chat, message} = message_fixture()
 
       assert {:ok, %Message{}} = Messages.delete_message(%Message{id: message.id})
       assert Enum.empty?(Messages.list_messages_by_chat_id(chat.id))
     end
 
     test "change_message/1 returns a message changeset" do
-      {:ok, user, chat, message} = message_fixture()
+      {:ok, _user, _chat, message} = message_fixture()
 
       assert %Ecto.Changeset{} = Messages.change_message(message)
     end
