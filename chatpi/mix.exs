@@ -98,8 +98,7 @@ defmodule Chatpi.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       check: [
         "format --check-formatted",
-        "credo --strict",
-        "sobelow --verbose"
+        "credo"
       ],
       check_ci: [
         # "check",

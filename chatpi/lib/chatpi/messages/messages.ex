@@ -14,13 +14,18 @@ defmodule Chatpi.Messages do
   import Ecto.Query, warn: false
   alias Chatpi.{Repo, Messages.Message, Chats.Chat}
 
-  def list_messages_by_chat_id(chat_id) do
-    Message
-    |> where([message], message.chat_id == ^chat_id)
+  defp query_messages_paged(query) do
+    query
     |> order_by(desc: :inserted_at)
     |> preload([:files])
     |> limit(20)
     |> Repo.all()
+  end
+
+  def list_messages_by_chat_id(chat_id) do
+    Message
+    |> where([message], message.chat_id == ^chat_id)
+    |> query_messages_paged
   end
 
   def list_messages_by_chat_id_query(
@@ -28,28 +33,31 @@ defmodule Chatpi.Messages do
         %Cursor{query_type: query_type, inserted_at: inserted_at}
       ) do
     query =
-      Message
-      |> join(:inner, [message], chat in Chat, on: chat.id == ^chat_id)
-      |> order_by(desc: :inserted_at)
-      |> preload([:files])
+      case query_type do
+        "after" ->
+          Message
+          |> where([message], message.inserted_at > ^inserted_at and message.chat_id == ^chat_id)
 
-    if query_type == "after" do
-      query
-      |> where([message], message.inserted_at > ^inserted_at and message.chat_id == ^chat_id)
-      |> limit(20)
-      |> Repo.all()
-    else
-      query
-      |> where([message], message.inserted_at < ^inserted_at)
-      |> limit(20)
-      |> Repo.all()
-    end
+        _ ->
+          Message
+          |> where([message], message.inserted_at < ^inserted_at)
+      end
+
+    query
+    |> join(:inner, [message], chat in Chat, on: chat.id == ^chat_id)
+    |> query_messages_paged
   end
 
   def create_message(attrs \\ %{}) do
     %Message{}
     |> Message.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def update_message(%Message{} = message, attrs) do
+    message
+    |> Message.update_changeset(attrs)
+    |> Repo.update()
   end
 
   def delete_message(%Message{} = message) do

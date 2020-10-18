@@ -48,18 +48,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "create_message/1 with file works" do
-      {:ok, user, chat, message} = message_fixture()
-
-      message =
-        message
-        |> Map.put(:files, [])
-
-      assert {:ok, %Message{} = message} =
-               Messages.create_message(%{
-                 text: "text",
-                 user_auth_key: user.auth_key,
-                 chat_id: chat.id
-               })
+      assert {:ok, message} = message_fixture_reply_with_file()
     end
 
     test "create_message/1 with invalid data returns error changeset" do

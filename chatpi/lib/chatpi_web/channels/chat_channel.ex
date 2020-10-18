@@ -27,7 +27,12 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  def handle_info(:after_join, socket) do
+  def handle_in("ping", _payload, socket) do
+    {:reply, {:ok, %{status: "ok"}}, socket}
+  end
+
+  @doc false
+  def handle_info(:after_join, _, socket) do
     push(socket, "presence_state", Presence.list(socket))
 
     {:ok, _} =
@@ -66,13 +71,13 @@ defmodule ChatpiWeb.ChatChannel do
   def handle_in("message:new", message_payload, socket) do
     user = get_in(socket.assigns, [:user])
 
-    if String.length(message_payload.text) > 0 do
+    if String.length(message_payload["text"]) > 0 do
       message =
         create_message!(
           get_chat_id(socket),
           user,
-          message_payload.text,
-          message_payload.file
+          message_payload["text"],
+          message_payload["files"]
         )
 
       broadcast!(socket, "message:new", MessageView.render("message.json", %{message: message}))
@@ -117,11 +122,18 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  defp create_message!(id, user, text, file \\ nil) do
+  defp create_message!(id, user, text \\ "", files) do
+    attr = %{
+      text: text,
+      files: files,
+      user_auth_key: user.auth_key,
+      chat_id: id
+    }
+
     case Messages.create_message(%{
            text: text,
-           file: file,
-           user_id: user.auth_key,
+           files: files,
+           user_auth_key: user.auth_key,
            chat_id: id
          }) do
       {:ok, message} -> message

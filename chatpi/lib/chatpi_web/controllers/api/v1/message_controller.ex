@@ -2,10 +2,7 @@ defmodule ChatpiWeb.Api.V1.MessageController do
   @moduledoc false
   use ChatpiWeb, :controller
   use Plug.ErrorHandler
-  import Ecto.Query, only: [from: 2]
-  alias Chatpi.Repo
   alias ChatpiWeb.Endpoint
-  alias Chatpi.{Chats, Messages.Message, Messages}
   action_fallback(FallbackController)
   import Plug.ErrorHandler
 
@@ -46,8 +43,8 @@ defmodule ChatpiWeb.Api.V1.MessageController do
     end
   end
 
-  defp is_admin(_chat_id, _auth_key) do
-    true
+  defp is_admin(chat_id, auth_key) do
+    chat_id == "testAdminChatId" and auth_key == "testAuthKey"
   end
 
   defp handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do

@@ -58,7 +58,7 @@ defmodule Chatpi.Fixtures do
   end
 
   def message do
-    alias Chatpi.{Messages}
+    alias Chatpi.{Messages, Chats, Repo}
 
     quote do
       @valid_attrs %{text: "text", user_auth_key: nil, chat_id: nil, files: []}
@@ -86,9 +86,9 @@ defmodule Chatpi.Fixtures do
         new_message = Map.merge(%{user_auth_key: user.auth_key, chat_id: chat.id}, attrs)
 
         message =
-          new_message
-          |> Enum.into(@valid_attrs)
-          |> Messages.create_message()
+          %Messages.Message{}
+          |> Messages.Message.changeset(Enum.into(new_message, @valid_attrs))
+          |> Repo.insert()
           |> (fn {:ok, message} ->
                 {message,
                  %Messages.File{
@@ -97,7 +97,7 @@ defmodule Chatpi.Fixtures do
                  }}
               end).()
           |> (fn {message, file} ->
-                Chats.update_message(message, %{files: Enum.concat(message.file, [file])})
+                Messages.update_message(message, %{files: [file]})
               end).()
 
         {:ok, user, chat, message}

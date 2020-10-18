@@ -31,16 +31,16 @@ defmodule Chatpi.Guardian.Plug do
   end
 
   @doc false
+  def resource_from_claims(%{}) do
+    {:error, "Unknown resource type"}
+  end
+
+  @doc false
   def verify_claim(%{"sub" => id} = _claims) do
     # Here we'll look up our resource from the claims, the subject can be
     # found in the `"sub"` key. In `above subject_for_token/2` we returned
     # the resource id so here we'll rely on that to look it up.
     resource = Users.get_user!(id)
     {:ok, resource}
-  end
-
-  @doc false
-  def resource_from_claims(%{}) do
-    {:error, "Unknown resource type"}
   end
 end
