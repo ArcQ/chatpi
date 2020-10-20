@@ -1,4 +1,5 @@
 defmodule Chatpi.Auth.FetchStrategy do
+  @moduledoc false
   use JokenJwks.DefaultStrategyTemplate
 
   def init_opts(opts) do
@@ -8,6 +9,7 @@ defmodule Chatpi.Auth.FetchStrategy do
 end
 
 defmodule Chatpi.Auth.Token do
+  @moduledoc false
   # no signer
   use Joken.Config, default_signer: nil
 

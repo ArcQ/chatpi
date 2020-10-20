@@ -32,9 +32,9 @@ defmodule Chatpi.Fixtures do
     alias Chatpi.Chats.{Member, Chat}
 
     quote do
-      @valid_attrs %{id: "somechatid", name: "fixture chat 1", members: []}
+      @valid_chat_attrs %{id: "somechatid", name: "fixture chat 1", members: []}
 
-      @update_attrs %{name: "some updated name"}
+      @update_chat_attrs %{name: "some updated name"}
 
       @invalid_attrs %{id: nil, name: nil, members: []}
 
@@ -43,7 +43,7 @@ defmodule Chatpi.Fixtures do
 
         {:ok, chat} =
           %Chat{}
-          |> Chat.changeset(Enum.into(attrs, @valid_attrs))
+          |> Chat.changeset(Enum.into(attrs, @valid_chat_attrs))
           |> Repo.insert()
 
         member = %Member{user: user, chat: chat}

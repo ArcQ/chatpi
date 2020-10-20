@@ -36,7 +36,7 @@ defmodule Chatpi.ChatsTest do
     end
 
     test "create_chat/1 with valid data creates a chat" do
-      assert {:ok, %Chat{} = chat} = Chats.create_chat(@valid_attrs)
+      assert {:ok, %Chat{} = chat} = Chats.create_chat(@valid_chat_attrs)
 
       assert_called(
         Kaffe.Producer.produce_sync("chatpi_out", [{"key", "created-chat"}, {"chat", chat}])
@@ -52,7 +52,7 @@ defmodule Chatpi.ChatsTest do
     test "update_chat/2 with valid data updates the chat" do
       {:ok, user, chat} = chat_fixture()
 
-      assert {:ok, %Chat{} = chat} = Chats.update_chat(chat, @update_attrs)
+      assert {:ok, %Chat{} = chat} = Chats.update_chat(chat, @update_chat_attrs)
 
       assert chat.name == "some updated name"
     end

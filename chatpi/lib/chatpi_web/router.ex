@@ -24,6 +24,7 @@ defmodule ChatpiWeb.Router do
 
   scope "/api", ChatpiWeb.Api do
     pipe_through([:api])
+    resources("/", RootController, only: [:index])
 
     scope "/v1", V1 do
     end

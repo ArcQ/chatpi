@@ -1,4 +1,4 @@
-defmodule ChatpiWeb.RootController do
+defmodule ChatpiWeb.Api.RootController do
   @moduledoc false
   use ChatpiWeb, :controller
 

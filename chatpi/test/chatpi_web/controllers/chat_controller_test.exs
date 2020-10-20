@@ -1,44 +1,96 @@
 defmodule ChatpiWeb.ChatControllerTest do
   @moduledoc false
+
+  import Mock
+  import Chatpi.FixtureConstants
   use ChatpiWeb.ConnCase
 
   alias Chatpi.Chats
 
   use Chatpi.Fixtures, [:user, :chat]
 
+  setup_with_mocks([
+    {Chatpi.Auth.Token, [],
+     [
+       verify_and_validate: fn auth_token ->
+         case auth_token do
+           "authorized_bearer" ->
+             {:ok,
+              %{
+                "username" => "arcq",
+                "sub" => auth_key_c()
+              }}
+
+           _ ->
+             {:error, "unauthed"}
+         end
+       end
+     ]},
+    {Kaffe.Producer, [], [produce_sync: fn key, event -> "" end]}
+  ]) do
+    :ok
+  end
+
   describe "index" do
     test "lists all users", %{conn: conn} do
-      conn = get(conn, Routes.user_path(conn, :index))
-      assert json_response(conn, 200) =~ "Listing Users"
+      {:ok, _user, _chat} = chat_fixture()
+
+      result =
+        conn
+        |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
+        |> get(Routes.chat_path(conn, :index))
+        |> json_response(200)
+
+      assert %{
+               "chats" => [
+                 %{"id" => id, "name" => "fixture chat 1"}
+               ]
+             } = result
     end
   end
 
   describe "create user" do
-    test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
+    test "creates user when valid", %{conn: conn} do
+      {:ok, user} = user_fixture()
 
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.user_path(conn, :show, id)
+      result =
+        conn
+        |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
+        |> post(Routes.chat_path(conn, :create), %{users: [user.id], name: "test fam"})
+        |> json_response(200)
 
-      conn = get(conn, Routes.user_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show User"
+      assert %{
+               "chat" => %{
+                 "id" => id,
+                 "inserted_at" => inserted_at,
+                 "members" => [
+                   %{
+                     "auth_key" => "892130df-f45b-46b3-b766-2101db28ea62",
+                     "id" => user_id,
+                     "username" => "some name"
+                   }
+                 ],
+                 "name" => "test fam"
+               }
+             } = result
+
+      result2 =
+        conn
+        |> get(Routes.chat_path(conn, :show, id))
+        |> json_response(200)
+
+      assert result = result2
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New User"
-    end
-  end
+    # test "400 when invalid", %{conn: conn} do
+    #   conn =
+    #     result =
+    #     conn
+    #     |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
+    #     |> post(Routes.chat_path(conn, :create), %{})
+    #     |> json_response(400)
 
-  describe "delete user" do
-    test "deletes chosen user", %{conn: conn, user: user} do
-      user = user_fixture()
-      conn = delete(conn, Routes.user_path(conn, :delete, user))
-      assert redirected_to(conn) == Routes.user_path(conn, :index)
-
-      assert_error_sent(404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
-      end)
-    end
+    #   assert %{} = result
+    # end
   end
 end

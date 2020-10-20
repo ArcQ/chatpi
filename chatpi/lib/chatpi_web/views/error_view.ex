@@ -1,10 +1,11 @@
 defmodule ChatpiWeb.ErrorView do
   use ChatpiWeb, :view
 
-  def handle_errors(conn, %{kind: _kind, reason: _reason, stack: _stack} = err) do
-    IO.puts("An error occurred, the error was:")
-    IO.puts(err)
+  def template_not_found(template, _assigns) do
+    %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
+  end
 
-    conn
+  def render("500.json", %{conn: conn}) do
+    %{errors: %{code: "500_SERVER_ERROR", detail: conn.assigns.reason.description}}
   end
 end
