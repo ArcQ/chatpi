@@ -1,13 +1,11 @@
-defmodule ChatpiWeb.ChatControllerTest do
+defmodule ChatpiWeb.UserControllerTest do
   @moduledoc false
 
   import Mock
   import Chatpi.FixtureConstants
   use ChatpiWeb.ConnCase
 
-  alias Chatpi.Chats
-
-  use Chatpi.Fixtures, [:user, :chat]
+  use Chatpi.Fixtures, [:user]
 
   setup_with_mocks([
     {Chatpi.Auth.Token, [],
@@ -26,26 +24,21 @@ defmodule ChatpiWeb.ChatControllerTest do
          end
        end
      ]},
-    {Kaffe.Producer, [], [produce_sync: fn key, event -> "" end]}
+    {Kaffe.Producer, [], [produce_sync: fn _key, _event -> "" end]}
   ]) do
     :ok
   end
 
   describe "index" do
-    test "lists all users", %{conn: conn} do
-      {:ok, _user, _chat} = chat_fixture()
-
+    test "lists all users before query", %{conn: conn} do
       result =
         conn
         |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
-        |> get(Routes.chat_path(conn, :index))
+        |> get(Routes.user_path(conn, :index))
         |> json_response(200)
+        |> Map.get("users")
 
-      assert %{
-               "chats" => [
-                 %{"id" => id, "name" => "fixture chat 1"}
-               ]
-             } = result
+      assert length(result) == 3
     end
   end
 end

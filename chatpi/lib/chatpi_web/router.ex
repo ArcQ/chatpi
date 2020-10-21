@@ -37,7 +37,8 @@ defmodule ChatpiWeb.Router do
     scope "/v1", V1 do
       resources("/users", UserController, only: [:index, :show, :create, :update])
       resources("/chats", ChatController, only: [:index, :show, :create])
-      get("/chats/:chat_id/messages", MessageController, :index)
+
+      resources("/chats/:chat_id/messages", MessageController, only: [:index, :create])
 
       patch("/chats/:chat_id/messages/:id/seen", MessageController, :messages_seen,
         as: :message_seen

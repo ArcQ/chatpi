@@ -9,8 +9,10 @@ defmodule Chatpi.MessageProcessor do
     Users.create_or_update_user(user_params)
   end
 
-  defp handle_message("upsert-chat-entity", %{"data" => user_params}) do
-    Chats.create_chat(user_params)
+  defp handle_message("upsert-chat-entity", %{"data" => chat_params}) do
+    IO.puts("MessageProcessor upserting chat")
+    result = Chats.create_chat(chat_params["entity"])
+    IO.puts(inspect(result))
   end
 
   defp handle_message("add-member-to-chat-entity", %{"data" => user_params}) do
@@ -23,8 +25,10 @@ defmodule Chatpi.MessageProcessor do
 
   def handle_messages(messages) do
     for %{key: key, value: value} = _message <- messages do
-      IO.puts("Message Received -> #{key}: #{value}")
-      handle_message(key, value.data)
+      {:ok, decoded_value} = Jason.decode(value)
+      IO.puts("Message Received -> #{key}: #{inspect(value)}")
+      IO.puts("Message Received -> #{key}: #{inspect(decoded_value)}")
+      handle_message(key, decoded_value)
     end
 
     # Important!

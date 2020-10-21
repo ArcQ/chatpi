@@ -103,7 +103,7 @@ defmodule Chatpi.MixProject do
       check_ci: [
         # "check",
         "ecto.reset",
-        "test test/chatpi"
+        "test"
       ]
     ]
   end

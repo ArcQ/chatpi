@@ -1,7 +1,6 @@
 defmodule Chatpi.ChatsTest do
   import Mock
   use Chatpi.DataCase
-
   alias Ecto.Changeset
   alias Chatpi.Chats
 

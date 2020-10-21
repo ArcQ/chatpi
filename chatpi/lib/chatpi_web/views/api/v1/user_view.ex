@@ -5,16 +5,12 @@ defmodule ChatpiWeb.Api.V1.UserView do
 
   def render("index.json", %{users: users}) do
     %{
-      data:
-        Enum.map(users, fn user -> render_one(user, ChatpiWeb.Api.V1.UserView, "user.json") end)
+      users:
+        Enum.map(users, fn user -> render_one(user, ChatpiWeb.Api.V1.UserView, "show.json") end)
     }
   end
 
   def render("show.json", %{user: user}) do
-    %{data: render_one(user, ChatpiWeb.Api.V1.UserView, "user.json")}
-  end
-
-  def render("user.json", %{user: user}) do
     user
     |> Map.take(@public_attributes)
   end

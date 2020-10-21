@@ -2,9 +2,10 @@ defmodule ChatpiWeb.Api.V1.MessageController do
   @moduledoc false
   use ChatpiWeb, :controller
   use Plug.ErrorHandler
-  alias ChatpiWeb.Endpoint
-  action_fallback(FallbackController)
+  alias Chatpi.{Chats, Messages}
   import Plug.ErrorHandler
+
+  action_fallback(FallbackController)
 
   @doc false
   def index(conn, %{
@@ -27,21 +28,23 @@ defmodule ChatpiWeb.Api.V1.MessageController do
     end
   end
 
-  @doc false
-  def create_system_message(conn, %{
-        "chat_id" => chat_id,
-        "auth_key" => auth_key,
-        "event" => event,
-        "message" => msg
-      }) do
-    admin = Guardian.Plug.current_resource(conn, [])
+  # @doc "
+  # create for system messages
+  # "
+  # def create(conn, %{
+  #       "chat_id" => chat_id,
+  #       "auth_key" => auth_key,
+  #       "event" => event,
+  #       "message" => msg
+  #     }) do
+  #   admin = Guardian.Plug.current_resource(conn, [])
 
-    if is_admin(chat_id, auth_key) do
-      Endpoint.broadcast_from(admin.id, chat_id, event, msg)
-    else
-      %{error: "unauthorized"}
-    end
-  end
+  #   if is_admin(chat_id, auth_key) do
+  #     Endpoint.broadcast_from(admin.id, chat_id, event, msg)
+  #   else
+  #     %{error: "unauthorized"}
+  #   end
+  # end
 
   defp is_admin(chat_id, auth_key) do
     chat_id == "testAdminChatId" and auth_key == "testAuthKey"
