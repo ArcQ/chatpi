@@ -27,3 +27,5 @@ config :ex_aws,
     host: "s3-" <> System.get_env("AWS_REGION") <> ".amazonaws.com",
     region: System.get_env("AWS_REGION")
   ]
+
+config :chatpi, :env, :prod

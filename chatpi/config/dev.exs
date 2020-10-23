@@ -93,3 +93,5 @@ config :kaffe,
       password: System.get_env("KAFKA_PASSWORD")
     }
   ]
+
+config :chatpi, :env, :dev

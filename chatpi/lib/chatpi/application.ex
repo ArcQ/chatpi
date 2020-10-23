@@ -23,7 +23,7 @@ defmodule Chatpi.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Chatpi.Supervisor]
 
-    if Mix.env() == :test do
+    if Application.get_env(:chatpi, :env) == :test do
       Supervisor.start_link(
         children,
         opts

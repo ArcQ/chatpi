@@ -14,11 +14,11 @@ defmodule Chatpi.UsersTest do
       assert Users.list_users() |> length == 4
     end
 
-    test "list_users_by_ids/2 returns all messages" do
-      {:ok, user} = user_fixture()
+    # test "list_users_by_ids/2 returns all messages" do
+    #   {:ok, user} = user_fixture()
 
-      assert Users.list_users_by_ids([auth_key_c()]) == [user]
-    end
+    #   assert Users.list_users_by_ids([auth_key_c()]) == [user]
+    # end
 
     test "create_user/1 with valid data creates user" do
       assert Users.list_users() |> length == 3

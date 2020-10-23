@@ -18,3 +18,5 @@ config :chatpi, Chatpi.Repo,
 
 config :arc,
   storage: Arc.Storage.Local
+
+config :chatpi, :env, :test
