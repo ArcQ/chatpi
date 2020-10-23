@@ -10,7 +10,7 @@ defmodule Chatpi.Users do
     Repo.all(
       from(
         u in User,
-        where: u.is_inactive != true
+        where: u.is_inactive == false or is_nil(u.is_inactive)
       )
     )
   end
@@ -19,7 +19,7 @@ defmodule Chatpi.Users do
     Repo.all(
       from(
         u in User,
-        where: u.is_inactive != true and u.auth_key in ^user_auth_keys
+        where: u.is_inactive == false or (is_nil(u.is_inactive) and u.auth_key in ^user_auth_keys)
       )
     )
   end
@@ -41,7 +41,7 @@ defmodule Chatpi.Users do
     Repo.get_by!(User, auth_key: auth_key)
   end
 
-  def create_or_update_user(%{auth_key: auth_key} = attrs) do
+  def create_or_update_user(%{auth_key: auth_key, username: _username} = attrs) do
     case Repo.get_by(User, auth_key: auth_key) do
       nil ->
         create_user(attrs)
@@ -52,6 +52,8 @@ defmodule Chatpi.Users do
   end
 
   def create_user(attrs) do
+    IO.puts(inspect(attrs))
+
     %User{}
     |> User.insert_changeset(attrs)
     |> Repo.insert()

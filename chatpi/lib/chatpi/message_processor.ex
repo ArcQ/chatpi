@@ -4,7 +4,7 @@ defmodule Chatpi.MessageProcessor do
   """
   alias Chatpi.{Users, Chats}
 
-  defp handle_message("upsert-user", %{entity: user_attr}) do
+  defp handle_message("upsert-user", %{user: user_attr}) do
     IO.puts("MessageProcessor upserting user")
     Users.create_or_update_user(user_attr)
   end
@@ -30,6 +30,7 @@ defmodule Chatpi.MessageProcessor do
     for %{key: key, value: value} = _message <- messages do
       {:ok, decoded_map} = Jason.decode(value)
 
+      IO.puts("Message Received -> #{key}: #{inspect(messages)}")
       params = recursively_format_message(decoded_map)
 
       IO.puts("Message Received -> #{key}: #{inspect(params)}")

@@ -21,11 +21,15 @@ defmodule Chatpi.UsersTest do
     end
 
     test "create_user/1 with valid data creates user" do
+      assert Users.list_users() |> length == 3
+
       assert {:ok, user} =
                Users.create_user(%{
                  auth_key: auth_key_c(),
                  username: "new_username"
                })
+
+      assert Users.list_users() |> length == 4
     end
 
     test "create_or_update_user/2 creates or updates user" do

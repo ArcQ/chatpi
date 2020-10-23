@@ -1,0 +1,18 @@
+{
+  "data": {
+    "user": {
+      "authKey": "892130df-f45b-46b3-b766-2101db28ea62",
+      "createdAt": "2020-08-08T00:00:00",
+      "email": "eddielaw296@gmail.com",
+      "firstName": "eddie",
+      "id": "40e6215d-b5c6-4896-987c-f30f3678f608",
+      "imageUrl": "https://images.unsplash.com/photo-1597476934600-ef660b4ce617?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
+      "lastName": "law",
+      "score": 0.0,
+      "updatedAt": "2020-08-08T00:00:00",
+      "username": "arcq"
+    }
+  },
+  "publishedAt": "2020-10-22T23:50:15.148035",
+  "publisher": "touchbase"
+}

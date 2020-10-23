@@ -16,15 +16,20 @@ defmodule ChatpiWeb.MessageProcessorTest do
 
   describe "handle_message" do
     test "upsert-user", %{} do
-      # MessageProcessor.handle_messages([
-      #   %{
-      #     key: "upsert-user",
-      #     value:
-      #       "{\"publisher\":\"touchbase\",\"publishedAt\":\"2020-10-21T00:08:07.310812\",\"data\":{\"entity\":{\"creator\":{\"createdAt\":\"2020-08-08T00:00:00\",\"updatedAt\":\"2020-10-07T02:09:34.397919\",\"id\":\"40e6215d-b5c6-4896-987c-f30f3678f608\",\"authKey\":\"129830df-f45a-46b3-b766-2101db28ea62\",\"username\":\"arcq\",\"email\":\"eddielaw29d6@gmail.com\",\"score\":0.0,\"firstName\":\"eddie\",\"lastName\":\"law\",\"imageUrl\":\"https://images.unsplash.com/photo-1601924264473-30bdbcc48489?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80\"},\"name\":\"testbase940\",\"score\":0.0,\"imageUrl\":\"https://source.unsplash.com/random\",\"members\":[{\"user\":{\"createdAt\":\"2020-08-08T00:00:00\",\"updatedAt\":\"2020-10-07T02:09:34.397919\",\"id\":\"40e6215d-b5c6-4896-987c-f30f3678f608\",\"authKey\":\"129830df-f45a-46b3-b766-2101db28ea62\",\"username\":\"arcq\",\"email\":\"eddielaw29d6@gmail.com\",\"score\":0.0,\"firstName\":\"eddie\",\"lastName\":\"law\",\"imageUrl\":\"https://images.unsplash.com/photo-1601924264473-30bdbcc48489?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2000&q=80\"},\"role\":\"ADMIN\"}],\"active\":true}}}"
-      #   }
-      # ])
+      MessageProcessor.handle_messages([
+        %{
+          headers: [],
+          key: "upsert-user",
+          offset: 27,
+          partition: 4,
+          topic: "chatpi",
+          ts: 1_603_425_015_521,
+          ts_type: :create,
+          value: get_json("test/support/messages/upsert-user.json")
+        }
+      ])
 
-      # assert Users.list_users() |> length == 4
+      assert Users.list_users() |> length == 4
     end
 
     test "upsert-chat-entity", %{} do
