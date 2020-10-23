@@ -6,7 +6,7 @@ defmodule Chatpi.Chats do
   import Ecto.Query, warn: false
   alias Chatpi.Repo
 
-  alias Chatpi.{Chats.Chat, Users.User, Chats.Member, MessagePublisher}
+  alias Chatpi.{Chats.Chat, Users, Users.User, Chats.Member, MessagePublisher}
 
   def list_chats_for_user(auth_key) do
     Chat
@@ -37,7 +37,24 @@ defmodule Chatpi.Chats do
     )
   end
 
-  def create_chat(attrs \\ %{}) do
+  def create_chat_with_members(%{name: name, members: user_auth_keys}) do
+    users =
+      user_auth_keys
+      |> Users.list_users_by_ids()
+
+    if length(users) == length(users) do
+      {:ok, chat} = create_chat(%{name: name, members: []})
+
+      members =
+        users
+        |> Enum.map(&%Member{user: &1, chat: chat})
+
+      chat
+      |> update_chat(%{members: Enum.concat(chat.members, members)})
+    end
+  end
+
+  def create_chat(attrs) do
     case %Chat{}
          |> Chat.changeset(attrs)
          |> Repo.insert() do
