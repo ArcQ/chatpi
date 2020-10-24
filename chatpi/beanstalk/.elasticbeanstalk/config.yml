@@ -1,0 +1,22 @@
+branch-defaults:
+  default:
+    environment: chatpi-dev-env
+environment-defaults:
+  chatpi-dev:
+    branch: null
+    repository: null
+  chatpi-dev-env:
+    branch: null
+    repository: null
+global:
+  application_name: chatpi
+  default_ec2_keyname: null
+  default_platform: Docker running on 64bit Amazon Linux 2
+  default_region: us-east-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  sc: null
+  workspace_type: Application

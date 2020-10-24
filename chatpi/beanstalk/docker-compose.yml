@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  app:
+    image: 670564539270.dkr.ecr.us-east-1.amazonaws.com/chatpi:latest
+    ports:
+      - "80:4000"

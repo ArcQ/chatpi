@@ -18,3 +18,8 @@ cd chatpi #/chatpi
 aws ecr get-login-password --region us-east-1 --profile default | docker login --username AWS --password-stdin $ECR_DOMAIN
 docker build --target production -t $ECR_DOMAIN/$PROJECT_NAME:latest -f Dockerfile .
 docker push $ECR_DOMAIN/$PROJECT_NAME:latest
+
+cd beanstalk
+eb deploy
+
+cd ../../

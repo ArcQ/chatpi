@@ -1,0 +1,2 @@
+FROM 670564539270.dkr.ecr.us-east-1.amazonaws.com/chatpi:latest
+EXPOSE 4000

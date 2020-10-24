@@ -19,3 +19,7 @@ docker-compose.yml
 .gitignore
 LICENCE
 readme.md
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+.git
+.gitignore

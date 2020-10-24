@@ -73,8 +73,8 @@ defmodule Chatpi.MixProject do
 
       # if you're using a s3 bucket for production
       # install ex_aws and ex_aws_s3, then configure it in config/prod.exs
-      {:ex_aws, "~> 2.0", only: [:prod]},
-      {:ex_aws_s3, "~> 2.0", only: [:prod]},
+      {:ex_aws, "~> 2.0"},
+      {:ex_aws_s3, "~> 2.0"},
       # {:hackney, "~> 1.9"},
       {:hackney, "~> 1.15.2"},
       {:sweet_xml, "~> 0.6.5"},

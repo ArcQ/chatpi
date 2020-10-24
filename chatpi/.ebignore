@@ -1,0 +1,17 @@
+.elixir_ls/
+_build/
+config/
+deps/
+lib/
+priv/
+test/
+.dockerignore
+.env.*
+.formatter.exs
+.gitignore
+init.sql
+mix.exs
+mix.lock
+README.md
+run.sh
+wait-for.sh

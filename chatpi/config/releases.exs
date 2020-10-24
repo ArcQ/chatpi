@@ -14,18 +14,46 @@ config :chatpi, Chatpi.Repo,
 
 # ssl: true
 
-config :arc,
-  storage: Arc.Storage.S3,
-  bucket: {:system, "AWS_S3_BUCKET"}
+# config :arc,
+#   storage: Arc.Storage.S3,
+#   bucket: {:system, "AWS_S3_BUCKET"}
 
-config :ex_aws,
-  access_key_id: [{:system, "AWS_ACCESS_KEY_ID"}, :instance_role],
-  secret_access_key: [{:system, "AWS_SECRET_ACCESS_KEY"}, :instance_role],
-  region: System.get_env("AWS_REGION"),
-  s3: [
-    scheme: "https://",
-    host: "s3-" <> System.get_env("AWS_REGION") <> ".amazonaws.com",
-    region: System.get_env("AWS_REGION")
+# config :ex_aws,
+#   access_key_id: [{:system, "AWS_SERVICE_ACCESS_KEY_ID"}, :instance_role],
+#   secret_access_key: [{:system, "AWS_SERVICE_SECRET_ACCESS_KEY"}, :instance_role],
+#   region: System.get_env("AWS_REGION"),
+#   s3: [
+#     scheme: "https://",
+#     host: "s3-" <> System.get_env("AWS_REGION") <> ".amazonaws.com",
+#     region: System.get_env("AWS_REGION")
+#   ]
+
+config :kaffe,
+  producer: [
+    endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
+    topics: ["chatpi-out"],
+    ssl: true,
+    partition_strategy: :md5,
+    sasl: %{
+      mechanism: :plain,
+      login: System.get_env("KAFKA_USER"),
+      password: System.get_env("KAFKA_PASSWORD")
+    }
+  ],
+  consumer: [
+    endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
+    topics: ["chatpi"],
+    consumer_group: "chatpi-consumer",
+    message_handler: Chatpi.MessageProcessor,
+    offset_reset_policy: :reset_to_latest,
+    max_bytes: 500_000,
+    worker_allocation_strategy: :worker_per_topic_partition,
+    ssl: true,
+    sasl: %{
+      mechanism: :plain,
+      login: System.get_env("KAFKA_USER"),
+      password: System.get_env("KAFKA_PASSWORD")
+    }
   ]
 
 config :chatpi, :env, :prod

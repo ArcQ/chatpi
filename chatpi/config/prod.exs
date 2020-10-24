@@ -4,3 +4,4 @@ use Mix.Config
 # separately.
 # import_config "prod.secret.exs"
 config :logger, level: :info
+config :chatpi, :env, :prod
