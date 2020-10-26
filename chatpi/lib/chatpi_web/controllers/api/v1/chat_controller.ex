@@ -13,12 +13,6 @@ defmodule ChatpiWeb.Api.V1.ChatController do
     render(conn, "index.json", chats: chats)
   end
 
-  @doc false
-  def show(conn, %{"id" => id}) do
-    chat = Chats.get_chat(id)
-    render(conn, "show.json", chat: chat)
-  end
-
   defp handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do
     json(conn, %{error: 500, reason: reason})
   end

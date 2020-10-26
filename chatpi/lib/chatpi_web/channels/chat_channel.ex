@@ -65,6 +65,9 @@ defmodule ChatpiWeb.ChatChannel do
     )
 
     broadcast!(socket, "message:new", %{user: user, text: text})
+
+    # {:noreply, socket} ? should we really need to ack this?
+    {:reply, :ok, socket}
   end
 
   @doc false
@@ -90,7 +93,8 @@ defmodule ChatpiWeb.ChatChannel do
       end
     end
 
-    {:noreply, socket}
+    # {:noreply, socket} ? should we really need to ack this?
+    {:reply, :ok, socket}
   end
 
   # @doc false

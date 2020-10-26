@@ -32,8 +32,10 @@ defmodule ChatpiWeb.ChatControllerTest do
   end
 
   describe "index" do
-    test "lists all users", %{conn: conn} do
-      {:ok, _user, _chat} = chat_fixture()
+    test "lists all chats you own", %{conn: conn} do
+      {:ok, _user, chat} = chat_fixture()
+
+      chat_id = chat.id
 
       result =
         conn
@@ -43,7 +45,7 @@ defmodule ChatpiWeb.ChatControllerTest do
 
       assert %{
                "chats" => [
-                 %{"id" => id, "name" => "fixture chat 1"}
+                 %{"id" => ^chat_id, "name" => "fixture chat 1"}
                ]
              } = result
     end
