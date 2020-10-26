@@ -2,7 +2,8 @@ import Config
 
 config :chatpi, ChatpiWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 4000],
-  secret_key_base: System.get_env("SECRET_KEY_BASE")
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  check_origin: false
 
 config :chatpi, Chatpi.Repo,
   adapter: Ecto.Adapters.Postgres,

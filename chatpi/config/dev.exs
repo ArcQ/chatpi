@@ -10,6 +10,7 @@ config :chatpi, ChatpiWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
+  reloadable_apps: [:chatpi],
   check_origin: false,
   watchers: []
 
