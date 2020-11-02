@@ -53,6 +53,24 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
+  def handle_in(
+        "reaction:new",
+        %{"message_id" => message_id, "reaction" => %Messages.Reaction{} = reaction},
+        socket
+      ) do
+    user = get_in(socket.assigns, [:user])
+
+        Messages.upsert_reaction(
+          message_id, reaction
+    )
+
+    broadcast!(socket, "reaction:new", %{ reaction | user: user})
+
+    # {:noreply, socket} ? should we really need to ack this?
+    {:reply, :ok, socket}
+  end
+
+  @doc false
   def handle_in("message:new", %{"text" => text, "gif" => true}, socket) do
     user = get_in(socket.assigns, [:user])
 

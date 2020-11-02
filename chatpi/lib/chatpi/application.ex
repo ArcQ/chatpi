@@ -32,7 +32,7 @@ defmodule Chatpi.Application do
       Supervisor.start_link(
         children ++
           [
-            {Chatpi.Auth.FetchStrategy, time_interval: 20_000},
+            {Chatpi.Auth.FetchStrategy, time_interval: 60_000},
             %{
               id: Kaffe.GroupMemberSupervisor,
               start: {Kaffe.GroupMemberSupervisor, :start_link, []},

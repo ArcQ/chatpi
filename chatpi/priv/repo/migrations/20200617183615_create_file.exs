@@ -7,6 +7,11 @@ defmodule Chatpi.Repo.Migrations.CreateFile do
       add(:url, :string)
 
       add(
+        :chat_id,
+        references(:chat, type: :uuid, on_delete: :delete_all, on_update: :update_all)
+      )
+
+      add(
         :message_id,
         references(:message, type: :uuid, on_delete: :delete_all, on_update: :update_all)
       )

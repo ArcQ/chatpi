@@ -6,8 +6,7 @@ defmodule Chatpi.Messages.Message do
 
   schema "message" do
     field(:text, :string)
-    field(:seen_by_id, :integer)
-    field(:seen_at, :naive_datetime)
+    field(:reactions, {:array, :map})
     has_many(:files, Chatpi.Messages.File)
 
     belongs_to(:chat, Chatpi.Chats.Chat, type: Ecto.UUID)
@@ -26,7 +25,7 @@ defmodule Chatpi.Messages.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:text, :user_auth_key, :chat_id, :seen_by_id, :seen_at])
+    |> cast(attrs, [:text, :user_auth_key, :chat_id])
     |> validate_required([:text, :user_auth_key, :chat_id])
     |> cast_assoc(:user)
     |> cast_assoc(:chat)
