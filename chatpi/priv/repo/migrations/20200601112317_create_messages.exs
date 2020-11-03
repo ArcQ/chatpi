@@ -18,18 +18,10 @@ defmodule Chatpi.Repo.Migrations.CreateMessage do
 
       add(:chat_id, references(:chat, type: :uuid, on_delete: :nothing, on_update: :update_all))
 
-      add(:seen_by_id, references(:chatpi_user, type: :uuid, on_delete: :nothing),
-        null: true,
-        default: nil
-      )
-
-      add(:seen_at, :naive_datetime, null: true, default: nil)
-
       timestamps()
     end
 
     create(index(:message, [:user_auth_key]))
     create(index(:message, [:chat_id]))
-    create(index(:message, [:seen_by_id]))
   end
 end

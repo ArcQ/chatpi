@@ -18,7 +18,7 @@ defmodule ChatpiWeb.Api.V1.MessageController do
     if Chats.is_member(auth_key, chat_id) do
       render(conn, "index.json",
         messages:
-          Messages.list_messages_by_chat_id_query(chat_id, %Cursor{
+          Messages.list_messages_by_chat_id_query(chat_id, %Messages.Cursor{
             query_type: query_type,
             inserted_at: inserted_at
           })

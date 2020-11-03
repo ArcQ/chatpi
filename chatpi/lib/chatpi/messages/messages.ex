@@ -1,8 +1,16 @@
-defmodule Cursor do
+defmodule Chatpi.Messages.Cursor do
   @moduledoc """
   cusor for querying messages
   """
   defstruct query_type: "after", inserted_at: "2020-09-12T05:29:57"
+  # field :bar, type: Bar
+end
+
+defmodule Chatpi.Messages.Reaction do
+  @moduledoc """
+  cusor for querying messages
+  """
+  defstruct [:user_id, :inserted_at, :classifier]
   # field :bar, type: Bar
 end
 
@@ -30,7 +38,7 @@ defmodule Chatpi.Messages do
 
   def list_messages_by_chat_id_query(
         chat_id,
-        %Cursor{query_type: query_type, inserted_at: inserted_at}
+        %Chatpi.Messages.Cursor{query_type: query_type, inserted_at: inserted_at}
       ) do
     query =
       case query_type do
@@ -52,6 +60,11 @@ defmodule Chatpi.Messages do
     %Message{}
     |> Message.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def upsert_reaction(message_id, %Chatpi.Messages.Reaction{} = _) do
+    Message
+    |> where([message], message.message_id == ^message_id)
   end
 
   def update_message(%Message{} = message, attrs) do

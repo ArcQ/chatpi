@@ -27,7 +27,9 @@ defmodule Chatpi.MessagesTest do
         message
         |> Map.put(:files, [])
 
-      assert Messages.list_messages_by_chat_id_query(chat.id, %Cursor{query_type: "after"}) == [
+      assert Messages.list_messages_by_chat_id_query(chat.id, %Messages.Cursor{
+               query_type: "after"
+             }) == [
                message
              ]
     end
@@ -60,6 +62,12 @@ defmodule Chatpi.MessagesTest do
 
       assert {:ok, %Message{}} = Messages.delete_message(%Message{id: message.id})
       assert Enum.empty?(Messages.list_messages_by_chat_id(chat.id))
+    end
+
+    test "change_message/1 returns a message changeset" do
+      {:ok, _user, _chat, message} = message_fixture()
+
+      assert %Ecto.Changeset{} = Messages.change_message(message)
     end
 
     test "change_message/1 returns a message changeset" do
