@@ -57,23 +57,25 @@ defmodule ChatpiWeb.ChatChannel do
         "reaction:new",
         %{
           "message_id" => message_id,
-          "reaction" =>
-            %{
-              "message_id" => message_id,
-              "user" => user_id,
-              "classifier" => classifier
-            } = reaction
+          "reaction" => %{
+            "classifier" => classifier
+          }
         },
         socket
       ) do
     user = get_in(socket.assigns, [:user])
 
-    Messages.upsert_reaction(
-      message_id,
-      %{message_id: message_id, user: user_id, classifier: classifier}
-    )
+    {:ok, _upserted_reaction} =
+      Messages.upsert_reaction(
+        message_id,
+        %{user_id: user.id, classifier: classifier}
+      )
 
-    broadcast!(socket, "reaction:new", %{reaction | user: user})
+    broadcast!(socket, "reaction:new", %{
+      message_id: message_id,
+      classifier: classifier,
+      user: user
+    })
 
     # {:noreply, socket} ? should we really need to ack this?
     {:reply, :ok, socket}

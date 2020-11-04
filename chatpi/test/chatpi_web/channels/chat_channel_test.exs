@@ -61,24 +61,22 @@ defmodule ChatpiWeb.ChatChannelTest do
   test "send reaction to a message should create new reaction if it does not exist", %{
     user: user,
     socket: socket,
-    message: message
+    message: %{id: id}
   } do
     push(socket, "reaction:new", %{
-      "message_id" => message.id,
-      "reaction" => %{"user" => user.id, "classifier" => "laugh"}
+      "message_id" => id,
+      "reaction" => %{"classifier" => "laugh"}
     })
 
     assert_broadcast(
       "reaction:new",
       %{
-        id: id,
-        user_auth_key: user_auth_key,
-        text: "test a message",
-        inserted_at: inserted_at
+        user: user,
+        message_id: ^id,
+        classifier: "laugh"
       } = broadcasted_message
     )
 
-    assert !Map.has_key?(broadcasted_message, :file)
-    assert broadcasted_message[:user_auth_key] == user.auth_key
+    # assert broadcasted_message[:user_auth_key] == user.auth_key
   end
 end

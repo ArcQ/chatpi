@@ -69,7 +69,7 @@ defmodule Chatpi.Messages do
     end
   end
 
-  def upsert_reaction(message_id, reaction) do
+  def upsert_reaction(message_id, %{user_id: _, classifier: _} = reaction) do
     message =
       Message
       |> where([message], message.id == ^message_id)
