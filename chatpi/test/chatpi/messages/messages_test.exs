@@ -7,6 +7,7 @@ defmodule Chatpi.MessagesTest do
 
   describe "messages" do
     alias Chatpi.Messages.Message
+    alias Chatpi.Messages.Reaction
 
     use Chatpi.Fixtures, [:user, :chat, :message]
 
@@ -21,7 +22,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "list_messages_by_chat_id_query/2 returns all messages" do
-      {:ok, user, chat, message} = message_fixture()
+      {:ok, _user, chat, message} = message_fixture()
 
       message =
         message
@@ -70,10 +71,55 @@ defmodule Chatpi.MessagesTest do
       assert %Ecto.Changeset{} = Messages.change_message(message)
     end
 
-    test "change_message/1 returns a message changeset" do
-      {:ok, _user, _chat, message} = message_fixture()
+    test "upsert_reaction/2 inserts reaction when it doesn't exist" do
+      {:ok, user, _chat, message} = message_fixture()
 
-      assert %Ecto.Changeset{} = Messages.change_message(message)
+      reaction = %{
+        user_id: user.id,
+        classifier: "cry"
+      }
+
+      {:ok, message} = Messages.upsert_reaction(message.id, reaction)
+
+      assert message.reactions |> length == 1
+
+      upserted_reaction = message.reactions |> List.first()
+
+      user_id = user.id
+
+      assert %{
+               user_id: ^user_id,
+               classifier: "cry"
+             } = message.reactions |> List.first()
+    end
+
+    test "upsert_reaction/2 replaces reaction when it does exist" do
+      {:ok, user, _chat, message} = message_fixture()
+
+      reaction = %{
+        user_id: user.id,
+        classifier: "cry"
+      }
+
+      {:ok, message} = Messages.upsert_reaction(message.id, reaction)
+
+      reaction2 = %{
+        user_id: user.id,
+        classifier: "laugh"
+      }
+
+      {:ok, message} = Messages.upsert_reaction(message.id, reaction2)
+
+      assert message.reactions |> length == 1
+
+      upserted_reaction = message.reactions |> List.first()
+
+      user_id = user.id
+
+      assert %{
+               user_id: ^user_id,
+               classifier: "laugh"
+             } = message.reactions |> List.first()
     end
   end
 end

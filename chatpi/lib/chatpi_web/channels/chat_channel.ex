@@ -27,11 +27,6 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  def handle_in("ping", _payload, socket) do
-    {:reply, {:ok, %{status: "ok"}}, socket}
-  end
-
-  @doc false
   def handle_info(:after_join, _, socket) do
     push(socket, "presence_state", Presence.list(socket))
 
@@ -41,6 +36,11 @@ defmodule ChatpiWeb.ChatChannel do
       })
 
     {:noreply, socket}
+  end
+
+  @doc false
+  def handle_in("ping", _payload, socket) do
+    {:reply, {:ok, %{status: "ok"}}, socket}
   end
 
   @doc false
@@ -55,16 +55,25 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def handle_in(
         "reaction:new",
-        %{"message_id" => message_id, "reaction" => %Messages.Reaction{} = reaction},
+        %{
+          "message_id" => message_id,
+          "reaction" =>
+            %{
+              "message_id" => message_id,
+              "user" => user_id,
+              "classifier" => classifier
+            } = reaction
+        },
         socket
       ) do
     user = get_in(socket.assigns, [:user])
 
-        Messages.upsert_reaction(
-          message_id, reaction
+    Messages.upsert_reaction(
+      message_id,
+      %{message_id: message_id, user: user_id, classifier: classifier}
     )
 
-    broadcast!(socket, "reaction:new", %{ reaction | user: user})
+    broadcast!(socket, "reaction:new", %{reaction | user: user})
 
     # {:noreply, socket} ? should we really need to ack this?
     {:reply, :ok, socket}

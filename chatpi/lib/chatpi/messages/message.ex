@@ -6,7 +6,7 @@ defmodule Chatpi.Messages.Message do
 
   schema "message" do
     field(:text, :string)
-    field(:reactions, {:array, :map})
+    embeds_many(:reactions, Chatpi.Messages.Reaction, on_replace: :delete)
     has_many(:files, Chatpi.Messages.File)
 
     belongs_to(:chat, Chatpi.Chats.Chat, type: Ecto.UUID)
@@ -38,6 +38,13 @@ defmodule Chatpi.Messages.Message do
   def update_changeset(message, attrs) do
     message
     |> cast(attrs, [])
-    |> put_assoc(:files, attrs[:files], required: false)
+    |> put_assoc(:files, attrs[:files] || nil, required: false)
+  end
+
+  @doc false
+  def update_reactions_changeset(message, attrs) do
+    message
+    |> cast(attrs, [])
+    |> cast_embed(:reactions)
   end
 end

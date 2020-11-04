@@ -52,8 +52,6 @@ defmodule Chatpi.Users do
   end
 
   def create_user(attrs) do
-    IO.puts(inspect(attrs))
-
     %User{}
     |> User.insert_changeset(attrs)
     |> Repo.insert()

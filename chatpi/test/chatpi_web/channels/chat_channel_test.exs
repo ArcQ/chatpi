@@ -14,7 +14,7 @@ defmodule ChatpiWeb.ChatChannelTest do
   end
 
   setup do
-    {:ok, user, chat} = chat_fixture()
+    {:ok, user, chat, message} = message_fixture()
 
     {:ok, _, socket} =
       UserSocket
@@ -30,7 +30,7 @@ defmodule ChatpiWeb.ChatChannelTest do
         "token" => auth_key_c()
       })
 
-    {:ok, socket: socket, lobby: lobby_socket, user: user, chat: chat}
+    {:ok, socket: socket, lobby: lobby_socket, user: user, chat: chat, message: message}
   end
 
   test "ping private and lobby replies with status ok", %{socket: socket, lobby: lobby_socket} do
@@ -46,6 +46,30 @@ defmodule ChatpiWeb.ChatChannelTest do
 
     assert_broadcast(
       "message:new",
+      %{
+        id: id,
+        user_auth_key: user_auth_key,
+        text: "test a message",
+        inserted_at: inserted_at
+      } = broadcasted_message
+    )
+
+    assert !Map.has_key?(broadcasted_message, :file)
+    assert broadcasted_message[:user_auth_key] == user.auth_key
+  end
+
+  test "send reaction to a message should create new reaction if it does not exist", %{
+    user: user,
+    socket: socket,
+    message: message
+  } do
+    push(socket, "reaction:new", %{
+      "message_id" => message.id,
+      "reaction" => %{"user" => user.id, "classifier" => "laugh"}
+    })
+
+    assert_broadcast(
+      "reaction:new",
       %{
         id: id,
         user_auth_key: user_auth_key,

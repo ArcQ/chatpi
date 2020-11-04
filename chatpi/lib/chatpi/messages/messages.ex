@@ -6,14 +6,6 @@ defmodule Chatpi.Messages.Cursor do
   # field :bar, type: Bar
 end
 
-defmodule Chatpi.Messages.Reaction do
-  @moduledoc """
-  cusor for querying messages
-  """
-  defstruct [:user_id, :inserted_at, :classifier]
-  # field :bar, type: Bar
-end
-
 defmodule Chatpi.Messages do
   @moduledoc """
   The Messages context.
@@ -62,9 +54,37 @@ defmodule Chatpi.Messages do
     |> Repo.insert()
   end
 
-  def upsert_reaction(message_id, %Chatpi.Messages.Reaction{} = _) do
-    Message
-    |> where([message], message.message_id == ^message_id)
+  # TODO we could make this more generic for all array types
+  def merge_into_reactions(existing_items \\ [], new_item) do
+    if Enum.any?(existing_items, &(&1.user_id == new_item.user_id)) do
+      Enum.map(existing_items, fn existing_item ->
+        if existing_item.user_id == new_item.user_id do
+          new_item
+        else
+          existing_item
+        end
+      end)
+    else
+      [new_item | existing_items]
+    end
+  end
+
+  def upsert_reaction(message_id, reaction) do
+    message =
+      Message
+      |> where([message], message.id == ^message_id)
+      |> Repo.all()
+      |> List.first()
+
+    reactions =
+      message
+      |> Map.get(:reactions)
+      |> (&(&1 || [])).()
+      |> merge_into_reactions(reaction)
+
+    message
+    |> Message.update_reactions_changeset(%{reactions: reactions})
+    |> Repo.update()
   end
 
   def update_message(%Message{} = message, attrs) do
