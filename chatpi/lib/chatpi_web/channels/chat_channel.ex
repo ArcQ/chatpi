@@ -27,7 +27,7 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  def handle_info(:after_join, _, socket) do
+  def handle_info(:after_join, socket) do
     push(socket, "presence_state", Presence.list(socket))
 
     {:ok, _} =
@@ -129,11 +129,6 @@ defmodule ChatpiWeb.ChatChannel do
     # {:noreply, socket} ? should we really need to ack this?
     {:reply, :ok, socket}
   end
-
-  # @doc false
-  # defp authorized?(%{"token" => token} = _payload) do
-  #   if String.length(token) > 0, do: true, else: false
-  # end
 
   defp authorized?(socket, _api_key, topic_id) do
     if topic_id == "lobby" do

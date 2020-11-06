@@ -3,14 +3,15 @@ defmodule Chatpi.MessageProcessor do
   process messages from kafka
   """
   alias Chatpi.{Users, Chats}
+  require Logger
 
   defp handle_message("upsert-user", %{user: user_attr}) do
-    IO.puts("MessageProcessor upserting user")
+    Logger.info("MessageProcessor upserting user")
     Users.create_or_update_user(user_attr)
   end
 
   defp handle_message("upsert-chat-entity", %{entity: chat_attr}) do
-    IO.puts("MessageProcessor upserting chat")
+    Logger.info("MessageProcessor upserting chat")
 
     Chats.create_chat_with_members(%{
       name: chat_attr.name,
@@ -30,10 +31,9 @@ defmodule Chatpi.MessageProcessor do
     for %{key: key, value: value} = _message <- messages do
       {:ok, decoded_map} = Jason.decode(value)
 
-      IO.puts("Message Received -> #{key}: #{inspect(messages)}")
       params = recursively_format_message(decoded_map)
 
-      IO.puts("Message Received -> #{key}: #{inspect(params)}")
+      Logger.info("Message Received -> #{key}: #{inspect(params)}")
       handle_message(key, params.data)
     end
 

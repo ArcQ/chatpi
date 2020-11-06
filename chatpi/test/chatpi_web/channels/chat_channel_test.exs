@@ -82,9 +82,7 @@ defmodule ChatpiWeb.ChatChannelTest do
 
   test "send reply to a message should work", %{
     user: user,
-    chat: chat,
-    socket: socket,
-    message: %{id: message_id}
+    socket: socket
   } do
     push(socket, "message:new", %{"text" => "test a message"})
 

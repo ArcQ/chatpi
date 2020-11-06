@@ -5,8 +5,6 @@ defmodule ChatpiWeb.ChatControllerTest do
   import Chatpi.FixtureConstants
   use ChatpiWeb.ConnCase
 
-  alias Chatpi.Chats
-
   use Chatpi.Fixtures, [:user, :chat]
 
   setup_with_mocks([
@@ -26,7 +24,7 @@ defmodule ChatpiWeb.ChatControllerTest do
          end
        end
      ]},
-    {Kaffe.Producer, [], [produce_sync: fn key, event -> "" end]}
+    {Kaffe.Producer, [], [produce_sync: fn _key, _event -> "" end]}
   ]) do
     :ok
   end

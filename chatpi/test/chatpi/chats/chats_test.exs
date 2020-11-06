@@ -1,11 +1,10 @@
 defmodule Chatpi.ChatsTest do
   import Mock
   use Chatpi.DataCase
-  alias Ecto.Changeset
   alias Chatpi.Chats
 
   setup_with_mocks([
-    {Kaffe.Producer, [], [produce_sync: fn key, event -> "" end]}
+    {Kaffe.Producer, [], [produce_sync: fn _key, _event -> "" end]}
   ]) do
     :ok
   end
@@ -15,7 +14,6 @@ defmodule Chatpi.ChatsTest do
     import Chatpi.FixtureConstants
 
     alias Chatpi.Chats.Chat
-    alias Chatpi.Chats.Member
 
     test "list_chats_for_user/1 returns all chats for user" do
       {:ok, user, chat} = chat_fixture()
@@ -49,7 +47,7 @@ defmodule Chatpi.ChatsTest do
     end
 
     test "update_chat/2 with valid data updates the chat" do
-      {:ok, user, chat} = chat_fixture()
+      {:ok, _user, chat} = chat_fixture()
 
       assert {:ok, %Chat{} = chat} = Chats.update_chat(chat, @update_chat_attrs)
 
@@ -57,13 +55,13 @@ defmodule Chatpi.ChatsTest do
     end
 
     test "delete_chat/1 deletes the chat" do
-      {:ok, user, chat} = chat_fixture()
+      {:ok, _user, chat} = chat_fixture()
       assert {:ok, %Chat{}} = Chats.delete_chat(chat)
       assert Enum.empty?(Chats.list_chats_for_user(chat.id))
     end
 
     test "change_chat/1 returns a chat changeset" do
-      {:ok, user, chat} = chat_fixture()
+      {:ok, _user, chat} = chat_fixture()
       assert %Ecto.Changeset{} = Chats.change_chat(chat)
     end
   end

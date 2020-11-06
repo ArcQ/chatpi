@@ -9,7 +9,7 @@ defmodule Chatpi.UsersTest do
     use Chatpi.Fixtures, [:user]
 
     test "list_users/1 returns all messages" do
-      {:ok, user} = user_fixture()
+      {:ok, _user} = user_fixture()
 
       assert Users.list_users() |> length == 4
     end

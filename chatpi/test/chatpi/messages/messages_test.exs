@@ -1,13 +1,10 @@
 defmodule Chatpi.MessagesTest do
   use Chatpi.DataCase
 
-  alias Chatpi.Users
-  alias Chatpi.Chats
   alias Chatpi.Messages
 
   describe "messages" do
     alias Chatpi.Messages.Message
-    alias Chatpi.Messages.Reaction
 
     use Chatpi.Fixtures, [:user, :chat, :message]
 
@@ -23,7 +20,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "find_by_id/1 returns all correct message" do
-      {:ok, _user, chat, message} = message_fixture()
+      {:ok, _user, _chat, message} = message_fixture()
 
       expected_result =
         message
@@ -49,11 +46,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "create_message/1 with valid data creates a message" do
-      {:ok, user, chat, message} = message_fixture()
-
-      message =
-        message
-        |> Map.put(:files, [])
+      {:ok, user, chat, _message} = message_fixture()
 
       assert {:ok, %Message{} = message} =
                Messages.create_message(%{
@@ -108,8 +101,6 @@ defmodule Chatpi.MessagesTest do
 
       assert message.reactions |> length == 1
 
-      upserted_reaction = message.reactions |> List.first()
-
       user_id = user.id
 
       assert %{
@@ -136,8 +127,6 @@ defmodule Chatpi.MessagesTest do
       {:ok, message} = Messages.upsert_reaction(message.id, reaction2)
 
       assert message.reactions |> length == 1
-
-      upserted_reaction = message.reactions |> List.first()
 
       user_id = user.id
 

@@ -13,7 +13,7 @@ defmodule Chatpi.Users.User do
 
     many_to_many(:chats, Chatpi.Chats.Chat, join_through: "chat_member")
 
-    has_many(:messages, Chatpi.Messages.Message)
+    has_many(:messages, Chatpi.Messages.Message, foreign_key: :user_auth_key)
 
     timestamps()
   end

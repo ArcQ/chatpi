@@ -2,6 +2,7 @@ defmodule ChatpiWeb.UserSocket do
   @moduledoc false
   use Phoenix.Socket
   alias Chatpi.Users
+  require Logger
 
   ## Channels
   channel("chat:*", ChatpiWeb.ChatChannel)
@@ -11,14 +12,14 @@ defmodule ChatpiWeb.UserSocket do
       {:ok, claims} ->
         auth_key = claims["sub"]
 
-        IO.puts("Socket connection requested from auth_key: " <> auth_key)
+        Logger.info("Socket connection requested from auth_key: " <> auth_key)
 
         {:ok,
          socket
          |> assign(:user, Users.get_user_by_auth_key!(auth_key))}
 
       {:error, reason} ->
-        IO.puts(inspect(reason))
+        Logger.warn(reason)
         {:error, reason}
     end
   end

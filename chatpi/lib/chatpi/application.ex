@@ -15,7 +15,7 @@ defmodule Chatpi.Application do
       ChatpiWeb.Endpoint,
       # Starts a worker by calling: Chatpi.Worker.start_link(arg)
       # {Chatpi.Worker, arg},
-
+      {Phoenix.PubSub, name: Chatpi.PubSub},
       ChatpiWeb.Presence
     ]
 

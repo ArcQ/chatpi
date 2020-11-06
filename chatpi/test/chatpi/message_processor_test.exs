@@ -6,10 +6,9 @@ defmodule ChatpiWeb.MessageProcessorTest do
   use Chatpi.Fixtures, [:user, :chat, :message]
   alias Chatpi.MessageProcessor
   alias Chatpi.{Users, Chats}
-  import Chatpi.FixtureConstants
 
   setup_with_mocks([
-    {Kaffe.Producer, [], [produce_sync: fn key, event -> "" end]}
+    {Kaffe.Producer, [], [produce_sync: fn _key, _event -> "" end]}
   ]) do
     :ok
   end
