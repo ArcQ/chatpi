@@ -17,9 +17,15 @@ defmodule Chatpi.Messages do
   defp query_messages_paged(query) do
     query
     |> order_by(desc: :inserted_at)
-    |> preload([:files])
+    |> preload([:files, :reply_target])
     |> limit(20)
     |> Repo.all()
+  end
+
+  def find_by_id(message_id) do
+    Message
+    |> preload([:files, :reply_target])
+    |> Repo.get(message_id)
   end
 
   def list_messages_by_chat_id(chat_id) do

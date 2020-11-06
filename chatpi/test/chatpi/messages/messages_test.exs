@@ -14,24 +14,37 @@ defmodule Chatpi.MessagesTest do
     test "list_messages_by_chat_id/1 returns all messages" do
       {:ok, _user, chat, message} = message_fixture()
 
-      message =
+      expected_result =
         message
         |> Map.put(:files, [])
+        |> Map.put(:reply_target, nil)
 
-      assert Messages.list_messages_by_chat_id(chat.id) == [message]
+      assert Messages.list_messages_by_chat_id(chat.id) == [expected_result]
+    end
+
+    test "find_by_id/1 returns all correct message" do
+      {:ok, _user, chat, message} = message_fixture()
+
+      expected_result =
+        message
+        |> Map.put(:files, [])
+        |> Map.put(:reply_target, nil)
+
+      assert Messages.find_by_id(message.id) == expected_result
     end
 
     test "list_messages_by_chat_id_query/2 returns all messages" do
       {:ok, _user, chat, message} = message_fixture()
 
-      message =
+      expected_result =
         message
         |> Map.put(:files, [])
+        |> Map.put(:reply_target, nil)
 
       assert Messages.list_messages_by_chat_id_query(chat.id, %Messages.Cursor{
                query_type: "after"
              }) == [
-               message
+               expected_result
              ]
     end
 
@@ -52,6 +65,18 @@ defmodule Chatpi.MessagesTest do
 
     test "create_message/1 with file works" do
       assert {:ok, _user, _chat, message} = message_fixture_reply_with_file()
+    end
+
+    test "create_message/1 with reply works" do
+      {:ok, user, chat, message} = message_fixture()
+
+      assert {:ok, %Message{} = message} =
+               Messages.create_message(%{
+                 reply_target_id: message.id,
+                 text: "text",
+                 user_auth_key: user.auth_key,
+                 chat_id: chat.id
+               })
     end
 
     test "create_message/1 with invalid data returns error changeset" do

@@ -74,7 +74,7 @@ defmodule ChatpiWeb.ChatChannel do
     broadcast!(socket, "reaction:new", %{
       message_id: message_id,
       classifier: classifier,
-      user: user
+      user_auth_key: user.auth_key
     })
 
     # {:noreply, socket} ? should we really need to ack this?
@@ -102,11 +102,13 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def handle_in("message:new", message_payload, socket) do
     user = get_in(socket.assigns, [:user])
+    reply_target_id = message_payload["reply_target_id"] || nil
 
     if String.length(message_payload["text"]) > 0 do
       case Messages.create_message(%{
              text: message_payload["text"],
              files: message_payload["files"],
+             reply_target_id: reply_target_id,
              user_auth_key: user.auth_key,
              chat_id: get_chat_id(socket)
            }) do
@@ -114,7 +116,9 @@ defmodule ChatpiWeb.ChatChannel do
           broadcast!(
             socket,
             "message:new",
-            MessageView.render("message.json", %{message: message})
+            MessageView.render("message.json", %{
+              message: %{message | reply_target_id: reply_target_id}
+            })
           )
 
         {:error, reason} ->

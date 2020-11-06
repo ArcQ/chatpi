@@ -25,7 +25,7 @@ defmodule Chatpi.Messages.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:text, :user_auth_key, :chat_id])
+    |> cast(attrs, [:text, :user_auth_key, :chat_id, :reply_target_id])
     |> validate_required([:text, :user_auth_key, :chat_id])
     |> cast_assoc(:user)
     |> cast_assoc(:chat)

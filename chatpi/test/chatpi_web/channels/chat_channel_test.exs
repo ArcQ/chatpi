@@ -71,12 +71,50 @@ defmodule ChatpiWeb.ChatChannelTest do
     assert_broadcast(
       "reaction:new",
       %{
-        user: user,
+        user_auth_key: user_auth_key,
         message_id: ^id,
         classifier: "laugh"
       } = broadcasted_message
     )
 
-    # assert broadcasted_message[:user_auth_key] == user.auth_key
+    assert user_auth_key == user.auth_key
+  end
+
+  test "send reply to a message should work", %{
+    user: user,
+    chat: chat,
+    socket: socket,
+    message: %{id: message_id}
+  } do
+    push(socket, "message:new", %{"text" => "test a message"})
+
+    assert_broadcast(
+      "message:new",
+      broadcasted_message
+    )
+
+    broadcasted_id = broadcasted_message.id
+
+    push(socket, "message:new", %{
+      "reply_target_id" => broadcasted_id,
+      "text" => "replied to your message"
+    })
+
+    assert broadcasted_message.reply_target_id == nil
+
+    assert_broadcast(
+      "message:new",
+      %{
+        user_auth_key: user_auth_key,
+        reply_target_id: ^broadcasted_id,
+        text: "replied to your message"
+      } = broadcasted_reply
+    )
+
+    assert broadcasted_message[:user_auth_key] == user.auth_key
+
+    saved_reply_message = Chatpi.Messages.find_by_id(broadcasted_reply.id)
+
+    assert saved_reply_message.reply_target_id == broadcasted_message.id
   end
 end

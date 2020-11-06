@@ -2,7 +2,7 @@ defmodule ChatpiWeb.Api.V1.MessageView do
   use ChatpiWeb, :view
   use Timex
 
-  @public_attributes ~W(id text user_auth_key inserted_at)a
+  @public_attributes ~W(id text user_auth_key inserted_at reply_target_id)a
 
   def render("index.json", %{messages: messages}) do
     %{
