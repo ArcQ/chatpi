@@ -6,7 +6,7 @@ defmodule Chatpi.Chats do
   import Ecto.Query, warn: false
   alias Chatpi.Repo
 
-  alias Chatpi.{Chats.Chat, Users, Users.User, Chats.Member, MessagePublisher}
+  alias Chatpi.{Messages.Message, Chats.Chat, Users, Users.User, Chats.Member, MessagePublisher}
 
   def list_chats_for_user(auth_key) do
     Chat
@@ -18,9 +18,16 @@ defmodule Chatpi.Chats do
   end
 
   def get_chat(id) do
-    Chat
-    |> where([chat], chat.id == ^id)
+    Member
+    |> where([member], member.id == ^id)
     |> preload(members: :user)
+    |> Repo.all()
+    |> List.first()
+  end
+
+  def get_member_by_id(id) do
+    Member
+    |> where([member], member.id == ^id)
     |> Repo.all()
     |> List.first()
   end
@@ -67,6 +74,13 @@ defmodule Chatpi.Chats do
     end
   end
 
+  def update_messages_read(%{message_id: message_seen_id, user_auth_key: _user_auth_key} = query) do
+    query
+    |> get_member
+    |> Member.update_message_seen_changeset(%{message_seen_id: message_seen_id})
+    |> Repo.update()
+  end
+
   def update_chat(%Chat{} = chat, attrs) do
     chat
     |> Chat.update_changeset(attrs)
@@ -98,5 +112,16 @@ defmodule Chatpi.Chats do
     |> where([chat], chat.id == ^chat_id)
     |> join(:inner, [chat], user in User, on: user.auth_key == ^auth_key)
     |> Repo.exists?()
+  end
+
+  def get_member(%{message_id: message_id, user_auth_key: user_auth_key} = _query) do
+    Member
+    |> join(:inner, [member], chat in Chat, on: chat.id == member.chat_id)
+    |> join(:inner, [member, chat], message in Message,
+      on: message.chat_id == chat.id and message.id == ^message_id
+    )
+    |> where([member], member.user_auth_key == ^user_auth_key)
+    |> Repo.all()
+    |> List.first()
   end
 end

@@ -10,10 +10,11 @@ defmodule Chatpi.ChatsTest do
   end
 
   describe "chats" do
-    use Chatpi.Fixtures, [:user, :chat]
+    use Chatpi.Fixtures, [:user, :chat, :message]
     import Chatpi.FixtureConstants
 
     alias Chatpi.Chats.Chat
+    alias Chatpi.Chats.Member
 
     test "list_chats_for_user/1 returns all chats for user" do
       {:ok, user, chat} = chat_fixture()
@@ -54,6 +55,22 @@ defmodule Chatpi.ChatsTest do
       assert chat.name == "some updated name"
     end
 
+    test "update_message/2 updates message_seen properly" do
+      {:ok, user, chat, message} = message_fixture()
+
+      assert {:ok, %Member{} = member} =
+               Chats.update_messages_read(%{
+                 message_id: message.id,
+                 user_auth_key: user.auth_key
+               })
+
+      result = Chats.get_member_by_id(member.id)
+
+      assert result.chat_id == chat.id
+      assert result.user_auth_key == user.auth_key
+      assert result.message_seen_id == message.id
+    end
+
     test "delete_chat/1 deletes the chat" do
       {:ok, _user, chat} = chat_fixture()
       assert {:ok, %Chat{}} = Chats.delete_chat(chat)
@@ -63,6 +80,15 @@ defmodule Chatpi.ChatsTest do
     test "change_chat/1 returns a chat changeset" do
       {:ok, _user, chat} = chat_fixture()
       assert %Ecto.Changeset{} = Chats.change_chat(chat)
+    end
+
+    test "get_member/1 gets member by query" do
+      {:ok, user, _chat, message} = message_fixture()
+      message_id = message.id
+
+      assert member = Chats.get_member(%{message_id: message_id, user_auth_key: user.auth_key})
+      assert member.chat_id == message.chat_id
+      assert member.user_auth_key == user.auth_key
     end
   end
 end

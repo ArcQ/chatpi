@@ -7,6 +7,7 @@ import {
   onMessageReceive,
   SendOptions,
   BroadcastAction,
+  SendReactionOptions,
 } from './types';
 
 /**
@@ -107,7 +108,39 @@ export class Connection {
   sendMessage({ channelId, message }: SendOptions): Promise<string> {
     return new Promise((resolve, reject) => {
       this.channels[channelId]
-        .push(BroadcastAction.NEW_MESSAGE, { text: message.text })
+        .push(BroadcastAction.NEW_MESSAGE, {
+          text: message.text,
+          reply_target_id: message.replyTargetId,
+          files: message.files,
+        })
+        .receive('ok', () => resolve('ok'))
+        .receive('error', reasons => reject(new Error(reasons)))
+        .receive('timeout', () =>
+          console.info(
+            'Send message timed out: Networking issues or configuration not set up properly',
+          ),
+        );
+    });
+  }
+
+  /**
+   * send a reaction
+   * @example <caption>Join a channel</caption>
+   * sendMessage({ channel: 'cf4aeae1-cda7-41f3-adf7-9b2bb377be7d4', message })
+        .then((response) => console.log(response));
+   *
+   */
+  sendReaction({
+    channelId,
+    reactionTargetId,
+    classifier,
+  }: SendReactionOptions): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.channels[channelId]
+        .push(BroadcastAction.NEW_REACTION, {
+          reaction_target_id: reactionTargetId,
+          classifier,
+        })
         .receive('ok', () => resolve('ok'))
         .receive('error', reasons => reject(new Error(reasons)))
         .receive('timeout', () =>

@@ -19,6 +19,9 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def join("chat:touchbase:" <> private_topic_id, _payload, socket) do
     if authorized?(socket, "touchbase", private_topic_id) do
+      socket
+      |> assign(:topic, private_topic_id)}
+
       send(self(), :after_join)
       {:ok, socket}
     else
@@ -29,6 +32,8 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def handle_info(:after_join, socket) do
     push(socket, "presence_state", Presence.list(socket))
+
+    update_messages_read(%{ user_auth_key: socket.assigns.user.auth_key })
 
     {:ok, _} =
       Presence.track(socket, "user:#{socket.assigns.user.auth_key}", %{
@@ -56,7 +61,7 @@ defmodule ChatpiWeb.ChatChannel do
   def handle_in(
         "reaction:new",
         %{
-          "message_id" => message_id,
+          "reaction_target_id" => message_id,
           "reaction" => %{
             "classifier" => classifier
           }
@@ -72,7 +77,7 @@ defmodule ChatpiWeb.ChatChannel do
       )
 
     broadcast!(socket, "reaction:new", %{
-      message_id: message_id,
+      reaction_target_id: message_id,
       classifier: classifier,
       user_auth_key: user.auth_key
     })

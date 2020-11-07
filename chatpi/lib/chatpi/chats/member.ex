@@ -12,6 +12,8 @@ defmodule Chatpi.Chats.Member do
       references: :auth_key,
       foreign_key: :user_auth_key
     )
+
+    belongs_to(:message_seen, Chatpi.Messages.Message, type: Ecto.UUID)
   end
 
   @doc false
@@ -20,5 +22,12 @@ defmodule Chatpi.Chats.Member do
     |> cast(attrs, [:chat_id, :user_auth_key])
     |> validate_required([:chat_id, :user_auth_key])
     |> put_change(:id, Ecto.UUID.bingenerate())
+  end
+
+  @doc false
+  def update_message_seen_changeset(member, attrs) do
+    member
+    |> cast(attrs, [:message_seen_id])
+    |> cast_assoc(:message_seen, required: false)
   end
 end

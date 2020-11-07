@@ -64,7 +64,7 @@ defmodule ChatpiWeb.ChatChannelTest do
     message: %{id: id}
   } do
     push(socket, "reaction:new", %{
-      "message_id" => id,
+      "reaction_target_id" => id,
       "reaction" => %{"classifier" => "laugh"}
     })
 
@@ -72,7 +72,7 @@ defmodule ChatpiWeb.ChatChannelTest do
       "reaction:new",
       %{
         user_auth_key: user_auth_key,
-        message_id: ^id,
+        reaction_target_id: ^id,
         classifier: "laugh"
       } = broadcasted_message
     )
