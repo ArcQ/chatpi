@@ -18,7 +18,7 @@ defmodule Chatpi.Messages do
     query
     |> order_by(desc: :inserted_at)
     |> preload([:files, :reply_target])
-    |> limit(20)
+    |> limit(100)
     |> Repo.all()
   end
 

@@ -115,4 +115,34 @@ defmodule ChatpiWeb.ChatChannelTest do
 
     assert saved_reply_message.reply_target_id == broadcasted_message.id
   end
+
+  test "broadcasting presence", %{socket: _socket, user: _user, chat: _chat} do
+    assert_broadcast("presence_diff", %{
+      joins: joins
+    })
+
+    assert joins |> Map.values() |> length == 1
+    join_payload = joins |> Map.values() |> List.first() |> Map.get(:metas) |> List.first()
+
+    assert %{
+             is_typing: false,
+             phx_ref: phx_ref
+           } = join_payload
+  end
+
+  test "handles start and stop typing indicators on presence", %{
+    socket: socket,
+    user: user,
+    chat: _chat
+  } do
+    push(socket, "user:typing", %{is_typing: true})
+
+    ChatpiWeb.Presence.list(socket)
+
+    assert socket
+           |> ChatpiWeb.Presence.get_by_key("user:#{user.auth_key}")
+           |> Map.get(:metas)
+           |> List.first()
+           |> Map.get(:is_typing) == true
+  end
 end

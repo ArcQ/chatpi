@@ -19,9 +19,6 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def join("chat:touchbase:" <> private_topic_id, _payload, socket) do
     if authorized?(socket, "touchbase", private_topic_id) do
-      socket
-      |> assign(:topic, private_topic_id)}
-
       send(self(), :after_join)
       {:ok, socket}
     else
@@ -31,14 +28,32 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   def handle_info(:after_join, socket) do
-    push(socket, "presence_state", Presence.list(socket))
-
-    update_messages_read(%{ user_auth_key: socket.assigns.user.auth_key })
-
     {:ok, _} =
       Presence.track(socket, "user:#{socket.assigns.user.auth_key}", %{
-        isTyping: false
+        is_typing: false
       })
+
+    push(socket, "presence_state", Presence.list(socket))
+
+    {:noreply, socket}
+  end
+
+  @doc false
+  def handle_in("user:typing", %{"is_typing" => is_typing}, socket) do
+    Presence.update(socket, "user:#{socket.assigns.user.auth_key}", %{
+      is_typing: is_typing
+    })
+
+    push(socket, "presence_diff", Presence.list(socket))
+
+    {:noreply, socket}
+  end
+
+  @doc false
+  def handle_in("read_message", %{"message_seen_id" => message_seen_id}, socket) do
+    Presence.update(socket, socket.assigns.user.auth_key, %{
+      read_message: message_seen_id
+    })
 
     {:noreply, socket}
   end
@@ -46,15 +61,6 @@ defmodule ChatpiWeb.ChatChannel do
   @doc false
   def handle_in("ping", _payload, socket) do
     {:reply, {:ok, %{status: "ok"}}, socket}
-  end
-
-  @doc false
-  def handle_in("user:typing", %{"isTyping" => isTyping}, socket) do
-    Presence.update(socket, socket.assigns.user.auth_key, %{
-      isTyping: isTyping
-    })
-
-    {:noreply, socket}
   end
 
   @doc false
@@ -92,13 +98,18 @@ defmodule ChatpiWeb.ChatChannel do
 
     text = "#{text}\n" <> get_random_gif(text)
 
-    create_message!(
-      get_chat_id(socket),
-      user,
-      text
-    )
+    created_message =
+      create_message!(
+        get_chat_id(socket),
+        user,
+        text
+      )
 
-    broadcast!(socket, "message:new", %{user: user, text: text})
+    broadcast!(socket, "message:new", %{created_message | user: user, text: text})
+
+    Presence.update(socket, socket.assigns.user.auth_key, %{
+      read_message: created_message.id
+    })
 
     # {:noreply, socket} ? should we really need to ack this?
     {:reply, :ok, socket}
@@ -125,6 +136,10 @@ defmodule ChatpiWeb.ChatChannel do
               message: %{message | reply_target_id: reply_target_id}
             })
           )
+
+          Presence.update(socket, socket.assigns.user.auth_key, %{
+            read_message: message.id
+          })
 
         {:error, reason} ->
           raise "Your message could not sent, because: " <> reason

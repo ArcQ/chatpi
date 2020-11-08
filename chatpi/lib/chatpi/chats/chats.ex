@@ -18,8 +18,8 @@ defmodule Chatpi.Chats do
   end
 
   def get_chat(id) do
-    Member
-    |> where([member], member.id == ^id)
+    Chat
+    |> where([chat], chat.id == ^id)
     |> preload(members: :user)
     |> Repo.all()
     |> List.first()
