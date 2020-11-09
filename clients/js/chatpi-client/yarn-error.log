@@ -2,7 +2,7 @@ Arguments:
   /Users/eddielaw/.nvm/versions/node/v12.18.2/bin/node /usr/local/Cellar/yarn/1.19.1/libexec/bin/yarn.js publish
 
 PATH: 
-  /Users/eddielaw/.nvm/versions/node/v12.18.2/bin:/Users/eddielaw/.cargo/bin:/usr/local/opt/llvm/bin:/Users/eddielaw/Development/scripts/emsdk:/Users/eddielaw/Development/scripts/emsdk/upstream/emscripten:/Users/eddielaw/Development/scripts/emsdk/node/12.9.1_64bit/bin:/Users/eddielaw/Development/scripts/racer/target/release:/Users/eddielaw/node_modules/.bin//Users/eddielaw/.yarn/bin:/Users/eddielaw/.config/yarn/global/node_modules/.bin:/Users/eddielaw/Development/scripts/bin/flutter/bin/:/Users/eddielaw/Development/scripts/bin/:/usr/local/Cellar/maven/3.5.0/bin:~/.gem/ruby/2.0.0/bin:/Users/eddielaw/.node/bin:/bin:/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/Users/eddielaw/local/bin:/usr/sbin:/Library/Apple/usr/bin:/Users/eddielaw/Downloads/google-cloud-sdk/bin:/Users/eddielaw/.cargo/bin:/usr/local/opt/llvm/bin:/Users/eddielaw/Go/bin:/usr/local/opt/go/libexec/bin:/Users/eddielaw/Development/scripts/bin/flutter/.pub-cache/bin:/usr/local/opt/fzf/bin
+  /var/folders/zg/mp8zgz5d1555r8fm22zjbv3r0000gn/T/yarn--1604900951012-0.8769215275945825:/Users/eddielaw/Development/personal/chatty-framework/clients/js/chatpi-client/node_modules/.bin:/Users/eddielaw/.config/yarn/link/node_modules/.bin:/Users/eddielaw/.nvm/versions/node/v12.18.2/libexec/lib/node_modules/npm/bin/node-gyp-bin:/Users/eddielaw/.nvm/versions/node/v12.18.2/lib/node_modules/npm/bin/node-gyp-bin:/Users/eddielaw/.nvm/versions/node/v12.18.2/bin/node_modules/npm/bin/node-gyp-bin:/Users/eddielaw/.nvm/versions/node/v12.18.2/bin:/Users/eddielaw/.cargo/bin:/Users/eddielaw/Library/Python/3.7/bin:/usr/local/opt/llvm/bin:/Users/eddielaw/Development/scripts/emsdk:/Users/eddielaw/Development/scripts/emsdk/upstream/emscripten:/Users/eddielaw/Development/scripts/emsdk/node/12.9.1_64bit/bin:/Users/eddielaw/Development/scripts/racer/target/release:/Users/eddielaw/node_modules/.bin//Users/eddielaw/.yarn/bin:/Users/eddielaw/.config/yarn/global/node_modules/.bin:/Users/eddielaw/Development/scripts/bin/flutter/bin/:/Users/eddielaw/Development/scripts/bin/:/usr/local/Cellar/maven/3.5.0/bin:~/.gem/ruby/2.0.0/bin:/Users/eddielaw/.node/bin:/bin:/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/Users/eddielaw/local/bin:/usr/sbin:/Library/Apple/usr/bin:/Users/eddielaw/.cargo/bin:/Users/eddielaw/Library/Python/3.7/bin:/usr/local/opt/llvm/bin:/Users/eddielaw/Go/bin:/usr/local/opt/go/libexec/bin:/Users/eddielaw/Development/scripts/bin/flutter/.pub-cache/bin:/usr/local/opt/fzf/bin
 
 Yarn version: 
   1.19.1
@@ -29,7 +29,7 @@ Trace:
 npm manifest: 
   {
     "name": "@knotfive/chatpi-client-js",
-    "version": "0.0.21",
+    "version": "0.0.27",
     "description": "client library for chatpi",
     "author": "eddielaw296@gmail.com",
     "license": "ISC",
@@ -61,7 +61,7 @@ npm manifest:
       "start": "microbundle watch",
       "doc": "typedoc --ignoreCompilerErrors --plugin typedoc-plugin-markdown --target ES6 --exclude node_modules --mode modules src",
       "lint": "eslint . --ext .ts",
-      "publish": "yarn build && yarn doc && yarn publish"
+      "deploy": "yarn build && yarn doc && yarn publish"
     }
   }
 

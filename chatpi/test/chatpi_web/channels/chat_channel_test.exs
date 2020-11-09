@@ -145,4 +145,58 @@ defmodule ChatpiWeb.ChatChannelTest do
            |> List.first()
            |> Map.get(:is_typing) == true
   end
+
+  test "join and subscribe with query for messages", %{user: user, chat: chat, message: message} do
+    {:ok, response, _socket} =
+      UserSocket
+      |> socket("private_room", %{some: :assign, user: user})
+      |> subscribe_and_join(ChatpiWeb.ChatChannel, "chat:touchbase:" <> chat.id, %{
+        "token" => auth_key_c(),
+        "query" => %{
+          "before" =>
+            message.inserted_at
+            |> NaiveDateTime.add(100, :second)
+            |> NaiveDateTime.to_iso8601()
+        }
+      })
+
+    assert response.messages |> length == 1
+    assert response.messages |> List.first() |> Map.get(:id) == message.id
+
+    {:ok, response, _socket} =
+      UserSocket
+      |> socket("private_room", %{some: :assign, user: user})
+      |> subscribe_and_join(ChatpiWeb.ChatChannel, "chat:touchbase:" <> chat.id, %{
+        "token" => auth_key_c(),
+        "query" => %{
+          "after" =>
+            message.inserted_at
+            |> NaiveDateTime.add(-100, :second)
+            |> NaiveDateTime.to_iso8601()
+        }
+      })
+
+    assert response.messages |> length == 1
+    assert response.messages |> List.first() |> Map.get(:id) == message.id
+
+    {:ok, response, _socket} =
+      UserSocket
+      |> socket("private_room", %{some: :assign, user: user})
+      |> subscribe_and_join(ChatpiWeb.ChatChannel, "chat:touchbase:" <> chat.id, %{
+        "token" => auth_key_c(),
+        "query" => %{
+          "before" =>
+            message.inserted_at
+            |> NaiveDateTime.add(100, :second)
+            |> NaiveDateTime.to_iso8601(),
+          "after" =>
+            message.inserted_at
+            |> NaiveDateTime.add(-100, :second)
+            |> NaiveDateTime.to_iso8601()
+        }
+      })
+
+    assert response.messages |> length == 1
+    assert response.messages |> List.first() |> Map.get(:id) == message.id
+  end
 end

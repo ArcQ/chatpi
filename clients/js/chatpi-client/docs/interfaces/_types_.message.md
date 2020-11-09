@@ -10,16 +10,25 @@
 
 ### Properties
 
-* [isTyping](_types_.message.md#istyping)
+* [files](_types_.message.md#files)
+* [replyTargetId](_types_.message.md#replytargetid)
 * [text](_types_.message.md#text)
 
 ## Properties
 
-###  isTyping
+###  files
 
-• **isTyping**: *boolean*
+• **files**: *Array‹string›*
 
-*Defined in [types.ts:12](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L12)*
+*Defined in [types.ts:39](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L39)*
+
+___
+
+###  replyTargetId
+
+• **replyTargetId**: *string*
+
+*Defined in [types.ts:40](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L40)*
 
 ___
 
@@ -27,4 +36,4 @@ ___
 
 • **text**: *string*
 
-*Defined in [types.ts:34](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L34)*
+*Defined in [types.ts:38](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L38)*

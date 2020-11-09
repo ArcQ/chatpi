@@ -10,25 +10,16 @@
 
 ### Properties
 
-* [action](_types_.sendoptions.md#action)
 * [channelId](_types_.sendoptions.md#channelid)
 * [message](_types_.sendoptions.md#message)
 
 ## Properties
 
-###  action
-
-• **action**: *[BroadcastAction](../enums/_types_.broadcastaction.md)*
-
-*Defined in [types.ts:39](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L39)*
-
-___
-
 ###  channelId
 
 • **channelId**: *[ChannelId](../modules/_types_.md#channelid)*
 
-*Defined in [types.ts:38](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L38)*
+*Defined in [types.ts:44](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L44)*
 
 ___
 
@@ -36,4 +27,4 @@ ___
 
 • **message**: *[Message](_types_.message.md)*
 
-*Defined in [types.ts:40](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L40)*
+*Defined in [types.ts:45](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L45)*

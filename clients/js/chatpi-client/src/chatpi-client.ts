@@ -40,8 +40,11 @@ export class Connection {
     channelIds,
     userToken,
     authorizationToken,
-    onPresenceChange 
-    typingTimeout  
+    onPresenceChange,
+    typingTimeout,
+    // initial messages you want returned, before/after a message timestamp
+    //if you've never quered for messages before, just query before date.now
+    messageQuery, 
     });
   */
   constructor(config: ConnectionConfig) {
@@ -53,6 +56,7 @@ export class Connection {
       params: {
         userToken: config.userToken,
         token: config.authorizationToken,
+        query: config.messageQuery,
       },
     };
 

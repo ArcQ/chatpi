@@ -13,8 +13,10 @@
 * [apiKey](_types_.connectionconfig.md#apikey)
 * [authorizationToken](_types_.connectionconfig.md#authorizationtoken)
 * [channelIds](_types_.connectionconfig.md#channelids)
+* [messageQuery](_types_.connectionconfig.md#messagequery)
 * [onMessageReceive](_types_.connectionconfig.md#onmessagereceive)
 * [onPresenceChange](_types_.connectionconfig.md#onpresencechange)
+* [typingTimeout](_types_.connectionconfig.md#typingtimeout)
 * [url](_types_.connectionconfig.md#url)
 * [userToken](_types_.connectionconfig.md#usertoken)
 
@@ -24,7 +26,7 @@
 
 • **apiKey**: *string*
 
-*Defined in [types.ts:25](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L25)*
+*Defined in [types.ts:27](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L27)*
 
 ___
 
@@ -32,7 +34,7 @@ ___
 
 • **authorizationToken**: *string*
 
-*Defined in [types.ts:28](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L28)*
+*Defined in [types.ts:30](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L30)*
 
 ___
 
@@ -40,7 +42,15 @@ ___
 
 • **channelIds**: *Array‹[ChannelId](../modules/_types_.md#channelid)›*
 
-*Defined in [types.ts:26](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L26)*
+*Defined in [types.ts:28](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L28)*
+
+___
+
+###  messageQuery
+
+• **messageQuery**: *[MessageQuery](_types_.messagequery.md)*
+
+*Defined in [types.ts:34](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L34)*
 
 ___
 
@@ -48,7 +58,7 @@ ___
 
 • **onMessageReceive**: *[onMessageReceive](_types_.onmessagereceive.md)*
 
-*Defined in [types.ts:30](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L30)*
+*Defined in [types.ts:32](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L32)*
 
 ___
 
@@ -56,7 +66,15 @@ ___
 
 • **onPresenceChange**: *[onPresenceChangeCb](_types_.onpresencechangecb.md)*
 
-*Defined in [types.ts:29](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L29)*
+*Defined in [types.ts:31](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L31)*
+
+___
+
+###  typingTimeout
+
+• **typingTimeout**: *number*
+
+*Defined in [types.ts:33](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L33)*
 
 ___
 
@@ -64,7 +82,7 @@ ___
 
 • **url**: *string*
 
-*Defined in [types.ts:24](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L24)*
+*Defined in [types.ts:26](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L26)*
 
 ___
 
@@ -72,4 +90,4 @@ ___
 
 • **userToken**: *string*
 
-*Defined in [types.ts:27](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L27)*
+*Defined in [types.ts:29](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L29)*

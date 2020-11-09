@@ -7,7 +7,7 @@ defmodule ChatpiWeb.ChatChannel do
   alias Presence
 
   @doc false
-  def join("chat:touchbase:lobby", _payload, socket) do
+  def join("chat:touchbase:lobby", socket) do
     if authorized?(socket, "touchbbase", "lobby") do
       send(self(), :after_join)
       {:ok, socket}
@@ -17,8 +17,27 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  def join("chat:touchbase:" <> private_topic_id, _payload, socket) do
-    if authorized?(socket, "touchbase", private_topic_id) do
+  def join("chat:touchbase:" <> chat_id, %{"query" => query}, socket) do
+    if authorized?(socket, "touchbase", chat_id) do
+      send(self(), :after_join)
+
+      response_payload = %{
+        messages:
+          Messages.list_messages_by_chat_id_query(chat_id, %Messages.Cursor{
+            before_timestamp: query["before"],
+            after_timestamp: query["after"]
+          })
+      }
+
+      {:ok, response_payload, socket}
+    else
+      {:error, %{reason: "unauthorized"}}
+    end
+  end
+
+  @doc false
+  def join("chat:touchbase:" <> chat_id, %{}, socket) do
+    if authorized?(socket, "touchbase", chat_id) do
       send(self(), :after_join)
       {:ok, socket}
     else

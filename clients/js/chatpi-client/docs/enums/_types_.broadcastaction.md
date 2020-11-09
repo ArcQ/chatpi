@@ -7,6 +7,7 @@
 ### Enumeration members
 
 * [NEW_MESSAGE](_types_.broadcastaction.md#new_message)
+* [NEW_REACTION](_types_.broadcastaction.md#new_reaction)
 
 ## Enumeration members
 
@@ -14,4 +15,12 @@
 
 • **NEW_MESSAGE**: = "message:new"
 
-*Defined in [types.ts:2](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/types.ts#L2)*
+*Defined in [types.ts:2](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L2)*
+
+___
+
+###  NEW_REACTION
+
+• **NEW_REACTION**: = "reaction:new"
+
+*Defined in [types.ts:3](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L3)*

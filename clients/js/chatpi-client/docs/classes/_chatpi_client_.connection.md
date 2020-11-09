@@ -28,6 +28,8 @@ Wrapped Channel Obj around a phoenix socket
 * [onPresenceChange](_chatpi_client_.connection.md#private-onpresencechange)
 * [presences](_chatpi_client_.connection.md#private-presences)
 * [socket](_chatpi_client_.connection.md#private-socket)
+* [timeouts](_chatpi_client_.connection.md#private-timeouts)
+* [typingTimeout](_chatpi_client_.connection.md#private-typingtimeout)
 
 ### Methods
 
@@ -39,6 +41,9 @@ Wrapped Channel Obj around a phoenix socket
 * [leaveChannel](_chatpi_client_.connection.md#leavechannel)
 * [removePresenceWatcher](_chatpi_client_.connection.md#removepresencewatcher)
 * [sendMessage](_chatpi_client_.connection.md#sendmessage)
+* [sendReaction](_chatpi_client_.connection.md#sendreaction)
+* [startTyping](_chatpi_client_.connection.md#starttyping)
+* [stopTyping](_chatpi_client_.connection.md#stoptyping)
 * [watchPresence](_chatpi_client_.connection.md#watchpresence)
 
 ## Constructors
@@ -47,9 +52,9 @@ Wrapped Channel Obj around a phoenix socket
 
 \+ **new Connection**(`config`: [ConnectionConfig](../interfaces/_types_.connectionconfig.md)): *[Connection](_chatpi_client_.connection.md)*
 
-*Defined in [chatpi-client.ts:29](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L29)*
+*Defined in [chatpi-client.ts:32](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L32)*
 
-**`remarks`** creates a connection with channelIds
+**`remarks`** creates a connection with channelIds, default typing timoute is 10 seconds
 
 **`example`** <caption>Connect via apiKey</caption>
 const connection = new Connection({
@@ -58,7 +63,12 @@ apiKey,
 channelIds,
 userToken,
 authorizationToken,
-onPresenceChange });
+onPresenceChange,
+typingTimeout,
+// initial messages you want returned, before/after a message timestamp
+//if you've never quered for messages before, just query before date.now
+messageQuery,
+});
 
 **Parameters:**
 
@@ -74,7 +84,7 @@ Name | Type |
 
 • **apiKey**: *string*
 
-*Defined in [chatpi-client.ts:24](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L24)*
+*Defined in [chatpi-client.ts:25](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L25)*
 
 ___
 
@@ -82,7 +92,7 @@ ___
 
 • **channels**: *Record‹[ChannelId](../modules/_types_.md#channelid), Channel›*
 
-*Defined in [chatpi-client.ts:26](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L26)*
+*Defined in [chatpi-client.ts:27](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L27)*
 
 ___
 
@@ -90,7 +100,7 @@ ___
 
 • **onMessageReceive**: *[onMessageReceive](../interfaces/_types_.onmessagereceive.md)*
 
-*Defined in [chatpi-client.ts:29](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L29)*
+*Defined in [chatpi-client.ts:30](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L30)*
 
 ___
 
@@ -98,7 +108,7 @@ ___
 
 • **onPresenceChange**: *[onPresenceChangeCb](../interfaces/_types_.onpresencechangecb.md)*
 
-*Defined in [chatpi-client.ts:28](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L28)*
+*Defined in [chatpi-client.ts:29](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L29)*
 
 ___
 
@@ -106,7 +116,7 @@ ___
 
 • **presences**: *Record‹[ChannelId](../modules/_types_.md#channelid), [ChatpiPresence](../interfaces/_types_.chatpipresence.md)›*
 
-*Defined in [chatpi-client.ts:27](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L27)*
+*Defined in [chatpi-client.ts:28](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L28)*
 
 ___
 
@@ -114,7 +124,25 @@ ___
 
 • **socket**: *Socket*
 
-*Defined in [chatpi-client.ts:25](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L25)*
+*Defined in [chatpi-client.ts:26](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L26)*
+
+___
+
+### `Private` timeouts
+
+• **timeouts**: *object*
+
+*Defined in [chatpi-client.ts:32](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L32)*
+
+#### Type declaration:
+
+___
+
+### `Private` typingTimeout
+
+• **typingTimeout**: *number* = 10000
+
+*Defined in [chatpi-client.ts:31](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L31)*
 
 ## Methods
 
@@ -122,7 +150,7 @@ ___
 
 ▸ **createChannel**(`channelId`: string): *Channel*
 
-*Defined in [chatpi-client.ts:71](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L71)*
+*Defined in [chatpi-client.ts:80](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L80)*
 
 **Parameters:**
 
@@ -138,7 +166,7 @@ ___
 
 ▸ **disconnect**(): *void*
 
-*Defined in [chatpi-client.ts:160](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L160)*
+*Defined in [chatpi-client.ts:218](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L218)*
 
 **Returns:** *void*
 
@@ -148,7 +176,7 @@ ___
 
 ▸ **getChannelById**(`channelId`: [ChannelId](../modules/_types_.md#channelid)): *Channel*
 
-*Defined in [chatpi-client.ts:117](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L117)*
+*Defined in [chatpi-client.ts:158](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L158)*
 
 **Parameters:**
 
@@ -164,7 +192,7 @@ ___
 
 ▸ **getPresenceById**(`channelId`: [ChannelId](../modules/_types_.md#channelid)): *[ChatpiPresence](../interfaces/_types_.chatpipresence.md)*
 
-*Defined in [chatpi-client.ts:130](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L130)*
+*Defined in [chatpi-client.ts:188](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L188)*
 
 **Parameters:**
 
@@ -180,7 +208,7 @@ ___
 
 ▸ **joinChannel**(`channelId`: [ChannelId](../modules/_types_.md#channelid)): *void*
 
-*Defined in [chatpi-client.ts:121](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L121)*
+*Defined in [chatpi-client.ts:162](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L162)*
 
 **Parameters:**
 
@@ -196,7 +224,7 @@ ___
 
 ▸ **leaveChannel**(`channelId`: [ChannelId](../modules/_types_.md#channelid)): *void*
 
-*Defined in [chatpi-client.ts:125](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L125)*
+*Defined in [chatpi-client.ts:166](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L166)*
 
 **Parameters:**
 
@@ -212,7 +240,7 @@ ___
 
 ▸ **removePresenceWatcher**(`channelId`: [ChannelId](../modules/_types_.md#channelid)): *void*
 
-*Defined in [chatpi-client.ts:153](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L153)*
+*Defined in [chatpi-client.ts:211](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L211)*
 
 **Parameters:**
 
@@ -228,7 +256,7 @@ ___
 
 ▸ **sendMessage**(`__namedParameters`: object): *Promise‹string›*
 
-*Defined in [chatpi-client.ts:103](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L103)*
+*Defined in [chatpi-client.ts:112](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L112)*
 
 send a message
 
@@ -249,11 +277,69 @@ Name | Type |
 
 ___
 
+###  sendReaction
+
+▸ **sendReaction**(`__namedParameters`: object): *Promise‹string›*
+
+*Defined in [chatpi-client.ts:137](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L137)*
+
+send a reaction
+
+**`example`** <caption>Join a channel</caption>
+sendMessage({ channel: 'cf4aeae1-cda7-41f3-adf7-9b2bb377be7d4', message })
+.then((response) => console.log(response));
+
+**Parameters:**
+
+▪ **__namedParameters**: *object*
+
+Name | Type |
+------ | ------ |
+`channelId` | string |
+`classifier` | [ReactionClassifier](../enums/_types_.reactionclassifier.md) |
+`reactionTargetId` | string |
+
+**Returns:** *Promise‹string›*
+
+___
+
+###  startTyping
+
+▸ **startTyping**(`channelId`: [ChannelId](../modules/_types_.md#channelid)): *void*
+
+*Defined in [chatpi-client.ts:171](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L171)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`channelId` | [ChannelId](../modules/_types_.md#channelid) |
+
+**Returns:** *void*
+
+___
+
+###  stopTyping
+
+▸ **stopTyping**(`channelId`: [ChannelId](../modules/_types_.md#channelid)): *void*
+
+*Defined in [chatpi-client.ts:184](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L184)*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`channelId` | [ChannelId](../modules/_types_.md#channelid) |
+
+**Returns:** *void*
+
+___
+
 ###  watchPresence
 
 ▸ **watchPresence**(`channelId`: [ChannelId](../modules/_types_.md#channelid)): *void*
 
-*Defined in [chatpi-client.ts:134](https://github.com/ArcQ/chatpi/blob/70f8801/clients/js/chatpi-client/src/chatpi-client.ts#L134)*
+*Defined in [chatpi-client.ts:192](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/chatpi-client.ts#L192)*
 
 **Parameters:**
 

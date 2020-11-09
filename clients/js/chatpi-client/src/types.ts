@@ -17,6 +17,11 @@ export interface onMessageReceive {
   (channelId: ChannelId, messages: ChatpiPresence): void;
 }
 
+export interface MessageQuery {
+  before: string;
+  after: string;
+}
+
 export interface ConnectionConfig {
   url: string;
   apiKey: string;
@@ -26,6 +31,7 @@ export interface ConnectionConfig {
   onPresenceChange: onPresenceChangeCb;
   onMessageReceive: onMessageReceive;
   typingTimeout: number;
+  messageQuery: MessageQuery;
 }
 
 export interface Message {

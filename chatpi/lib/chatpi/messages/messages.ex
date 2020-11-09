@@ -18,10 +18,10 @@ defmodule Chatpi.Messages do
     fn query ->
       query
       |> order_by(desc: :inserted_at)
-      |> preload([:files, :reply_target])
       |> limit(^result_limit)
-      |> reverse_order
+      |> preload([:files, :reply_target])
       |> Repo.all()
+      |> Enum.reverse()
     end
   end
 

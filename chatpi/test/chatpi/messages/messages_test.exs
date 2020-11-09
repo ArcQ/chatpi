@@ -30,7 +30,7 @@ defmodule Chatpi.MessagesTest do
       assert Messages.find_by_id(message.id) == expected_result
     end
 
-    test "list_messages_by_chat_id_query/2 default returns all messages" do
+    test "list_messages_by_chat_id_query/2 default returns all messages up to 50" do
       {:ok, _user, chat, message} = message_fixture()
 
       expected_result =
@@ -43,7 +43,7 @@ defmodule Chatpi.MessagesTest do
              ]
     end
 
-    test "list_messages_by_chat_id_query/2 query between" do
+    test "list_messages_by_chat_id_query/2 query after should retrieve most current going backwards up to limit if given" do
       {:ok, user, chat, _message} = message_fixture()
 
       {:ok, second_message} =
@@ -61,17 +61,30 @@ defmodule Chatpi.MessagesTest do
         chat_id: chat.id
       })
 
-      Messages.create_message(%{
-        text: "text3",
-        user_auth_key: user.auth_key,
-        chat_id: chat.id
-      })
+      Process.sleep(1000)
+
+      {:ok, fourth_message} =
+        Messages.create_message(%{
+          text: "text3",
+          user_auth_key: user.auth_key,
+          chat_id: chat.id
+        })
 
       assert chat.id
              |> Messages.list_messages_by_chat_id_query(%Messages.Cursor{
                after_timestamp: NaiveDateTime.to_iso8601(second_message.inserted_at)
              })
              |> length() == 2
+
+      one_result_list =
+        chat.id
+        |> Messages.list_messages_by_chat_id_query(%Messages.Cursor{
+          after_timestamp: NaiveDateTime.to_iso8601(second_message.inserted_at),
+          limit: 1
+        })
+
+      assert one_result_list |> length == 1
+      assert one_result_list |> List.first() |> Map.get(:text) == fourth_message.text
     end
 
     test "create_message/1 with valid data creates a message" do
