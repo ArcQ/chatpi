@@ -7,20 +7,25 @@ defmodule ChatpiWeb.Api.V1.MessageController do
 
   action_fallback(FallbackController)
 
-  @doc false
-  def index(conn, %{
-        "chat_id" => chat_id,
-        "query_type" => query_type,
-        "inserted_at" => inserted_at
-      }) do
+  @doc """
+  optionals:
+  "before" => before_timestamp,
+  "after" => after_timestamp
+  """
+  def index(
+        conn,
+        %{
+          "chat_id" => chat_id
+        } = params
+      ) do
     auth_key = Guardian.Plug.current_resource(conn, []).auth_key
 
     if Chats.is_member(auth_key, chat_id) do
       render(conn, "index.json",
         messages:
           Messages.list_messages_by_chat_id_query(chat_id, %Messages.Cursor{
-            query_type: query_type,
-            inserted_at: inserted_at
+            before_timestamp: params["before"],
+            after_timestamp: params["after"]
           })
       )
     else

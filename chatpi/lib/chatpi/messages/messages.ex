@@ -2,7 +2,7 @@ defmodule Chatpi.Messages.Cursor do
   @moduledoc """
   cusor for querying messages
   """
-  defstruct query_type: "after", inserted_at: "2020-09-12T05:29:57"
+  defstruct after_timestamp: "2020-09-12T05:29:57", before_timestamp: nil, limit: 50
   # field :bar, type: Bar
 end
 
@@ -14,12 +14,15 @@ defmodule Chatpi.Messages do
   import Ecto.Query, warn: false
   alias Chatpi.{Repo, Messages.Message, Chats.Chat}
 
-  defp query_messages_paged(query) do
-    query
-    |> order_by(desc: :inserted_at)
-    |> preload([:files, :reply_target])
-    |> limit(100)
-    |> Repo.all()
+  defp query_messages_paged(result_limit) do
+    fn query ->
+      query
+      |> order_by(desc: :inserted_at)
+      |> preload([:files, :reply_target])
+      |> limit(^result_limit)
+      |> reverse_order
+      |> Repo.all()
+    end
   end
 
   def find_by_id(message_id) do
@@ -31,27 +34,38 @@ defmodule Chatpi.Messages do
   def list_messages_by_chat_id(chat_id) do
     Message
     |> where([message], message.chat_id == ^chat_id)
-    |> query_messages_paged
+    |> query_messages_paged(50).()
   end
 
   def list_messages_by_chat_id_query(
         chat_id,
-        %Chatpi.Messages.Cursor{query_type: query_type, inserted_at: inserted_at}
+        %Chatpi.Messages.Cursor{} = cursor
       ) do
-    query =
-      case query_type do
-        "after" ->
-          Message
-          |> where([message], message.inserted_at > ^inserted_at and message.chat_id == ^chat_id)
+    after_timestamp = cursor.after_timestamp
+    before_timestamp = cursor.before_timestamp
 
-        _ ->
-          Message
-          |> where([message], message.inserted_at < ^inserted_at)
+    query = Message
+
+    query =
+      if after_timestamp != nil do
+        Message
+        |> where([message], message.inserted_at > ^after_timestamp)
+      else
+        query
+      end
+
+    query =
+      if before_timestamp != nil do
+        query
+        |> where([message], message.inserted_at < ^before_timestamp)
+      else
+        query
       end
 
     query
+    |> where([message], message.chat_id == ^chat_id)
     |> join(:inner, [message], chat in Chat, on: chat.id == ^chat_id)
-    |> query_messages_paged
+    |> query_messages_paged(cursor.limit).()
   end
 
   def create_message(attrs \\ %{}) do

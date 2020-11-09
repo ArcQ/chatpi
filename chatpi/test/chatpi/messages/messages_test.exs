@@ -30,7 +30,7 @@ defmodule Chatpi.MessagesTest do
       assert Messages.find_by_id(message.id) == expected_result
     end
 
-    test "list_messages_by_chat_id_query/2 returns all messages" do
+    test "list_messages_by_chat_id_query/2 default returns all messages" do
       {:ok, _user, chat, message} = message_fixture()
 
       expected_result =
@@ -38,11 +38,40 @@ defmodule Chatpi.MessagesTest do
         |> Map.put(:files, [])
         |> Map.put(:reply_target, nil)
 
-      assert Messages.list_messages_by_chat_id_query(chat.id, %Messages.Cursor{
-               query_type: "after"
-             }) == [
+      assert Messages.list_messages_by_chat_id_query(chat.id, %Messages.Cursor{}) == [
                expected_result
              ]
+    end
+
+    test "list_messages_by_chat_id_query/2 query between" do
+      {:ok, user, chat, _message} = message_fixture()
+
+      {:ok, second_message} =
+        Messages.create_message(%{
+          text: "text1",
+          user_auth_key: user.auth_key,
+          chat_id: chat.id
+        })
+
+      Process.sleep(1000)
+
+      Messages.create_message(%{
+        text: "text2",
+        user_auth_key: user.auth_key,
+        chat_id: chat.id
+      })
+
+      Messages.create_message(%{
+        text: "text3",
+        user_auth_key: user.auth_key,
+        chat_id: chat.id
+      })
+
+      assert chat.id
+             |> Messages.list_messages_by_chat_id_query(%Messages.Cursor{
+               after_timestamp: NaiveDateTime.to_iso8601(second_message.inserted_at)
+             })
+             |> length() == 2
     end
 
     test "create_message/1 with valid data creates a message" do

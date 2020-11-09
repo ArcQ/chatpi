@@ -38,11 +38,10 @@ defmodule ChatpiWeb.MessageControllerTest do
         |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
         |> get(
           Routes.message_path(conn, :index, chat.id,
-            query_type: "before",
-            inserted_at:
+            before:
               message.inserted_at
-              |> NaiveDateTime.add(10, :second)
-              |> NaiveDateTime.to_string()
+              |> NaiveDateTime.add(100, :second)
+              |> NaiveDateTime.to_iso8601()
           )
         )
         |> json_response(200)
@@ -60,19 +59,17 @@ defmodule ChatpiWeb.MessageControllerTest do
       result =
         conn
         |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
-        |> get(
-          Routes.message_path(conn, :index, chat.id,
-            query_type: "after",
-            inserted_at: "2020-09-12T05:29:57"
-          )
-        )
+        |> get(Routes.message_path(conn, :index, chat.id, after: "2020-09-12T05:29:57"))
         |> json_response(200)
         |> Map.get("messages")
-        |> List.first()
 
-      assert result["id"] == message.id
-      assert result["text"] == message.text
-      assert result["user_auth_key"] == message.user_auth_key
+      assert result |> length == 1
+
+      first_result = result |> List.first()
+
+      assert first_result["id"] == message.id
+      assert first_result["text"] == message.text
+      assert first_result["user_auth_key"] == message.user_auth_key
     end
   end
 end
