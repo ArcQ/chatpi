@@ -139,30 +139,29 @@ defmodule ChatpiWeb.ChatChannel do
     user = get_in(socket.assigns, [:user])
     reply_target_id = message_payload["reply_target_id"] || nil
 
-    if String.length(message_payload["text"]) > 0 do
-      case Messages.create_message(%{
-             text: message_payload["text"],
-             files: message_payload["files"],
-             reply_target_id: reply_target_id,
-             user_auth_key: user.auth_key,
-             chat_id: get_chat_id(socket)
-           }) do
-        {:ok, message} ->
-          broadcast!(
-            socket,
-            "message:new",
-            MessageView.render("message.json", %{
-              message: %{message | reply_target_id: reply_target_id}
-            })
-          )
-
-          Presence.update(socket, socket.assigns.user.auth_key, %{
-            read_message: message.id
+    case Messages.create_message(%{
+           text: message_payload["text"],
+           files: message_payload["files"],
+           custom_details: message_payload["custom_details"],
+           reply_target_id: reply_target_id,
+           user_auth_key: user.auth_key,
+           chat_id: get_chat_id(socket)
+         }) do
+      {:ok, message} ->
+        broadcast!(
+          socket,
+          "message:new",
+          MessageView.render("message.json", %{
+            message: %{message | reply_target_id: reply_target_id}
           })
+        )
 
-        {:error, reason} ->
-          raise "Your message could not sent, because: " <> reason
-      end
+        Presence.update(socket, socket.assigns.user.auth_key, %{
+          read_message: message.id
+        })
+
+      {:error, reason} ->
+        raise "Your message could not sent, because: " <> reason
     end
 
     # {:noreply, socket} ? should we really need to ack this?

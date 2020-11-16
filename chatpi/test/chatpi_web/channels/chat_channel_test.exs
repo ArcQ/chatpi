@@ -116,6 +116,27 @@ defmodule ChatpiWeb.ChatChannelTest do
     assert saved_reply_message.reply_target_id == broadcasted_message.id
   end
 
+  test "send messages with custom_details should work", %{user: user, socket: socket} do
+    push(socket, "message:new", %{
+      "custom_details" => %{random_payload: "some value"}
+    })
+
+    assert_broadcast(
+      "message:new",
+      %{
+        id: id,
+        custom_details: custom_details,
+        inserted_at: inserted_at
+      } = broadcasted_message
+    )
+
+    assert custom_details["random_payload"] == "some value"
+
+    saved_mesasge = Chatpi.Messages.find_by_id(id)
+
+    assert saved_mesasge.custom_details["random_payload"] == "some value"
+  end
+
   test "broadcasting presence", %{socket: _socket, user: _user, chat: _chat} do
     assert_broadcast("presence_diff", %{
       joins: joins
