@@ -15,6 +15,7 @@ defmodule Chatpi.MessagesTest do
         message
         |> Map.put(:files, [])
         |> Map.put(:reply_target, nil)
+        |> Map.put(:is_system, false)
 
       assert Messages.list_messages_by_chat_id(chat.id) == [expected_result]
     end
@@ -26,6 +27,7 @@ defmodule Chatpi.MessagesTest do
         message
         |> Map.put(:files, [])
         |> Map.put(:reply_target, nil)
+        |> Map.put(:is_system, false)
 
       assert Messages.find_by_id(message.id) == expected_result
     end
@@ -37,6 +39,7 @@ defmodule Chatpi.MessagesTest do
         message
         |> Map.put(:files, [])
         |> Map.put(:reply_target, nil)
+        |> Map.put(:is_system, false)
 
       assert Messages.list_messages_by_chat_id_query(chat.id, %Messages.Cursor{}) == [
                expected_result

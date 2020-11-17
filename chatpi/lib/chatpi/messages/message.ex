@@ -7,9 +7,13 @@ defmodule Chatpi.Messages.Message do
   schema "message" do
     field(:text, :string)
     embeds_many(:reactions, Chatpi.Messages.Reaction, on_replace: :delete)
+
     # in case consumer of chatpi needs to keep track of some custom object that needs to
     # belong inside of the messages list view in a particular place
     field(:custom_details, :map)
+
+    field(:is_system, :boolean)
+
     has_many(:files, Chatpi.Messages.File)
 
     belongs_to(:chat, Chatpi.Chats.Chat, type: Ecto.UUID)
@@ -28,7 +32,14 @@ defmodule Chatpi.Messages.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:text, :user_auth_key, :chat_id, :reply_target_id, :custom_details])
+    |> cast(attrs, [
+      :text,
+      :user_auth_key,
+      :chat_id,
+      :reply_target_id,
+      :custom_details,
+      :is_system
+    ])
     |> validate_required([:user_auth_key, :chat_id])
     |> cast_assoc(:user)
     |> cast_assoc(:chat)

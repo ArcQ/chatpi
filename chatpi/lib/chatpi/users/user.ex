@@ -9,7 +9,6 @@ defmodule Chatpi.Users.User do
     field(:auth_key, :string)
     field(:username, :string)
     field(:is_inactive, :boolean)
-    field(:is_admin, :boolean)
 
     many_to_many(:chats, Chatpi.Chats.Chat, join_through: "chat_member")
 

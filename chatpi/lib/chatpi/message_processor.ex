@@ -2,7 +2,7 @@ defmodule Chatpi.MessageProcessor do
   @moduledoc """
   process messages from kafka
   """
-  alias Chatpi.{Users, Chats}
+  alias Chatpi.{Users, Chats, Messages}
   require Logger
 
   defp handle_message("upsert-user", %{user: user_attr}) do
@@ -27,6 +27,11 @@ defmodule Chatpi.MessageProcessor do
     Chats.remove_chat_members(user_attr)
   end
 
+  defp handle_message("add-system-message", %{entity: system_message}) do
+    Messages.create_message(%{system_message | is_system: true})
+  end
+
+  # note only works for trusted clients right now
   def handle_messages(messages) do
     for %{key: key, value: value} = _message <- messages do
       {:ok, decoded_map} = Jason.decode(value)

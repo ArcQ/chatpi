@@ -116,7 +116,7 @@ defmodule ChatpiWeb.ChatChannelTest do
     assert saved_reply_message.reply_target_id == broadcasted_message.id
   end
 
-  test "send messages with custom_details should work", %{user: user, socket: socket} do
+  test "send messages with custom_details should work", %{user: _user, socket: socket} do
     push(socket, "message:new", %{
       "custom_details" => %{random_payload: "some value"}
     })
