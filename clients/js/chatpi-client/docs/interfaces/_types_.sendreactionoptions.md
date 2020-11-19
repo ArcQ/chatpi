@@ -20,7 +20,7 @@
 
 • **channelId**: *[ChannelId](../modules/_types_.md#channelid)*
 
-*Defined in [types.ts:57](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L57)*
+*Defined in [types.ts:57](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L57)*
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 • **classifier**: *[ReactionClassifier](../enums/_types_.reactionclassifier.md)*
 
-*Defined in [types.ts:59](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L59)*
+*Defined in [types.ts:59](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L59)*
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 • **reactionTargetId**: *string*
 
-*Defined in [types.ts:58](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L58)*
+*Defined in [types.ts:58](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L58)*

@@ -19,7 +19,7 @@
 
 • **channelId**: *[ChannelId](../modules/_types_.md#channelid)*
 
-*Defined in [types.ts:44](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L44)*
+*Defined in [types.ts:44](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L44)*
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 • **message**: *[Message](_types_.message.md)*
 
-*Defined in [types.ts:45](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L45)*
+*Defined in [types.ts:45](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L45)*

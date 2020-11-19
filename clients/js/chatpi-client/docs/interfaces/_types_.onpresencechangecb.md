@@ -10,7 +10,7 @@
 
 ▸ (`channelId`: [ChannelId](../modules/_types_.md#channelid), `presences`: [ChatpiPresence](_types_.chatpipresence.md)): *void*
 
-*Defined in [types.ts:12](https://github.com/ArcQ/chatpi/blob/5cb36a2/clients/js/chatpi-client/src/types.ts#L12)*
+*Defined in [types.ts:12](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L12)*
 
 **Parameters:**
 
