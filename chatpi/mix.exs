@@ -105,6 +105,11 @@ defmodule Chatpi.MixProject do
         # "check",
         "ecto.reset",
         "test"
+      ],
+      check_ci: [
+        # "check",
+        "ecto.reset",
+        "test"
       ]
     ]
   end

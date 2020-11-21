@@ -14,12 +14,15 @@ defmodule Chatpi.Users.User do
 
     has_many(:messages, Chatpi.Messages.Message, foreign_key: :user_auth_key)
 
+    embeds_many(:push_tokens, Chatpi.User.PushToken, on_replace: :delete)
+
     timestamps()
   end
 
   @permitted_params ~w(
     username
     auth_key
+    
     is_inactive
   )a
 

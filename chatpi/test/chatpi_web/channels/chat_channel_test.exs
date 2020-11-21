@@ -8,7 +8,8 @@ defmodule ChatpiWeb.ChatChannelTest do
   alias ChatpiWeb.UserSocket
 
   setup_with_mocks([
-    {Chatpi.Auth.Token, [], [verify_and_validate: fn _token -> {:ok, %{sub: auth_key_c()}} end]}
+    {Chatpi.Auth.Token, [], [verify_and_validate: fn _token -> {:ok, %{sub: auth_key_c()}} end]},
+    {ExponentServerSdk.PushNotification, [], [push_list: fn messages -> {:ok, messages} end]}
   ]) do
     :ok
   end

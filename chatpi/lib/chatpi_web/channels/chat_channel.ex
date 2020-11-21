@@ -205,7 +205,12 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   defp broadcast_message(socket, chat_id, topic, message) do
-    message_list = [
+    Task.start(fn -> send_notification_to_all_members_in_chat(chat_id, message) end)
+    broadcast!(socket, topic, message)
+  end
+
+  defp send_notification_to_all_members_in_chat(_chat_id, _message) do
+    messages = [
       %{
         to: "ExponentPushToken[XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX]",
         title: "Pushed!",
@@ -219,8 +224,7 @@ defmodule ChatpiWeb.ChatChannel do
     ]
 
     # Send it to Expo
-    {:ok, response} = ExponentServerSdk.PushNotification.push_list(messages)
-    broadcast!(socket, topic, message)
+    {:ok, _response} = ExponentServerSdk.PushNotification.push_list(messages)
   end
 
   @doc false

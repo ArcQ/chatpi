@@ -2,6 +2,7 @@ defmodule ChatpiWeb.Api.V1.UserView do
   use ChatpiWeb, :view
 
   @public_attributes ~W(id auth_key username)a
+  @public_token_attributes ~W(id auth_key token, deviceId)a
 
   def render("index.json", %{users: users}) do
     %{

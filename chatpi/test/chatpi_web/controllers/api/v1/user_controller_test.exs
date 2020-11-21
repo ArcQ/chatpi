@@ -41,4 +41,17 @@ defmodule ChatpiWeb.UserControllerTest do
       assert length(result) == 3
     end
   end
+
+  describe "add_push_token" do
+    test "creates push token", %{conn: conn} do
+      result =
+        conn
+        |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
+        |> patch(Routes.user_path(conn, :add_push_token))
+        |> json_response(200)
+        |> Map.get("token")
+
+      assert result == %{}
+    end
+  end
 end

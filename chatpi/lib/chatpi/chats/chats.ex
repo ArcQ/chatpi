@@ -44,6 +44,17 @@ defmodule Chatpi.Chats do
     )
   end
 
+  def list_user_expo_tokens_for_chat(chat_id) do
+    Repo.all(
+      from(user in User,
+        select: user.push_token,
+        distinct: true,
+        inner_join: member in assoc(user, :members),
+        on: member.user_auth_key == user.auth_key and member.chat_id == ^chat_id
+      )
+    )
+  end
+
   def create_chat_with_members(%{name: name, members: user_auth_keys}) do
     users =
       user_auth_keys
