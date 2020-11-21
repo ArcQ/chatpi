@@ -46,6 +46,8 @@ defmodule ChatpiWeb.Router do
       patch("/chats/:chat_id/messages/:id/seen", MessageController, :messages_seen,
         as: :message_seen
       )
+
+      resources("/organizations", OrganizationController, except: [:new, :edit])
     end
   end
 end

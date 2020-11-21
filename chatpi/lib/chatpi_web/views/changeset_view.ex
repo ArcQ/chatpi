@@ -1,4 +1,4 @@
-defmodule ChatpiWeb.Api.V1.ChangesetView do
+defmodule ChatpiWeb.ChangesetView do
   use ChatpiWeb, :view
 
   @doc """
@@ -8,6 +8,7 @@ defmodule ChatpiWeb.Api.V1.ChangesetView do
   `ChatpiWeb.ErrorHelpers.translate_error/1` for more details.
   """
   def translate_errors(changeset) do
+    # Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
     Chatpi.Utils.Error.normalize(changeset)
   end
 
