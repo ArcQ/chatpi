@@ -30,4 +30,4 @@
 
 Ƭ **ChannelId**: *string*
 
-*Defined in [types.ts:6](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L6)*
+*Defined in [types.ts:6](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L6)*

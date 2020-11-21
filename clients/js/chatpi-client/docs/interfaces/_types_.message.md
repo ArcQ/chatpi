@@ -20,7 +20,7 @@
 
 • **files**: *Array‹string›*
 
-*Defined in [types.ts:39](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L39)*
+*Defined in [types.ts:39](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L39)*
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 • **replyTargetId**: *string*
 
-*Defined in [types.ts:40](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L40)*
+*Defined in [types.ts:40](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L40)*
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 • **text**: *string*
 
-*Defined in [types.ts:38](https://github.com/ArcQ/chatpi/blob/a1985e7/clients/js/chatpi-client/src/types.ts#L38)*
+*Defined in [types.ts:38](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L38)*

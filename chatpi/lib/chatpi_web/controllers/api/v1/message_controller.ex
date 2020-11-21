@@ -33,26 +33,25 @@ defmodule ChatpiWeb.Api.V1.MessageController do
     end
   end
 
-  # @doc "
-  # create for system messages
-  # "
-  # def create(conn, %{
-  #       "chat_id" => chat_id,
-  #       "auth_key" => auth_key,
-  #       "event" => event,
-  #       "message" => msg
-  #     }) do
-  #   admin = Guardian.Plug.current_resource(conn, [])
+  @doc "
+  create system messages
+  "
+  def create(conn, %{
+        "chat_id" => chat_id,
+        "event" => event,
+        "message" => msg
+      }) do
+    auth_key = Guardian.Plug.current_resource(conn, []).auth_key
 
-  #   if is_admin(chat_id, auth_key) do
-  #     Endpoint.broadcast_from(admin.id, chat_id, event, msg)
-  #   else
-  #     %{error: "unauthorized"}
-  #   end
-  # end
+    if is_admin(conn, chat_id, auth_key) do
+      ChatpiWeb.Endpoint.broadcast_from(auth_key, chat_id, event, msg)
+    else
+      %{error: "unauthorized"}
+    end
+  end
 
-  defp is_admin(chat_id, auth_key) do
-    chat_id == "testAdminChatId" and auth_key == "testAuthKey"
+  defp is_admin(conn, _chat_id, _auth_key) do
+    conn.req_headers["x-api-key"] == "test123"
   end
 
   defp handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do

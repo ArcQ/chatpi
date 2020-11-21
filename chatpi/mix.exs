@@ -31,7 +31,7 @@ defmodule Chatpi.MixProject do
   def application do
     [
       mod: {Chatpi.Application, []},
-      extra_applications: [:logger, :runtime_tools, :timex]
+      extra_applications: [:logger, :runtime_tools, :timex, :exponent_server_sdk]
     ]
   end
 
@@ -75,6 +75,7 @@ defmodule Chatpi.MixProject do
       # install ex_aws and ex_aws_s3, then configure it in config/prod.exs
       {:ex_aws, "~> 2.0"},
       {:ex_aws_s3, "~> 2.0"},
+      {:exponent_server_sdk, "~> 0.2.0"},
       # {:hackney, "~> 1.9"},
       {:hackney, "~> 1.15.2"},
       {:sweet_xml, "~> 0.6.5"},

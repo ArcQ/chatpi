@@ -201,7 +201,7 @@ export class Connection {
 
     channel.on('presence_diff', diff => {
       this.presences[channelId] = Presence.syncDiff(
-        this.presences[channelId],
+        this.presences[channelId] || {},
         diff,
       );
       this.onPresenceChange(channelId, this.presences[channelId]);

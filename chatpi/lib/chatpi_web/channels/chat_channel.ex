@@ -95,17 +95,16 @@ defmodule ChatpiWeb.ChatChannel do
       ) do
     user = get_in(socket.assigns, [:user])
 
-    {:ok, _upserted_reaction} =
-      Messages.upsert_reaction(
-        message_id,
-        %{user_id: user.id, classifier: classifier}
-      )
-
-    broadcast!(socket, "reaction:new", %{
-      reaction_target_id: message_id,
-      classifier: classifier,
-      user_auth_key: user.auth_key
-    })
+    broadcast_message(
+      socket,
+      get_chat_id(socket),
+      "reaction:new",
+      %{
+        reaction_target_id: message_id,
+        classifier: classifier,
+        user_auth_key: user.auth_key
+      }
+    )
 
     # {:noreply, socket} ? should we really need to ack this?
     {:reply, :ok, socket}
@@ -124,7 +123,12 @@ defmodule ChatpiWeb.ChatChannel do
         text
       )
 
-    broadcast!(socket, "message:new", %{created_message | user: user, text: text})
+    broadcast_message(
+      socket,
+      get_chat_id(socket),
+      "message:new",
+      MessageView.render("message.json", %{created_message | user: user, text: text})
+    )
 
     Presence.update(socket, socket.assigns.user.auth_key, %{
       read_message: created_message.id
@@ -148,8 +152,9 @@ defmodule ChatpiWeb.ChatChannel do
            chat_id: get_chat_id(socket)
          }) do
       {:ok, message} ->
-        broadcast!(
+        broadcast_message(
           socket,
+          get_chat_id(socket),
           "message:new",
           MessageView.render("message.json", %{
             message: %{message | reply_target_id: reply_target_id}
@@ -196,6 +201,26 @@ defmodule ChatpiWeb.ChatChannel do
 
   defp get_chat_id(socket) do
     List.last(String.split(socket.topic, ":"))
+  end
+
+  @doc false
+  defp broadcast_message(socket, chat_id, topic, message) do
+    message_list = [
+      %{
+        to: "ExponentPushToken[XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX]",
+        title: "Pushed!",
+        body: "You got your first message"
+      },
+      %{
+        to: "ExponentPushToken[YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY]",
+        title: "Pushed Again!",
+        body: "You got your second message"
+      }
+    ]
+
+    # Send it to Expo
+    {:ok, response} = ExponentServerSdk.PushNotification.push_list(messages)
+    broadcast!(socket, topic, message)
   end
 
   @doc false
