@@ -10,18 +10,24 @@ defmodule ChatpiWeb.Api.V1.UserController do
     render(conn, "index.json", users: users)
   end
 
-  def add_push_token(%Plug.Conn{body_params: %{type: token_type, token: token}} = conn, %{
-        "chat_id" => chat_id,
-        "type" => type,
-        "message" => msg
-      }) do
+  def add_push_token(conn, _params) do
     auth_key = Guardian.Plug.current_resource(conn, []).auth_key
+    %{"type" => token_type, "token" => token} = conn.body_params
 
-    case token_type do
-      "expo" ->
-        nil
-    end
+    {:ok, user} =
+      case token_type do
+        "expo" -> Users.add_push_token_by_auth_key(auth_key, token)
+      end
 
-    TokenView.render(conn, "show.json", %{})
+    IO.inspect(user)
+
+    render(conn, "push_token.json", %{
+      push_token: %{
+        id: "id",
+        auth_key: "auth_key",
+        token: "token",
+        deviceId: "deviceId"
+      }
+    })
   end
 end

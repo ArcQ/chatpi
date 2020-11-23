@@ -1,7 +1,7 @@
 defmodule ChatpiWeb.Api.V1.OrganizationController do
   use ChatpiWeb, :controller
 
-  alias Chatpi.Organizations
+  alias Chatpi.Organizations.Organizations
   alias Chatpi.Organizations.Organization
 
   action_fallback(ChatpiWeb.FallbackController)

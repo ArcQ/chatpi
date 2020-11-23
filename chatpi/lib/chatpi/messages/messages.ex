@@ -1,6 +1,6 @@
 defmodule Chatpi.Messages.Cursor do
   @moduledoc """
-  cusor for querying messages
+  cursor for querying messages
   """
   defstruct after_timestamp: "2020-09-12T05:29:57", before_timestamp: nil, limit: 50
   # field :bar, type: Bar
@@ -12,7 +12,7 @@ defmodule Chatpi.Messages do
   """
 
   import Ecto.Query, warn: false
-  alias Chatpi.{Repo, Messages.Message, Chats.Chat}
+  alias Chatpi.{Repo, Messages.Message, Chats.Chat, ArrayUtils}
 
   defp query_messages_paged(result_limit) do
     fn query ->
@@ -74,21 +74,6 @@ defmodule Chatpi.Messages do
     |> Repo.insert()
   end
 
-  # TODO we could make this more generic for all array types
-  def merge_into_reactions(existing_items \\ [], new_item) do
-    if Enum.any?(existing_items, &(&1.user_id == new_item.user_id)) do
-      Enum.map(existing_items, fn existing_item ->
-        if existing_item.user_id == new_item.user_id do
-          new_item
-        else
-          existing_item
-        end
-      end)
-    else
-      [new_item | existing_items]
-    end
-  end
-
   def upsert_reaction(message_id, %{user_id: _, classifier: _} = reaction) do
     message =
       Message
@@ -100,7 +85,7 @@ defmodule Chatpi.Messages do
       message
       |> Map.get(:reactions)
       |> (&(&1 || [])).()
-      |> merge_into_reactions(reaction)
+      |> ArrayUtils.add_if_unique(reaction)
 
     message
     |> Message.update_reactions_changeset(%{reactions: reactions})

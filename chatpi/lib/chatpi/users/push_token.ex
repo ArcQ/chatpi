@@ -1,4 +1,4 @@
-defmodule Chatpi.User.PushToken do
+defmodule Chatpi.Users.PushToken do
   @moduledoc false
 
   use Chatpi.Schema

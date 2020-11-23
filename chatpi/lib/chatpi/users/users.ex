@@ -41,6 +41,13 @@ defmodule Chatpi.Users do
     Repo.get_by!(User, auth_key: auth_key)
   end
 
+  def add_push_token_by_auth_key(auth_key, push_token) do
+    auth_key
+    |> get_user_by_auth_key!()
+    |> User.update_changeset(%{push_tokens: [push_token]})
+    |> Repo.update()
+  end
+
   def create_or_update_user(%{auth_key: auth_key, username: _username} = attrs) do
     case Repo.get_by(User, auth_key: auth_key) do
       nil ->

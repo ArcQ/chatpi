@@ -15,4 +15,9 @@ defmodule ChatpiWeb.Api.V1.UserView do
     user
     |> Map.take(@public_attributes)
   end
+
+  def render("push_token.json", %{push_token: push_token}) do
+    push_token
+    |> Map.take(@public_token_attributes)
+  end
 end

@@ -44,10 +44,15 @@ defmodule ChatpiWeb.UserControllerTest do
 
   describe "add_push_token" do
     test "creates push token", %{conn: conn} do
+      {:ok, user} = user_fixture()
+
       result =
         conn
         |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
-        |> patch(Routes.user_path(conn, :add_push_token))
+        |> patch(Routes.push_token_path(conn, :add_push_token),
+          type: "expo",
+          token: "test_token"
+        )
         |> json_response(200)
         |> Map.get("token")
 

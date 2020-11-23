@@ -37,7 +37,7 @@ defmodule ChatpiWeb.Router do
     scope "/v1", V1 do
       resources("/users", UserController, only: [:index, :show, :create, :update])
 
-      patch("/users/:user_id/push_token", UserController, :add_push_token, as: :push_token)
+      patch("/users/me/push_token", UserController, :add_push_token, as: :push_token)
 
       resources("/chats", ChatController, only: [:index, :show, :create])
 
