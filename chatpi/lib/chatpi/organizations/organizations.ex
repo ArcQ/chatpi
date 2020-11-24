@@ -1,4 +1,4 @@
-defmodule Chatpi.Organizations.Organizations do
+defmodule Chatpi.Organizations do
   @moduledoc """
   The Organizations context.
   """

@@ -85,7 +85,7 @@ defmodule Chatpi.Messages do
       message
       |> Map.get(:reactions)
       |> (&(&1 || [])).()
-      |> ArrayUtils.add_if_unique(reaction)
+      |> ArrayUtils.add_if_unique(reaction, :user_id)
 
     message
     |> Message.update_reactions_changeset(%{reactions: reactions})

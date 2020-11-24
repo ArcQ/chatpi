@@ -3,10 +3,10 @@ defmodule Chatpi.ArrayUtils do
   utilities for arrays 
   """
   # add an item into an array if it it is not already in  it
-  def add_if_unique(existing_items \\ [], new_item) do
-    if Enum.any?(existing_items, &(&1.user_id == new_item.user_id)) do
+  def add_if_unique(existing_items \\ [], new_item, key) do
+    if Enum.any?(existing_items, &(Map.get(&1, key) == Map.get(new_item, key))) do
       Enum.map(existing_items, fn existing_item ->
-        if existing_item.user_id == new_item.user_id do
+        if Map.get(existing_item, key) == Map.get(new_item, key) do
           new_item
         else
           existing_item

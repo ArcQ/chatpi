@@ -1,10 +1,10 @@
 defmodule ChatpiWeb.Api.V1.OrganizationController do
   use ChatpiWeb, :controller
 
-  alias Chatpi.Organizations.Organizations
+  alias Chatpi.Organizations
   alias Chatpi.Organizations.Organization
 
-  action_fallback(ChatpiWeb.FallbackController)
+  action_fallback(ChatpiWeb.Api.V1.FallbackController)
 
   def index(conn, _params) do
     organizations = Organizations.list_organizations()

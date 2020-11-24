@@ -14,8 +14,8 @@ defmodule Chatpi.Users.PushToken do
   end
 
   @doc false
-  def changeset(reaction, attrs) do
-    reaction
-    |> cast(attrs, [:user_id, :inserted_at, :classifier])
+  def changeset(push_token, attrs) do
+    push_token
+    |> cast(attrs, [:type, :device_id, :token])
   end
 end

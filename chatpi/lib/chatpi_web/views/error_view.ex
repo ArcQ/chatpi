@@ -6,6 +6,6 @@ defmodule ChatpiWeb.ErrorView do
   end
 
   def render("500.json", %{conn: conn}) do
-    %{errors: %{code: "500_SERVER_ERROR", detail: conn.assigns.reason.description}}
+    %{errors: %{code: "500_SERVER_ERROR", detail: conn.assigns.reason}}
   end
 end

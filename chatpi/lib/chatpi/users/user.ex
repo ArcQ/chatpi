@@ -50,6 +50,11 @@ defmodule Chatpi.Users.User do
   def update_changeset(user, params \\ %{}) do
     user
     |> cast(params, @permitted_params)
+  end
+
+  def update_push_tokens_changeset(user, params \\ %{}) do
+    user
+    |> cast(params, [])
     |> cast_embed(:push_tokens)
   end
 

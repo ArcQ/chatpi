@@ -17,7 +17,8 @@ defmodule Chatpi.Organizations.Organization do
   @doc false
   def changeset(organization, attrs) do
     organization
-    |> cast(attrs, [])
+    |> cast(attrs, [:name, :api_key, :api_secret])
+    # |> validate_required([:name, :api_key, :api_secret])
     |> validate_required([])
   end
 end

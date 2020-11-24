@@ -4,7 +4,7 @@ defmodule Chatpi.Users do
   """
 
   import Ecto.Query, warn: false
-  alias Chatpi.{Repo, Users.User}
+  alias Chatpi.{Repo, Users.User, ArrayUtils}
 
   def list_users do
     Repo.all(
@@ -41,10 +41,20 @@ defmodule Chatpi.Users do
     Repo.get_by!(User, auth_key: auth_key)
   end
 
-  def add_push_token_by_auth_key(auth_key, push_token) do
-    auth_key
-    |> get_user_by_auth_key!()
-    |> User.update_changeset(%{push_tokens: [push_token]})
+  def add_push_token_by_auth_key(
+        auth_key,
+        %{token: _token, device_id: _device_id, type: _token_type} = push_token
+      ) do
+    user = get_user_by_auth_key!(auth_key)
+
+    push_tokens =
+      user
+      |> Map.get(:push_tokens)
+      |> (&(&1 || [])).()
+      |> ArrayUtils.add_if_unique(push_token, :device_id)
+
+    user
+    |> User.update_push_tokens_changeset(%{push_tokens: push_tokens})
     |> Repo.update()
   end
 
