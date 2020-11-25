@@ -13,7 +13,7 @@ defmodule ChatpiWeb.ChannelCase do
   of the test unless the test case is marked as async.
   """
 
-  use ExUnit.CaseTemplate
+  use ExUnit.CaseTemplate, async: true
 
   using do
     quote do

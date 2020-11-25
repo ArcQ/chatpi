@@ -37,7 +37,8 @@ defmodule Chatpi.Application do
               id: Kaffe.GroupMemberSupervisor,
               start: {Kaffe.GroupMemberSupervisor, :start_link, []},
               type: :supervisor
-            }
+            },
+            Supervisor.Spec.worker(Chatpi.UnreadMessagesWorker, [0])
           ],
         opts
       )

@@ -25,6 +25,14 @@ defmodule Chatpi.Chats do
     |> List.first()
   end
 
+  # def get_unread_count_by_auth_key(auth_key) do
+  #   Chat
+  #   |> where([chat], chat.id == ^id)
+  #   |> preload(members: :user)
+  #   |> Repo.all()
+  #   |> List.first()
+  # end
+
   def get_member_by_id(id) do
     Member
     |> where([member], member.id == ^id)
@@ -85,10 +93,32 @@ defmodule Chatpi.Chats do
     end
   end
 
+  # def refresh_messages_read(%{chat_id: chat_id} = query) do
+  #   subset_members =
+  #     Member
+  #     |> where([member], member.chat_id == ^chat_id)
+
+  #   Message
+  #   |> where([message], message.chat_id == ^chat_id)
+  #   |> query_messages_paged(50).()
+
+  #   Member
+  #   |> distinct(true)
+  #   |> join(:inner, [chat], member in Member, on: member.user_auth_key == ^auth_key)
+  #   |> where([chat, member], chat.id == member.chat_id)
+  #   |> preload(members: :user)
+  #   |> get_member
+  #   |> Member.update_message_seen_changeset(%{message_seen_id: message_seen_id})
+  #   |> Repo.update()
+  # end
+
   def update_messages_read(%{message_id: message_seen_id, user_auth_key: _user_auth_key} = query) do
     query
     |> get_member
-    |> Member.update_message_seen_changeset(%{message_seen_id: message_seen_id})
+    |> Member.update_message_seen_changeset(%{
+      message_seen_id: message_seen_id,
+      unread_messages: 0
+    })
     |> Repo.update()
   end
 
