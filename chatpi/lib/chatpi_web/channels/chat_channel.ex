@@ -209,22 +209,32 @@ defmodule ChatpiWeb.ChatChannel do
     broadcast!(socket, topic, message)
   end
 
-  defp send_notification_to_all_members_in_chat(_chat_id, _message) do
-    messages = [
-      %{
-        to: "ExponentPushToken[XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX]",
-        title: "Pushed!",
-        body: "You got your first message"
-      },
-      %{
-        to: "ExponentPushToken[YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY]",
-        title: "Pushed Again!",
-        body: "You got your second message"
-      }
-    ]
+  defp send_notification_to_all_members_in_chat(chat_id, message) do
+    chat =
+      chat_id
+      |> Chats.get_chat()
+
+    messages =
+      chat
+      |> Map.get(:members)
+      |> Enum.map(fn member ->
+        if Map.has_key?(member, :push_tokens) do
+          member.push_tokens
+        else
+          []
+        end
+      end)
+      |> List.flatten()
+      |> Enum.map(
+        &%{
+          to: "ExponentPushToken[" <> &1 <> "]",
+          title: ("To " <> chat.name) |> String.slice(0..29),
+          body: message.text |> String.slice(0..29)
+        }
+      )
 
     # Send it to Expo
-    {:ok, _response} = ExponentServerSdk.PushNotification.push_list(messages)
+    # {:ok, _response} = ExponentServerSdk.PushNotification.push_list(messages)
   end
 
   @doc false
