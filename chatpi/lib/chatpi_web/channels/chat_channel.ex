@@ -213,6 +213,7 @@ defmodule ChatpiWeb.ChatChannel do
     chat =
       chat_id
       |> Chats.get_chat()
+      |> Cachex.get(:chapi_cache, "key")
 
     messages =
       chat
@@ -234,7 +235,13 @@ defmodule ChatpiWeb.ChatChannel do
       )
 
     # Send it to Expo
-    # {:ok, _response} = ExponentServerSdk.PushNotification.push_list(messages)
+    {:ok, _response} = ExponentServerSdk.PushNotification.push_list(messages)
+  end
+
+  defp get_chat_cached(chat_id) do
+    chat
+    |> Cachex.get(:chapi_cache, "key")
+    |> Chats.get_chat()
   end
 
   @doc false

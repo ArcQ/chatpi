@@ -31,7 +31,7 @@ defmodule Chatpi.MixProject do
   def application do
     [
       mod: {Chatpi.Application, []},
-      extra_applications: [:logger, :runtime_tools, :timex, :exponent_server_sdk]
+      extra_applications: [:logger, :runtime_tools, :timex, :exponent_server_sdk, :cachex]
     ]
   end
 
@@ -83,6 +83,7 @@ defmodule Chatpi.MixProject do
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:kaffe, "~> 1.0"},
+      {:cachex, "~> 3.3"},
       {:mock, "~> 0.3.0", only: :test}
     ]
   end
