@@ -212,8 +212,7 @@ defmodule ChatpiWeb.ChatChannel do
   defp send_notification_to_all_members_in_chat(chat_id, message) do
     chat =
       chat_id
-      |> Chats.get_chat()
-      |> Cachex.get(:chapi_cache, "key")
+      |> get_chat_cached
 
     messages =
       chat
@@ -239,9 +238,15 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   defp get_chat_cached(chat_id) do
-    chat
-    |> Cachex.get(:chapi_cache, "key")
-    |> Chats.get_chat()
+    {:ok, cached_chat} = Cachex.get(:chats_cache, chat_id)
+
+    if cached_chat == nil do
+      chat = chat_id |> Chats.get_chat()
+      Cachex.put(:chats_cache, chat_id, chat)
+      chat
+    else
+      cached_chat
+    end
   end
 
   @doc false

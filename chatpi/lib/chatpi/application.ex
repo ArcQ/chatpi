@@ -4,7 +4,7 @@ defmodule Chatpi.Application do
   @moduledoc false
 
   use Application
-  require Cachex.Spec
+  import Cachex.Spec
 
   @doc false
   def start(_type, _args) do
@@ -18,17 +18,17 @@ defmodule Chatpi.Application do
       # {Chatpi.Worker, arg},
       {Phoenix.PubSub, name: Chatpi.PubSub},
       ChatpiWeb.Presence,
-      {Cachex, name: :chatpi_cache},
-      {
-        Cachex,
-        [:chats_cache, [expiration: expiration(default: :timer.minutes(10))]],
-        id: :chats_cache
-      },
-      {
-        Cachex,
-        [:users_cache, [expiration: expiration(default: :timer.minutes(10))]],
-        id: :users_cache
+      %{
+        id: :chats_cache,
+        start:
+          {Cachex, :start_link,
+           [:chats_cache, [expiration: expiration(default: :timer.minutes(20)), limit: 500]]}
       }
+      # {
+      #   Cachex,
+      #   [:users_cache, [expiration: expiration(default: :timer.minutes(20)), limit: 500]],
+      #   id: :users_cache
+      # }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -50,7 +50,7 @@ defmodule Chatpi.Application do
               start: {Kaffe.GroupMemberSupervisor, :start_link, []},
               type: :supervisor
             },
-            worker(Chatpi.UnreadMessagesWorker, [0])
+            Supervisor.Spec.worker(Chatpi.UnreadMessagesWorker, [0])
           ],
         opts
       )

@@ -1,5 +1,5 @@
 defmodule Chatpi.UnreadMessagesWorkerTest do
-  use Chatpi.DataCase, async: true
+  use Chatpi.DataCase, async: false
 
   setup do
     consumer_pid = start_supervised!({Chatpi.UnreadMessagesWorker, nil})

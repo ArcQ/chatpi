@@ -31,6 +31,15 @@ defmodule ChatpiWeb.ChatChannelTest do
         "token" => auth_key_c()
       })
 
+    pid =
+      Chatpi.Supervisor
+      |> Supervisor.which_children()
+      |> Enum.filter(&(elem(&1, 0) == :chats_cache))
+      |> List.first()
+      |> elem(1)
+
+    Ecto.Adapters.SQL.Sandbox.allow(Chatpi.Repo, self(), pid)
+
     {:ok, socket: socket, lobby: lobby_socket, user: user, chat: chat, message: message}
   end
 
@@ -57,6 +66,8 @@ defmodule ChatpiWeb.ChatChannelTest do
 
     assert !Map.has_key?(broadcasted_message, :file)
     assert broadcasted_message[:user_auth_key] == user.auth_key
+
+    Process.sleep(50)
   end
 
   test "send reaction to a message should create new reaction if it does not exist", %{
@@ -79,6 +90,8 @@ defmodule ChatpiWeb.ChatChannelTest do
     )
 
     assert user_auth_key == user.auth_key
+
+    Process.sleep(50)
   end
 
   test "send reply to a message should work", %{
@@ -115,6 +128,21 @@ defmodule ChatpiWeb.ChatChannelTest do
     saved_reply_message = Chatpi.Messages.find_by_id(broadcasted_reply.id)
 
     assert saved_reply_message.reply_target_id == broadcasted_message.id
+
+    # temporary fix because broadcast pulls from cache in another process so we need to wait for that to finish
+    Process.sleep(50)
+  end
+
+  test "broadcasting saves an entry of chats in the cache for broadcasting", %{
+    chat: chat,
+    socket: socket
+  } do
+    push(socket, "message:new", %{"text" => "test a message"})
+
+    Process.sleep(50)
+
+    {:ok, cached_chat} = Cachex.get(:chats_cache, chat.id)
+    assert cached_chat.members |> length == 1
   end
 
   test "send messages with custom_details should work", %{user: _user, socket: socket} do

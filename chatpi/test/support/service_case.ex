@@ -13,7 +13,7 @@ defmodule Chatpi.ServiceCase do
   of the test unless the test case is marked as async.
   """
 
-  use ExUnit.CaseTemplate, async: true
+  use ExUnit.CaseTemplate, async: false
 
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Chatpi.Repo)
