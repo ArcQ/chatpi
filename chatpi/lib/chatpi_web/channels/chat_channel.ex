@@ -5,6 +5,7 @@ defmodule ChatpiWeb.ChatChannel do
   alias Chatpi.{Chats, Messages}
   alias ChatpiWeb.Api.V1.MessageView
   alias Presence
+  alias ChatpiWeb.{Constants, NotificationFactory}
 
   @doc false
   def join("chat:touchbase:lobby", socket) do
@@ -205,11 +206,14 @@ defmodule ChatpiWeb.ChatChannel do
 
   @doc false
   defp broadcast_message(socket, chat_id, topic, message) do
-    Task.start(fn -> send_notification_to_all_members_in_chat(chat_id, message) end)
+    Task.start(fn ->
+      send_notification_to_all_members_in_chat(chat_id, Constants.notification().message, message)
+    end)
+
     broadcast!(socket, topic, message)
   end
 
-  defp send_notification_to_all_members_in_chat(chat_id, message) do
+  defp send_notification_to_all_members_in_chat(chat_id, notification_type, message) do
     chat =
       chat_id
       |> get_chat_cached
@@ -226,11 +230,7 @@ defmodule ChatpiWeb.ChatChannel do
       end)
       |> List.flatten()
       |> Enum.map(
-        &%{
-          to: "ExponentPushToken[" <> &1 <> "]",
-          title: ("To " <> chat.name) |> String.slice(0..29),
-          body: message.text |> String.slice(0..29)
-        }
+        &NotificationFactory.create_notification(notification_type, &1, chat.name, message.text)
       )
 
     # Send it to Expo

@@ -16,7 +16,7 @@ defmodule ChatpiWeb.UserSocket do
 
         {:ok,
          socket
-         |> assign(:user, Users.get_user_by_auth_key!(auth_key))}
+         |> assign(:user, Users.get_user_by_auth_key_cached(auth_key))}
 
       {:error, reason} ->
         Logger.warn(reason)

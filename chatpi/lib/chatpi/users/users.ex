@@ -30,22 +30,39 @@ defmodule Chatpi.Users do
     case Chatpi.Auth.Token.verify_and_validate(token) do
       {:ok, claims} ->
         auth_key = claims["sub"]
-        get_user_by_auth_key!(auth_key)
+        get_user_by_auth_key(auth_key)
 
       {:error, _} ->
         raise Ecto.NoResultsError
     end
   end
 
+  def get_user_by_auth_key(auth_key) do
+    Repo.get_by(User, auth_key: auth_key, is_inactive: false)
+  end
+
   def get_user_by_auth_key!(auth_key) do
-    Repo.get_by!(User, auth_key: auth_key)
+    Repo.get_by!(User, auth_key: auth_key, is_inactive: false)
+  end
+
+  def get_user_by_auth_key_cached(auth_key) do
+    {:ok, cached_user} = Cachex.get(:users_cache, auth_key)
+
+    if cached_user == nil do
+      user = get_user_by_auth_key(auth_key)
+      Cachex.put(:users_cache, auth_key, user)
+
+      user
+    else
+      cached_user
+    end
   end
 
   def add_push_token_by_auth_key(
         auth_key,
         %{token: _token, device_id: _device_id, type: _token_type} = push_token
       ) do
-    user = get_user_by_auth_key!(auth_key)
+    user = get_user_by_auth_key(auth_key)
 
     push_tokens =
       user

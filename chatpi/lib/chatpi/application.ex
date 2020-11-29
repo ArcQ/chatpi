@@ -23,12 +23,13 @@ defmodule Chatpi.Application do
         start:
           {Cachex, :start_link,
            [:chats_cache, [expiration: expiration(default: :timer.minutes(20)), limit: 500]]}
+      },
+      %{
+        id: :users_cache,
+        start:
+          {Cachex, :start_link,
+           [:users_cache, [expiration: expiration(default: :timer.minutes(20)), limit: 500]]}
       }
-      # {
-      #   Cachex,
-      #   [:users_cache, [expiration: expiration(default: :timer.minutes(20)), limit: 500]],
-      #   id: :users_cache
-      # }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

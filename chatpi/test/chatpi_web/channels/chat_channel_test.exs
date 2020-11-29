@@ -31,14 +31,7 @@ defmodule ChatpiWeb.ChatChannelTest do
         "token" => auth_key_c()
       })
 
-    pid =
-      Chatpi.Supervisor
-      |> Supervisor.which_children()
-      |> Enum.filter(&(elem(&1, 0) == :chats_cache))
-      |> List.first()
-      |> elem(1)
-
-    Ecto.Adapters.SQL.Sandbox.allow(Chatpi.Repo, self(), pid)
+    TestUtils.sql_sandbox_allow_pid(:chats_cache)
 
     {:ok, socket: socket, lobby: lobby_socket, user: user, chat: chat, message: message}
   end

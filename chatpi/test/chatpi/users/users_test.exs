@@ -8,6 +8,10 @@ defmodule Chatpi.UsersTest do
 
     use Chatpi.Fixtures, [:user]
 
+    setup do
+      TestUtils.sql_sandbox_allow_pid(:users_cache)
+    end
+
     test "list_users/1 returns all messages" do
       {:ok, _user} = user_fixture()
 
@@ -19,6 +23,16 @@ defmodule Chatpi.UsersTest do
 
     #   assert Users.list_users_by_ids([auth_key_c()]) == [user]
     # end
+
+    test "get_user_by_auth_key_cached should save into cache if not exists, and get from cache if it exists" do
+      {:ok, user} = user_fixture()
+
+      assert Users.get_user_by_auth_key_cached(user.auth_key) == user
+      assert Cachex.get(:users_cache, user.auth_key) == {:ok, user}
+      Users.set_user_inactive(user.id)
+      assert Users.get_user_by_auth_key(user.auth_key) == nil
+      assert Users.get_user_by_auth_key_cached(user.auth_key) == user
+    end
 
     test "create_user/1 with valid data creates user" do
       assert Users.list_users() |> length == 3
