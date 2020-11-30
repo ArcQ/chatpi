@@ -1,7 +1,7 @@
 defmodule Chatpi.UsersTest do
   use Chatpi.DataCase
 
-  alias Chatpi.Users
+  alias Chatpi.{Users, Users.User}
 
   describe "messages" do
     import Chatpi.FixtureConstants
@@ -29,7 +29,7 @@ defmodule Chatpi.UsersTest do
 
       assert Users.get_user_by_auth_key_cached(user.auth_key) == user
       assert Cachex.get(:users_cache, user.auth_key) == {:ok, user}
-      Users.set_user_inactive(user.id)
+      Users.update_user(%User{id: user.id}, %{is_inactive: true})
       assert Users.get_user_by_auth_key(user.auth_key) == nil
       assert Users.get_user_by_auth_key_cached(user.auth_key) == user
     end
@@ -80,10 +80,10 @@ defmodule Chatpi.UsersTest do
       assert user.username == "blah"
     end
 
-    test "set_user_inactive makes it inactive" do
+    test "update_user set user inactive makes it inactive" do
       {:ok, user} = user_fixture()
 
-      assert {:ok, user} = Users.set_user_inactive(user.id)
+      assert {:ok, user} = Users.update_user(%User{id: user.id}, %{is_inactive: true})
       assert user.is_inactive == true
     end
 

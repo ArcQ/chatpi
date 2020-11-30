@@ -14,6 +14,7 @@ defmodule Chatpi.Chats.Member do
     )
 
     belongs_to(:message_seen, Chatpi.Messages.Message, type: Ecto.UUID)
+    field(:is_muted, :boolean)
   end
 
   @doc false
@@ -26,13 +27,6 @@ defmodule Chatpi.Chats.Member do
 
   @doc false
   def update_changeset(member, attrs) do
-    member
-    |> cast(attrs, [:is_muted, :message_seen_id])
-    |> cast_assoc(:message_seen, required: false)
-  end
-
-  @doc false
-  def update_message_seen_changeset(member, attrs) do
     member
     |> cast(attrs, [:is_muted, :message_seen_id])
     |> cast_assoc(:message_seen, required: false)

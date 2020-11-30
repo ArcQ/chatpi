@@ -55,22 +55,6 @@ defmodule Chatpi.ChatsTest do
       assert chat.name == "some updated name"
     end
 
-    test "update_message/2 updates message_seen properly" do
-      {:ok, user, chat, message} = message_fixture()
-
-      assert {:ok, %Member{} = member} =
-               Chats.update_messages_read(%{
-                 message_id: message.id,
-                 user_auth_key: user.auth_key
-               })
-
-      result = Chats.get_member_by_id(member.id)
-
-      assert result.chat_id == chat.id
-      assert result.user_auth_key == user.auth_key
-      assert result.message_seen_id == message.id
-    end
-
     test "delete_chat/1 deletes the chat" do
       {:ok, _user, chat} = chat_fixture()
       assert {:ok, %Chat{}} = Chats.delete_chat(chat)
@@ -82,14 +66,41 @@ defmodule Chatpi.ChatsTest do
       assert %Ecto.Changeset{} = Chats.change_chat(chat)
     end
 
-    test "update_chat_members/1 mute notifications works" do
+    test "update_message/2 updates message_seen properly" do
       {:ok, user, chat, message} = message_fixture()
 
       assert {:ok, %Member{} = member} =
-               Chats.find_and_update_member(%{
-                 message_id: message.id,
-                 is_muted: false
-               })
+               Chats.find_and_update_member(
+                 %{
+                   message_id: message.id,
+                   user_auth_key: user.auth_key
+                 },
+                 %{
+                   message_seen_id: message.id,
+                   unread_messages: 0
+                 }
+               )
+
+      result = Chats.get_member_by_id(member.id)
+
+      assert result.chat_id == chat.id
+      assert result.user_auth_key == user.auth_key
+      assert result.message_seen_id == message.id
+    end
+
+    test "update_chat_members/1 mute notifications works" do
+      {:ok, user, chat, message} = message_fixture()
+
+      assert {:ok, %Member{is_muted: false} = member} =
+               Chats.find_and_update_member(
+                 %{
+                   message_id: message.id,
+                   user_auth_key: user.auth_key
+                 },
+                 %{
+                   is_muted: false
+                 }
+               )
     end
 
     test "get_member/1 gets member by query" do

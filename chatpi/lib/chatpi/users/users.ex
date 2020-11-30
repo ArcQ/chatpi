@@ -97,12 +97,6 @@ defmodule Chatpi.Users do
     |> Repo.update()
   end
 
-  def set_user_inactive(user_id) do
-    %User{id: user_id}
-    |> User.make_inactive_changset(%{is_inactive: true})
-    |> Repo.update()
-  end
-
   def change_user(%User{} = user) do
     User.update_changeset(user, %{})
   end

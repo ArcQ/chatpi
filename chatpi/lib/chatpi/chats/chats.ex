@@ -112,28 +112,8 @@ defmodule Chatpi.Chats do
   #   |> Repo.update()
   # end
 
-  def update_messages_read(%{message_id: message_seen_id, user_auth_key: _user_auth_key} = query) do
-    query
-    |> get_member
-    |> Member.update_message_seen_changeset(%{
-      message_seen_id: message_seen_id,
-      unread_messages: 0
-    })
-    |> Repo.update()
-  end
-
-  def update_messages_read(%{message_id: message_seen_id, user_auth_key: _user_auth_key} = query) do
-    query
-    |> get_member
-    |> Member.update_message_seen_changeset(%{
-      message_seen_id: message_seen_id,
-      unread_messages: 0
-    })
-    |> Repo.update()
-  end
-
   def find_and_update_member(
-        %{message_id: message_seen_id, user_auth_key: _user_auth_key} = query,
+        query,
         attrs
       ) do
     query
@@ -178,6 +158,13 @@ defmodule Chatpi.Chats do
     |> where([chat], chat.id == ^chat_id)
     |> join(:inner, [chat], user in User, on: user.auth_key == ^auth_key)
     |> Repo.exists?()
+  end
+
+  def get_member(%{chat_id: chat_id, user_auth_key: user_auth_key} = _query) do
+    Member
+    |> where([member], member.user_auth_key == ^user_auth_key and member.chat_id == ^chat_id)
+    |> Repo.all()
+    |> List.first()
   end
 
   def get_member(%{message_id: message_id, user_auth_key: user_auth_key} = _query) do

@@ -157,6 +157,7 @@ defmodule ChatpiWeb.ChatChannelTest do
     saved_mesasge = Chatpi.Messages.find_by_id(id)
 
     assert saved_mesasge.custom_details["random_payload"] == "some value"
+    Process.sleep(100)
     assert called(ExponentServerSdk.PushNotification.push_list(:_))
   end
 
