@@ -122,6 +122,25 @@ defmodule Chatpi.Chats do
     |> Repo.update()
   end
 
+  def update_messages_read(%{message_id: message_seen_id, user_auth_key: _user_auth_key} = query) do
+    query
+    |> get_member
+    |> Member.update_message_seen_changeset(%{
+      message_seen_id: message_seen_id,
+      unread_messages: 0
+    })
+    |> Repo.update()
+  end
+
+  def find_and_update_member(
+        %{message_id: message_seen_id, user_auth_key: _user_auth_key} = query,
+        attrs
+      ) do
+    query
+    |> get_member
+    |> update_chat_members(attrs)
+  end
+
   def update_chat(%Chat{} = chat, attrs) do
     chat
     |> Chat.update_changeset(attrs)
@@ -132,6 +151,12 @@ defmodule Chatpi.Chats do
     %Chat{}
     |> Chat.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def update_chat_members(%Member{} = member, attrs) do
+    member
+    |> Member.update_changeset(attrs)
+    |> Repo.update()
   end
 
   def remove_chat_members(attrs \\ %{}) do

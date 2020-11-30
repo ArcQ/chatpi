@@ -82,6 +82,16 @@ defmodule Chatpi.ChatsTest do
       assert %Ecto.Changeset{} = Chats.change_chat(chat)
     end
 
+    test "update_chat_members/1 mute notifications works" do
+      {:ok, user, chat, message} = message_fixture()
+
+      assert {:ok, %Member{} = member} =
+               Chats.find_and_update_member(%{
+                 message_id: message.id,
+                 is_muted: false
+               })
+    end
+
     test "get_member/1 gets member by query" do
       {:ok, user, _chat, message} = message_fixture()
       message_id = message.id

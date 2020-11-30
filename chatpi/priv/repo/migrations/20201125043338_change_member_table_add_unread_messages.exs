@@ -3,7 +3,7 @@ defmodule Chatpi.Repo.Migrations.ChangeMemberTableAddUnreadMessages do
 
   def change do
     alter table(:chat_member) do
-      add(:unread_messages, :integer, default: [])
+      add(:unread_messages, :integer, default: 0)
     end
   end
 end

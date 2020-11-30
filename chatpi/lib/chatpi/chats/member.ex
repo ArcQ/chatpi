@@ -25,9 +25,16 @@ defmodule Chatpi.Chats.Member do
   end
 
   @doc false
+  def update_changeset(member, attrs) do
+    member
+    |> cast(attrs, [:is_muted, :message_seen_id])
+    |> cast_assoc(:message_seen, required: false)
+  end
+
+  @doc false
   def update_message_seen_changeset(member, attrs) do
     member
-    |> cast(attrs, [:message_seen_id])
+    |> cast(attrs, [:is_muted, :message_seen_id])
     |> cast_assoc(:message_seen, required: false)
   end
 end

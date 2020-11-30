@@ -39,9 +39,13 @@ defmodule ChatpiWeb.Router do
 
       patch("/users/me/push_token", UserController, :add_push_token, as: :push_token)
 
-      resources("/chats", ChatController, only: [:index, :show, :create])
+      resources("/chats", ChatController, only: [:index, :create])
 
       resources("/chats/:chat_id/messages", MessageController, only: [:index, :create])
+
+      put("/chat/:chat_id/notification", ChatController, :mute_notification,
+        as: :mute_notification
+      )
 
       patch("/chats/:chat_id/messages/:id/seen", MessageController, :messages_seen,
         as: :message_seen

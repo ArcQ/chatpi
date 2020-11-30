@@ -13,6 +13,25 @@ defmodule ChatpiWeb.Api.V1.ChatController do
     render(conn, "index.json", chats: chats)
   end
 
+  @doc false
+  def create(conn, _params) do
+    auth_key = Guardian.Plug.current_resource(conn, []).auth_key
+
+    Chats.create_chat_with_members(%{
+      name: conn.body_params["name"],
+      members: [auth_key, conn.body_params["users"]]
+    })
+  end
+
+  def mute_chat(conn, _params) do
+    auth_key = Guardian.Plug.current_resource(conn, []).auth_key
+
+    Chats.create_chat_with_members(%{
+      is_muted: conn.body_params["is_muted"],
+      members: [auth_key, conn.body_params["users"]]
+    })
+  end
+
   defp handle_errors(conn, %{kind: _kind, reason: reason, stack: _stack}) do
     json(conn, %{error: 500, reason: reason})
   end
