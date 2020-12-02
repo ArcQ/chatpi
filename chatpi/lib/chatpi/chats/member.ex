@@ -14,7 +14,10 @@ defmodule Chatpi.Chats.Member do
     )
 
     belongs_to(:message_seen, Chatpi.Messages.Message, type: Ecto.UUID)
+
     field(:is_muted, :boolean)
+
+    field(:unread_messages, :integer)
   end
 
   @doc false

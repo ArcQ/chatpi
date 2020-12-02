@@ -89,7 +89,7 @@ defmodule Chatpi.ChatsTest do
     end
 
     test "update_chat_members/1 mute notifications works" do
-      {:ok, user, chat, message} = message_fixture()
+      {:ok, user, _chat, message} = message_fixture()
 
       assert {:ok, %Member{is_muted: false} = member} =
                Chats.find_and_update_member(

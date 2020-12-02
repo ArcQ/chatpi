@@ -25,14 +25,6 @@ defmodule Chatpi.Chats do
     |> List.first()
   end
 
-  # def get_unread_count_by_auth_key(auth_key) do
-  #   Chat
-  #   |> where([chat], chat.id == ^id)
-  #   |> preload(members: :user)
-  #   |> Repo.all()
-  #   |> List.first()
-  # end
-
   def get_member_by_id(id) do
     Member
     |> where([member], member.id == ^id)

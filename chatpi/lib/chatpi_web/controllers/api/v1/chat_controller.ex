@@ -10,7 +10,7 @@ defmodule ChatpiWeb.Api.V1.ChatController do
     auth_key = Guardian.Plug.current_resource(conn, []).auth_key
 
     chats = Chats.list_chats_for_user(auth_key)
-    render(conn, "index.json", chats: chats)
+    render(conn, "index.json", chats: chats, user_auth_key: auth_key)
   end
 
   @doc false

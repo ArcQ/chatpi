@@ -43,7 +43,16 @@ defmodule ChatpiWeb.ChatControllerTest do
 
       assert %{
                "chats" => [
-                 %{"id" => ^chat_id, "name" => "fixture chat 1"}
+                 %{
+                   "id" => ^chat_id,
+                   "name" => "fixture chat 1"
+                 }
+               ],
+               "detail" => [
+                 %{
+                   "message_seen_id" => nil,
+                   "unread_messages" => 0
+                 }
                ]
              } = result
     end
