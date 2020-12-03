@@ -34,10 +34,16 @@ export interface ConnectionConfig {
   messageQuery: MessageQuery;
 }
 
+export interface Reaction {
+  userAuthkey: string;
+  classifier: ReactionClassifier;
+}
+
 export interface Message {
   text: string;
   files: Array<string>;
-  replyTargetId: string;
+  reply: string;
+  reactions: Array<Reaction>;
 }
 
 export interface SendOptions {
