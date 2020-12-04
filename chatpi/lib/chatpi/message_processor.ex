@@ -7,16 +7,22 @@ defmodule Chatpi.MessageProcessor do
 
   defp handle_message("upsert-user", %{user: user_attr}) do
     Logger.info("MessageProcessor upserting user")
+    Cachex.del(:users_cache, user_attr.auth_key)
     Users.create_or_update_user(user_attr)
   end
 
   defp handle_message("upsert-chat-entity", %{entity: chat_attr}) do
     Logger.info("MessageProcessor upserting chat")
 
-    Chats.create_chat_with_members(%{
-      name: chat_attr.name,
-      members: Enum.map(chat_attr.members, & &1.user.auth_key)
-    })
+    if Map.has_key?(chat_attr, :id) do
+      Cachex.del(:chats_cache, chat_attr.chat_id)
+      # TODO update chats
+    else
+      Chats.create_chat_with_members(%{
+        name: chat_attr.name,
+        members: Enum.map(chat_attr.members, & &1.user.auth_key)
+      })
+    end
   end
 
   defp handle_message("add-member-to-chat-entity", %{entity: user_attr}) do
