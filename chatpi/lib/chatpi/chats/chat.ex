@@ -9,6 +9,8 @@ defmodule Chatpi.Chats.Chat do
 
     has_many(:members, Chatpi.Chats.Member)
 
+    belongs_to(:organization_id, Chatpi.Organizations.Organization, type: Ecto.UUID)
+
     timestamps()
   end
 

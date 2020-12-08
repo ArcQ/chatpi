@@ -9,12 +9,15 @@ defmodule Chatpi.Users.User do
     field(:auth_key, :string)
     field(:username, :string)
     field(:is_inactive, :boolean)
+    field(:is_admin, :boolean)
 
     many_to_many(:chats, Chatpi.Chats.Chat, join_through: "chat_member")
 
     has_many(:messages, Chatpi.Messages.Message, foreign_key: :user_auth_key)
 
     embeds_many(:push_tokens, Chatpi.Users.PushToken, on_replace: :delete)
+
+    belongs_to(:organization_id, Chatpi.Organizations.Organization, type: Ecto.UUID)
 
     timestamps()
   end

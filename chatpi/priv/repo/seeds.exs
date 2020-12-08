@@ -10,7 +10,14 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 #
-alias Chatpi.{Repo, Chats.Chat, Users.User, Messages.Message, Chats.Member}
+alias Chatpi.{
+  Repo,
+  Chats.Chat,
+  Users.User,
+  Messages.Message,
+  Chats.Member,
+  Organizations.Organization
+}
 
 defmodule MyUuid do
   def gen_uuid(str) do
@@ -18,16 +25,26 @@ defmodule MyUuid do
   end
 end
 
+{:ok, kf_shared_org} =
+  Repo.insert(%Organization{
+    name: "KnotFive",
+    api_key: "ad1d6120-35ff-4195-ad29-f413ccaba238",
+    api_secret: "2a3605f5-1653-4a34-a979-db4eac63e586"
+  })
+
 {:ok, arcq} =
   Repo.insert(%User{
+    organization: kf_shared_org,
     username: "arcq",
     auth_key: "129830df-f45a-46b3-b766-2101db28ea62",
     is_inactive: false,
+    is_admin: true,
     messages: []
   })
 
 {:ok, sita} =
   Repo.insert(%User{
+    organization: kf_shared_org,
     username: "sita",
     auth_key: "5728dfb5-d089-48f1-aa9c-f1ea436fa8b1",
     is_inactive: false,
@@ -36,6 +53,7 @@ end
 
 {:ok, donkers} =
   Repo.insert(%User{
+    organization: kf_shared_org,
     username: "d0nkers",
     auth_key: "56431cd1-6724-4ac9-af64-08c74d8df027",
     is_inactive: false,
@@ -44,18 +62,21 @@ end
 
 {:ok, chat_1} =
   Repo.insert(%Chat{
+    organization: kf_shared_org,
     id: "cf4aeae1-cda7-41f3-adf7-9b2bb377be7d",
     name: "chat_1"
     # users: [arcq, sita]
   })
 
 Repo.insert(%Chat{
+  organization: kf_shared_org,
   id: "83cdd361-54a2-4e5a-a6db-35e20fc54555",
   name: "chat_2"
   # users: [arcq, sita, donkers]
 })
 
 Repo.insert(%Chat{
+  organization: kf_shared_org,
   id: "7a6ad1d6-551c-453a-9a66-879c2587ca0d",
   name: "chat_3"
   # users: [arcq, donkers]

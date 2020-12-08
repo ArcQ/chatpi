@@ -9,7 +9,7 @@ defmodule Chatpi.Organizations.Organization do
     field(:api_key, :string)
     field(:api_secret, :string)
 
-    has_many(:owner_user_auth_key, Chatpi.Users.User, foreign_key: :auth_key)
+    has_many(:owner_id, Chatpi.Users.User, foreign_key: :id)
 
     timestamps()
   end
@@ -18,7 +18,6 @@ defmodule Chatpi.Organizations.Organization do
   def changeset(organization, attrs) do
     organization
     |> cast(attrs, [:name, :api_key, :api_secret])
-    # |> validate_required([:name, :api_key, :api_secret])
-    |> validate_required([])
+    |> validate_required([:name, :api_key, :api_secret])
   end
 end
