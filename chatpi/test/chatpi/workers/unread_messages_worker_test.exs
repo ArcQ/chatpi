@@ -11,7 +11,7 @@ defmodule Chatpi.UnreadMessagesWorkerTest do
 
     test "UnreadMessagesWorker should take chat_ids and update unread_messages for those chats",
          %{consumer_pid: consumer_pid} do
-      {:ok, _user, chat, _message} = message_fixture()
+      {:ok, _user, chat, _message, _organization} = message_fixture()
 
       GenServer.call(UnreadMessagesWorkerGenServer, {:add_chats_to_update, chat.id}, 1)
 

@@ -5,7 +5,7 @@ defmodule ChatpiWeb.MessageControllerTest do
   import Chatpi.FixtureConstants
   use ChatpiWeb.ConnCase
 
-  use Chatpi.Fixtures, [:user, :chat, :message]
+  use Chatpi.Fixtures, [:organization, :user, :chat, :message]
 
   setup_with_mocks([
     {Chatpi.Auth.Token, [],
@@ -31,7 +31,7 @@ defmodule ChatpiWeb.MessageControllerTest do
 
   describe "index" do
     test "lists all messages before query", %{conn: conn} do
-      {:ok, _user, chat, message} = message_fixture()
+      {:ok, _user, chat, message, _organization} = message_fixture()
 
       result =
         conn
@@ -54,7 +54,7 @@ defmodule ChatpiWeb.MessageControllerTest do
     end
 
     test "lists all messages after query", %{conn: conn} do
-      {:ok, _user, chat, message} = message_fixture()
+      {:ok, _user, chat, message, _organization} = message_fixture()
 
       result =
         conn

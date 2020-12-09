@@ -4,7 +4,7 @@ defmodule ChatpiWeb.ChatChannelTest do
   use ChatpiWeb.ChannelCase
 
   import Chatpi.FixtureConstants
-  use Chatpi.Fixtures, [:user, :chat, :message]
+  use Chatpi.Fixtures, [:organization, :user, :chat, :message]
   alias ChatpiWeb.UserSocket
 
   setup_with_mocks([
@@ -15,7 +15,7 @@ defmodule ChatpiWeb.ChatChannelTest do
   end
 
   setup do
-    {:ok, user, chat, message} = message_fixture()
+    {:ok, user, chat, message, _organization} = message_fixture()
 
     {:ok, _, socket} =
       UserSocket

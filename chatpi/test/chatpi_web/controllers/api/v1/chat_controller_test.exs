@@ -31,7 +31,7 @@ defmodule ChatpiWeb.ChatControllerTest do
 
   describe "index" do
     test "lists all chats you own", %{conn: conn} do
-      {:ok, _user, chat} = chat_fixture()
+      {:ok, _user, chat, _organization} = chat_fixture()
 
       chat_id = chat.id
 

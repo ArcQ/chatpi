@@ -5,7 +5,7 @@ defmodule ChatpiWeb.UserControllerTest do
   import Chatpi.FixtureConstants
   use ChatpiWeb.ConnCase
 
-  use Chatpi.Fixtures, [:user]
+  use Chatpi.Fixtures, [:organization, :user]
 
   setup_with_mocks([
     {Chatpi.Auth.Token, [],
@@ -44,7 +44,7 @@ defmodule ChatpiWeb.UserControllerTest do
 
   describe "add_push_token" do
     test "creates push token", %{conn: conn} do
-      {:ok, _user} = user_fixture()
+      {:ok, _organization, _user} = user_fixture()
 
       result =
         conn

@@ -34,7 +34,7 @@ defmodule ChatpiWeb.MessageProcessorTest do
     end
 
     test "upsert-chat-entity", %{} do
-      {:ok, user, organization} = user_fixture()
+      {:ok, user, _organization} = user_fixture()
 
       MessageProcessor.handle_messages([
         %{

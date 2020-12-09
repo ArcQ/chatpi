@@ -28,6 +28,5 @@ defmodule Chatpi.Chats.Chat do
     chat
     |> cast(attrs, [:name])
     |> put_assoc(:members, attrs[:members] || chat.members)
-    |> put_assoc(:organization, attrs[:organization])
   end
 end

@@ -66,9 +66,14 @@ defmodule Chatpi.Fixtures do
       def chat_fixture(attrs \\ %{}) do
         {:ok, user, organization} = user_fixture()
 
+        attrs =
+          attrs
+          |> Enum.into(@valid_chat_attrs)
+          |> Enum.into(%{organization: organization})
+
         {:ok, chat} =
           %Chat{}
-          |> Chat.changeset(Enum.into(attrs, @valid_chat_attrs))
+          |> Chat.changeset(attrs)
           |> Repo.insert()
 
         member = %Member{user: user, chat: chat}

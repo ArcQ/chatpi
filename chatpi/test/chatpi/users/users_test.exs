@@ -2,17 +2,7 @@ defmodule Chatpi.UsersTest do
   use Chatpi.DataCase
 
   alias Chatpi.{Users, Users.User}
-
-  defp forget(struct, field, cardinality \\ :one) do
-    %{
-      struct
-      | field => %Ecto.Association.NotLoaded{
-          __field__: field,
-          __owner__: struct.__struct__,
-          __cardinality__: cardinality
-        }
-    }
-  end
+  alias TestUtils
 
   describe "messages" do
     import Chatpi.FixtureConstants
@@ -44,7 +34,7 @@ defmodule Chatpi.UsersTest do
       # {:ok, cached_user} = Cachex.get(:users_cache, user.auth_key)
 
       # cached_user.
-      expected_user = forget(user, :organization)
+      expected_user = TestUtils.forget(user, :organization)
 
       assert Users.get_user_by_auth_key_cached(user.auth_key) == expected_user
       assert Cachex.get(:users_cache, user.auth_key) == {:ok, expected_user}

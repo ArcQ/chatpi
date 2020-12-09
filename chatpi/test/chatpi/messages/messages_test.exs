@@ -9,7 +9,7 @@ defmodule Chatpi.MessagesTest do
     use Chatpi.Fixtures, [:organization, :user, :chat, :message]
 
     test "list_messages_by_chat_id/1 returns all messages" do
-      {:ok, _user, chat, message} = message_fixture()
+      {:ok, _user, chat, message, _organization} = message_fixture()
 
       expected_result =
         message
@@ -21,7 +21,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "find_by_id/1 returns all correct message" do
-      {:ok, _user, _chat, message} = message_fixture()
+      {:ok, _user, _chat, message, _organization} = message_fixture()
 
       expected_result =
         message
@@ -33,7 +33,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "list_messages_by_chat_id_query/2 default returns all messages up to 50" do
-      {:ok, _user, chat, message} = message_fixture()
+      {:ok, _user, chat, message, _organization} = message_fixture()
 
       expected_result =
         message
@@ -47,7 +47,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "list_messages_by_chat_id_query/2 query after should retrieve most current going backwards up to limit if given" do
-      {:ok, user, chat, _message} = message_fixture()
+      {:ok, user, chat, _message, _organization} = message_fixture()
 
       {:ok, second_message} =
         Messages.create_message(%{
@@ -91,7 +91,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "create_message/1 with valid data creates a message" do
-      {:ok, user, chat, _message} = message_fixture()
+      {:ok, user, chat, _message, _organization} = message_fixture()
 
       assert {:ok, %Message{} = message} =
                Messages.create_message(%{
@@ -102,11 +102,11 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "create_message/1 with file works" do
-      assert {:ok, _user, _chat, message} = message_fixture_reply_with_file()
+      assert {:ok, _user, _chat, message, _organization} = message_fixture_reply_with_file()
     end
 
     test "create_message/1 with reply works" do
-      {:ok, user, chat, message} = message_fixture()
+      {:ok, user, chat, message, _organization} = message_fixture()
 
       assert {:ok, %Message{} = message} =
                Messages.create_message(%{
@@ -122,20 +122,20 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "delete_message/1 deletes the message" do
-      {:ok, _user, chat, message} = message_fixture()
+      {:ok, _user, chat, message, _organization} = message_fixture()
 
       assert {:ok, %Message{}} = Messages.delete_message(%Message{id: message.id})
       assert Enum.empty?(Messages.list_messages_by_chat_id(chat.id))
     end
 
     test "change_message/1 returns a message changeset" do
-      {:ok, _user, _chat, message} = message_fixture()
+      {:ok, _user, _chat, message, _organization} = message_fixture()
 
       assert %Ecto.Changeset{} = Messages.change_message(message)
     end
 
     test "upsert_reaction/2 inserts reaction when it doesn't exist" do
-      {:ok, user, _chat, message} = message_fixture()
+      {:ok, user, _chat, message, _organization} = message_fixture()
 
       reaction = %{
         user_id: user.id,
@@ -155,7 +155,7 @@ defmodule Chatpi.MessagesTest do
     end
 
     test "upsert_reaction/2 replaces reaction when it does exist" do
-      {:ok, user, _chat, message} = message_fixture()
+      {:ok, user, _chat, message, _organization} = message_fixture()
 
       reaction = %{
         user_id: user.id,
