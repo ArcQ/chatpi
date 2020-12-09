@@ -34,7 +34,9 @@
       ],
       "name": "testbase621",
       "score": 0.0
-    }
+    },
+    "apiKey": "some api key",
+    "apiSecret": "some api secret"
   },
   "publishedAt": "2020-10-21T00:43:25.811749",
   "publisher": "touchbase"

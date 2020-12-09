@@ -5,6 +5,26 @@ defmodule Chatpi.Fixtures do
       use Chatpi.Fixtures, [:user]
   """
   import Chatpi.FixtureConstants
+  alias Bcrypt
+
+  def organization do
+    alias Chatpi.Organizations
+
+    quote do
+      @valid_attrs %{
+        api_key: "some api key",
+        api_secret_hash: Bcrypt.Base.hash_password("some api secret", Bcrypt.gen_salt(12, true)),
+        name: "some org"
+      }
+
+      def organization_fixture(attrs \\ %{}) do
+        {:ok, organization} =
+          attrs
+          |> Enum.into(@valid_attrs)
+          |> Organizations.create_organization()
+      end
+    end
+  end
 
   def user do
     alias Chatpi.Users
@@ -19,10 +39,15 @@ defmodule Chatpi.Fixtures do
       @invalid_attrs %{auth_key: nil, username: nil}
 
       def user_fixture(attrs \\ %{}) do
+        {:ok, organization} = organization_fixture()
+
         {:ok, user} =
           attrs
+          |> Enum.into(%{organization: organization})
           |> Enum.into(@valid_attrs)
           |> Users.create_user()
+
+        {:ok, user, organization}
       end
     end
   end
@@ -39,7 +64,7 @@ defmodule Chatpi.Fixtures do
       @invalid_attrs %{id: nil, name: nil, members: []}
 
       def chat_fixture(attrs \\ %{}) do
-        {:ok, user} = user_fixture()
+        {:ok, user, organization} = user_fixture()
 
         {:ok, chat} =
           %Chat{}
@@ -52,7 +77,7 @@ defmodule Chatpi.Fixtures do
           chat
           |> Chats.update_chat(%{members: Enum.concat(chat.members, [member])})
 
-        {:ok, user, chat}
+        {:ok, user, chat, organization}
       end
     end
   end
@@ -68,7 +93,7 @@ defmodule Chatpi.Fixtures do
       @invalid_attrs %{text: nil}
 
       def message_fixture(attrs \\ %{}) do
-        {:ok, user, chat} = chat_fixture()
+        {:ok, user, chat, organization} = chat_fixture()
 
         new_message = Map.merge(%{user_auth_key: user.auth_key, chat_id: chat.id}, attrs)
 
@@ -77,11 +102,11 @@ defmodule Chatpi.Fixtures do
           |> Enum.into(@valid_attrs)
           |> Messages.create_message()
 
-        {:ok, user, chat, message}
+        {:ok, user, chat, message, organization}
       end
 
       def message_fixture_reply_with_file(attrs \\ %{}) do
-        {:ok, user, chat} = chat_fixture()
+        {:ok, user, chat, organization} = chat_fixture()
 
         new_message = Map.merge(%{user_auth_key: user.auth_key, chat_id: chat.id}, attrs)
 
@@ -98,7 +123,7 @@ defmodule Chatpi.Fixtures do
                 |> Repo.insert()
               end).()
 
-        {:ok, user, chat, message}
+        {:ok, user, chat, message, organization}
       end
     end
   end

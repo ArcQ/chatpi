@@ -8,15 +8,15 @@ defmodule ChatpiWeb.OrganizationControllerTest do
 
   @create_attrs %{
     api_key: "some api_key",
-    api_secret: "some api_secret",
+    api_secret_hash: "some api_secret_hash",
     name: "some name"
   }
   @update_attrs %{
     api_key: "some updated api_key",
-    api_secret: "some updated api_secret",
+    api_secret_hash: "some updated api_secret_hash",
     name: "some updated name"
   }
-  # @invalid_attrs %{api_key: nil, api_secret: nil, name: nil}
+  # @invalid_attrs %{api_key: nil, api_secret_hash: nil, name: nil}
 
   setup_with_mocks([
     {Chatpi.Auth.Token, [],
@@ -79,7 +79,7 @@ defmodule ChatpiWeb.OrganizationControllerTest do
       assert %{
                "id" => id,
                "api_key" => "some api_key",
-               "api_secret" => "some api_secret",
+               "api_secret_hash" => "some api_secret_hash",
                "name" => "some name"
              } = get_res["data"]
     end
@@ -119,7 +119,7 @@ defmodule ChatpiWeb.OrganizationControllerTest do
       assert %{
                "id" => id,
                "api_key" => "some updated api_key",
-               "api_secret" => "some updated api_secret",
+               "api_secret_hash" => "some updated api_secret_hash",
                "name" => "some updated name"
              } = json_response(get_res, 200)["data"]
     end

@@ -7,7 +7,7 @@ defmodule Chatpi.UnreadMessagesWorkerTest do
   end
 
   describe "UnreadMessagesWorker" do
-    use Chatpi.Fixtures, [:user, :chat, :message]
+    use Chatpi.Fixtures, [:organization, :user, :chat, :message]
 
     test "UnreadMessagesWorker should take chat_ids and update unread_messages for those chats",
          %{consumer_pid: consumer_pid} do

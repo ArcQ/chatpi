@@ -3,54 +3,79 @@ defmodule Chatpi.UsersTest do
 
   alias Chatpi.{Users, Users.User}
 
+  defp forget(struct, field, cardinality \\ :one) do
+    %{
+      struct
+      | field => %Ecto.Association.NotLoaded{
+          __field__: field,
+          __owner__: struct.__struct__,
+          __cardinality__: cardinality
+        }
+    }
+  end
+
   describe "messages" do
     import Chatpi.FixtureConstants
 
-    use Chatpi.Fixtures, [:user]
+    use Chatpi.Fixtures, [:organization, :user]
 
     setup do
       TestUtils.sql_sandbox_allow_pid(:users_cache)
     end
 
     test "list_users/1 returns all messages" do
-      {:ok, _user} = user_fixture()
+      {:ok, _user, _organization} = user_fixture()
 
       assert Users.list_users() |> length == 4
     end
 
     # test "list_users_by_ids/2 returns all messages" do
-    #   {:ok, user} = user_fixture()
+    #   {:ok, user, _organization} = user_fixture()
 
     #   assert Users.list_users_by_ids([auth_key_c()]) == [user]
     # end
 
     test "get_user_by_auth_key_cached should save into cache if not exists, and get from cache if it exists" do
-      {:ok, user} = user_fixture()
+      {:ok, user, organization} = user_fixture()
+      # user = Map.put(user, :organization, nil)
+      # assert Users.get_user_by_auth_key_cached(user.auth_key) |> Map.put(:organization, nil) ==
+      #          user
 
-      assert Users.get_user_by_auth_key_cached(user.auth_key) == user
-      assert Cachex.get(:users_cache, user.auth_key) == {:ok, user}
+      # {:ok, cached_user} = Cachex.get(:users_cache, user.auth_key)
+
+      # cached_user.
+      expected_user = forget(user, :organization)
+
+      assert Users.get_user_by_auth_key_cached(user.auth_key) == expected_user
+      assert Cachex.get(:users_cache, user.auth_key) == {:ok, expected_user}
       Users.update_user(%User{id: user.id}, %{is_inactive: true})
       assert Users.get_user_by_auth_key(user.auth_key) == nil
-      assert Users.get_user_by_auth_key_cached(user.auth_key) == user
+      assert Users.get_user_by_auth_key_cached(user.auth_key) == expected_user
     end
 
     test "create_user/1 with valid data creates user" do
+      {:ok, organization} = organization_fixture()
+
       assert Users.list_users() |> length == 3
 
       assert {:ok, user} =
                Users.create_user(%{
                  auth_key: auth_key_c(),
-                 username: "new_username"
+                 username: "new_username",
+                 organization: organization
                })
 
       assert Users.list_users() |> length == 4
     end
 
     test "create_or_update_user/2 creates or updates user" do
+      {:ok, organization} = organization_fixture()
+
       assert {:ok, user} =
                Users.create_or_update_user(%{
                  auth_key: auth_key_c(),
-                 username: "new_username"
+                 username: "new_username",
+                 organization: organization
                })
 
       id = user.id
@@ -60,7 +85,8 @@ defmodule Chatpi.UsersTest do
                Users.create_or_update_user(%{
                  username: "blah",
                  is_inactive: false,
-                 auth_key: auth_key_c()
+                 auth_key: auth_key_c(),
+                 organization: organization
                })
 
       assert updated_user.username == "blah"
@@ -68,7 +94,7 @@ defmodule Chatpi.UsersTest do
     end
 
     test "update_user/2 updates user" do
-      {:ok, user} = user_fixture()
+      {:ok, user, _organization} = user_fixture()
 
       assert {:ok, user} =
                Users.update_user(user, %{
@@ -80,15 +106,26 @@ defmodule Chatpi.UsersTest do
       assert user.username == "blah"
     end
 
+    test "update_user/2 won't allow updates to organizations" do
+      {:ok, user, organization} = user_fixture()
+
+      assert {:ok, user} =
+               Users.update_user(user, %{
+                 organization: nil
+               })
+
+      assert user.organization == organization
+    end
+
     test "update_user set user inactive makes it inactive" do
-      {:ok, user} = user_fixture()
+      {:ok, user, _organization} = user_fixture()
 
       assert {:ok, user} = Users.update_user(%User{id: user.id}, %{is_inactive: true})
       assert user.is_inactive == true
     end
 
     test "change_message/1 returns a message changeset" do
-      {:ok, user} = user_fixture()
+      {:ok, user, _organization} = user_fixture()
 
       assert %Ecto.Changeset{} = Users.change_user(user)
     end

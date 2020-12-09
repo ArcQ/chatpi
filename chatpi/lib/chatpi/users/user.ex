@@ -17,56 +17,57 @@ defmodule Chatpi.Users.User do
 
     embeds_many(:push_tokens, Chatpi.Users.PushToken, on_replace: :delete)
 
-    belongs_to(:organization_id, Chatpi.Organizations.Organization, type: Ecto.UUID)
+    belongs_to(:organization, Chatpi.Organizations.Organization, type: Ecto.UUID)
 
     timestamps()
   end
 
-  @permitted_params ~w(
+  @permitted_attrs ~w(
     username
     auth_key
     
     is_inactive
   )a
 
-  @required_params ~w(
+  @required_attrs ~w(
     auth_key
     username
   )a
 
-  @make_inactive_params ~w(
+  @make_inactive_attrs ~w(
     is_inactive
   )a
 
   @doc """
   Changeset definition for creating users
   """
-  def insert_changeset(user, params \\ %{}) do
+  def insert_changeset(user, attrs \\ %{}) do
     user
-    |> cast(params, @permitted_params)
-    |> validate_required(@required_params)
+    |> cast(attrs, @permitted_attrs)
+    |> validate_required(@required_attrs)
+    |> put_assoc(:organization, attrs[:organization])
   end
 
   @doc """
   Changeset definition for updating users
   """
-  def update_changeset(user, params \\ %{}) do
+  def update_changeset(user, attrs \\ %{}) do
     user
-    |> cast(params, @permitted_params)
+    |> cast(attrs, @permitted_attrs)
   end
 
-  def update_push_tokens_changeset(user, params \\ %{}) do
+  def update_push_tokens_changeset(user, attrs \\ %{}) do
     user
-    |> cast(params, [])
+    |> cast(attrs, [])
     |> cast_embed(:push_tokens)
   end
 
   @doc """
   Changeset definition for updating users
   """
-  def make_inactive_changset(user, params \\ %{}) do
+  def make_inactive_changset(user, attrs \\ %{}) do
     user
-    |> cast(params, @make_inactive_params)
+    |> cast(attrs, @make_inactive_attrs)
     |> validate_required([:id])
   end
 end

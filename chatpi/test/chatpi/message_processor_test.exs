@@ -3,7 +3,7 @@ defmodule ChatpiWeb.MessageProcessorTest do
 
   import Mock
   use Chatpi.DataCase
-  use Chatpi.Fixtures, [:user, :chat, :message]
+  use Chatpi.Fixtures, [:organization, :user, :chat, :message]
   alias Chatpi.MessageProcessor
   alias Chatpi.{Users, Chats}
 
@@ -15,6 +15,8 @@ defmodule ChatpiWeb.MessageProcessorTest do
 
   describe "handle_message" do
     test "upsert-user", %{} do
+      {:ok, _organization} = organization_fixture()
+
       MessageProcessor.handle_messages([
         %{
           headers: [],
@@ -32,7 +34,7 @@ defmodule ChatpiWeb.MessageProcessorTest do
     end
 
     test "upsert-chat-entity", %{} do
-      {:ok, user} = user_fixture()
+      {:ok, user, organization} = user_fixture()
 
       MessageProcessor.handle_messages([
         %{

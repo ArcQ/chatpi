@@ -75,7 +75,9 @@ defmodule Chatpi.Users do
     |> Repo.update()
   end
 
-  def create_or_update_user(%{auth_key: auth_key, username: _username} = attrs) do
+  def create_or_update_user(
+        %{auth_key: auth_key, username: _username, organization: _organization} = attrs
+      ) do
     case Repo.get_by(User, auth_key: auth_key) do
       nil ->
         create_user(attrs)

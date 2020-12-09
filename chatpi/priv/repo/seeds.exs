@@ -19,6 +19,8 @@ alias Chatpi.{
   Organizations.Organization
 }
 
+alias Bcrypt
+
 defmodule MyUuid do
   def gen_uuid(str) do
     str |> Ecto.UUID.dump() |> elem(1) |> Ecto.UUID.cast() |> elem(1)
@@ -29,7 +31,8 @@ end
   Repo.insert(%Organization{
     name: "KnotFive",
     api_key: "ad1d6120-35ff-4195-ad29-f413ccaba238",
-    api_secret: "2a3605f5-1653-4a34-a979-db4eac63e586"
+    api_secret_hash:
+      Bcrypt.Base.hash_password("2a3605f5-1653-4a34-a979-db4eac63e586", Bcrypt.gen_salt(12, true))
   })
 
 {:ok, arcq} =

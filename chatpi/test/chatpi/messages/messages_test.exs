@@ -6,7 +6,7 @@ defmodule Chatpi.MessagesTest do
   describe "messages" do
     alias Chatpi.Messages.Message
 
-    use Chatpi.Fixtures, [:user, :chat, :message]
+    use Chatpi.Fixtures, [:organization, :user, :chat, :message]
 
     test "list_messages_by_chat_id/1 returns all messages" do
       {:ok, _user, chat, message} = message_fixture()

@@ -2,16 +2,16 @@ defmodule Chatpi.MessageProcessor do
   @moduledoc """
   process messages from kafka
   """
-  alias Chatpi.{Users, Chats, Messages}
+  alias Chatpi.{Users, Chats, Messages, Organizations}
   require Logger
 
-  defp handle_message("upsert-user", %{user: user_attr}) do
+  defp handle_message("upsert-user", %{organization: organization}, %{user: user_attr}) do
     Logger.info("MessageProcessor upserting user")
     Cachex.del(:users_cache, user_attr.auth_key)
-    Users.create_or_update_user(user_attr)
+    Users.create_or_update_user(Map.put(user_attr, :organization, organization))
   end
 
-  defp handle_message("upsert-chat-entity", %{entity: chat_attr}) do
+  defp handle_message("upsert-chat-entity", %{organization: organization}, %{entity: chat_attr}) do
     Logger.info("MessageProcessor upserting chat")
 
     if Map.has_key?(chat_attr, :id) do
@@ -20,20 +20,21 @@ defmodule Chatpi.MessageProcessor do
     else
       Chats.create_chat_with_members(%{
         name: chat_attr.name,
-        members: Enum.map(chat_attr.members, & &1.user.auth_key)
+        members: Enum.map(chat_attr.members, & &1.user.auth_key),
+        organization: organization
       })
     end
   end
 
-  defp handle_message("add-member-to-chat-entity", %{entity: user_attr}) do
+  defp handle_message("add-member-to-chat-entity", _context, %{entity: user_attr}) do
     Chats.add_chat_members(user_attr)
   end
 
-  defp handle_message("remove-member-from-chat-entity", %{entity: user_attr}) do
+  defp handle_message("remove-member-from-chat-entity", _context, %{entity: user_attr}) do
     Chats.remove_chat_members(user_attr)
   end
 
-  defp handle_message("add-system-message", %{entity: system_message}) do
+  defp handle_message("add-system-message", _organization, %{entity: system_message}) do
     Messages.create_message(%{system_message | is_system: true})
   end
 
@@ -45,7 +46,21 @@ defmodule Chatpi.MessageProcessor do
       params = recursively_format_message(decoded_map)
 
       Logger.info("Message Received -> #{key}: #{inspect(params)}")
-      handle_message(key, params.data)
+
+      case Organizations.get_organization_by_api_key_and_validate(
+             params.data.api_key,
+             params.data.api_secret
+           ) do
+        {:ok, organization} ->
+          handle_message(key, %{organization: organization}, params.data)
+
+        {:error} ->
+          Logger.info(
+            "Message Denied -> api_key: #{params.data.api_key}: could not be verified with api_secret #{
+              params.data.api_secret
+            }"
+          )
+      end
     end
 
     :ok

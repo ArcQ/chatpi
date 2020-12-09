@@ -9,7 +9,7 @@ defmodule Chatpi.Chats.Chat do
 
     has_many(:members, Chatpi.Chats.Member)
 
-    belongs_to(:organization_id, Chatpi.Organizations.Organization, type: Ecto.UUID)
+    belongs_to(:organization, Chatpi.Organizations.Organization, type: Ecto.UUID)
 
     timestamps()
   end
@@ -20,6 +20,7 @@ defmodule Chatpi.Chats.Chat do
     |> cast(attrs, [:name])
     |> validate_required([:name])
     |> put_assoc(:members, attrs[:members])
+    |> put_assoc(:organization, attrs[:organization])
   end
 
   @doc false
@@ -27,5 +28,6 @@ defmodule Chatpi.Chats.Chat do
     chat
     |> cast(attrs, [:name])
     |> put_assoc(:members, attrs[:members] || chat.members)
+    |> put_assoc(:organization, attrs[:organization])
   end
 end

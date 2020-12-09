@@ -6,7 +6,7 @@ defmodule Chatpi.Repo.Migrations.CreateOrganizations do
       add(:id, :uuid, primary_key: true)
       add(:name, :string)
       add(:api_key, :string)
-      add(:api_secret, :string)
+      add(:api_secret_hash, :string)
 
       timestamps()
     end

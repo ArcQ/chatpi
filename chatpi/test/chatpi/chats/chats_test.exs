@@ -10,7 +10,7 @@ defmodule Chatpi.ChatsTest do
   end
 
   describe "chats" do
-    use Chatpi.Fixtures, [:user, :chat, :message]
+    use Chatpi.Fixtures, [:organization, :user, :chat, :message]
     import Chatpi.FixtureConstants
 
     alias Chatpi.Chats.Chat

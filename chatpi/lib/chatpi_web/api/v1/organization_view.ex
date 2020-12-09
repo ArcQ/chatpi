@@ -11,9 +11,11 @@ defmodule ChatpiWeb.OrganizationView do
   end
 
   def render("organization.json", %{organization: organization}) do
-    %{id: organization.id,
+    %{
+      id: organization.id,
       name: organization.name,
       api_key: organization.api_key,
-      api_secret: organization.api_secret}
+      api_secret_hash: organization.api_secret_hash
+    }
   end
 end

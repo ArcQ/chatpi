@@ -5,7 +5,7 @@ defmodule ChatpiWeb.ChatControllerTest do
   import Chatpi.FixtureConstants
   use ChatpiWeb.ConnCase
 
-  use Chatpi.Fixtures, [:user, :chat]
+  use Chatpi.Fixtures, [:organization, :user, :chat]
 
   setup_with_mocks([
     {Chatpi.Auth.Token, [],

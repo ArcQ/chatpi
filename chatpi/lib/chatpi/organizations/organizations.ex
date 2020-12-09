@@ -3,6 +3,7 @@ defmodule Chatpi.Organizations do
   The Organizations context.
   """
 
+  alias Bcrypt
   import Ecto.Query, warn: false
   alias Chatpi.Repo
 
@@ -13,6 +14,16 @@ defmodule Chatpi.Organizations do
   end
 
   def get_organization!(id), do: Repo.get!(Organization, id)
+
+  def get_organization_by_api_key_and_validate(api_key, api_secret) do
+    organization = Repo.get_by(Organization, api_key: api_key)
+
+    if Bcrypt.verify_pass(api_secret, organization.api_secret_hash) do
+      {:ok, organization}
+    else
+      {:error}
+    end
+  end
 
   def create_organization(attrs \\ %{}) do
     %Organization{}
