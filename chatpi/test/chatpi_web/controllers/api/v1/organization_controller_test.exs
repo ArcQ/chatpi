@@ -56,7 +56,7 @@ defmodule ChatpiWeb.OrganizationControllerTest do
         |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
         |> get(Routes.organization_path(conn, :index))
 
-      assert json_response(conn, 200)["data"] == []
+      assert json_response(conn, 200)["data"] |> length == 1
     end
   end
 
