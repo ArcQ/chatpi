@@ -8,7 +8,7 @@ defmodule ChatpiWeb.Api.V1.ChatView do
 
   def render("index.json", %{chats: chats, user_auth_key: user_auth_key}) do
     %{
-      chats: render_many(chats, ChatpiWeb.Api.V1.ChatView, "chat.json"),
+      chats: render_many(chats, ChatpiWeb.Api.V1.ChatView, "chat_with_details.json"),
       detail:
         Enum.map(
           chats,
@@ -48,7 +48,7 @@ defmodule ChatpiWeb.Api.V1.ChatView do
       :members,
       chat.members
       |> Enum.map(fn member -> member.user end)
-      |> render_many(ChatpiWeb.Api.V1.UserView, "user.json")
+      |> render_many(ChatpiWeb.Api.V1.UserView, "show.json")
     )
   end
 

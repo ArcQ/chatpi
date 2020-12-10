@@ -5,6 +5,7 @@ defmodule ChatpiWeb.Api.V1.UserView do
   @public_token_attributes ~W(id token device_id inserted_at)a
 
   def render("index.json", %{users: users}) do
+    IO.inspect(users)
     %{
       users:
         Enum.map(users, fn user -> render_one(user, ChatpiWeb.Api.V1.UserView, "show.json") end)
