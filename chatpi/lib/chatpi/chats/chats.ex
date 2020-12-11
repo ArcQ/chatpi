@@ -119,10 +119,16 @@ defmodule Chatpi.Chats do
     |> Repo.update()
   end
 
-  def add_chat_members(attrs \\ %{}) do
-    %Chat{}
-    |> Chat.changeset(attrs)
-    |> Repo.insert()
+  def add_chat_member(org_id, %{user_auth_key: user_auth_key, chat_id: chat_id} = attrs) do
+    case Users.get_user_by_auth_key_and_org(user_auth_key, org_id) do
+      {:ok, _user} ->
+        %Member{}
+        |> Member.changeset(attrs)
+        |> Repo.insert()
+
+      {:error, error} ->
+        {:error, "User does not belong to this organization"}
+    end
   end
 
   def update_chat_members(%Member{} = member, attrs) do
@@ -131,10 +137,10 @@ defmodule Chatpi.Chats do
     |> Repo.update()
   end
 
-  def remove_chat_members(attrs \\ %{}) do
-    %Chat{}
-    |> Chat.changeset(attrs)
-    |> Repo.insert()
+  def remove_chat_members(%{user_auth_keys: user_auth_keys}) do
+    Member
+    |> where([member], member.user_auth_key in ^user_auth_keys)
+    |> Repo.delete_all()
   end
 
   def delete_chat(%Chat{} = chat) do
@@ -155,6 +161,7 @@ defmodule Chatpi.Chats do
   def get_member(%{chat_id: chat_id, user_auth_key: user_auth_key} = _query) do
     Member
     |> where([member], member.user_auth_key == ^user_auth_key and member.chat_id == ^chat_id)
+    |> preload(:user)
     |> Repo.all()
     |> List.first()
   end
@@ -166,6 +173,7 @@ defmodule Chatpi.Chats do
       on: message.chat_id == chat.id and message.id == ^message_id
     )
     |> where([member], member.user_auth_key == ^user_auth_key)
+    |> preload(:user)
     |> Repo.all()
     |> List.first()
   end

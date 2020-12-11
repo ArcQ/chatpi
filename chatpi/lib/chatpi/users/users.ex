@@ -41,8 +41,15 @@ defmodule Chatpi.Users do
     Repo.get_by(User, auth_key: auth_key, is_inactive: false)
   end
 
-  def get_user_by_auth_key!(auth_key) do
-    Repo.get_by!(User, auth_key: auth_key, is_inactive: false)
+  def get_user_by_auth_key_and_org(auth_key, organization_id) do
+    case Repo.get_by(User,
+           auth_key: auth_key,
+           organization_id: organization_id,
+           is_inactive: false
+         ) do
+      nil -> {:error, "entity not found"}
+      user -> {:ok, user}
+    end
   end
 
   def get_user_by_auth_key_cached(auth_key) do
@@ -89,7 +96,7 @@ defmodule Chatpi.Users do
 
   def create_user(attrs) do
     %User{}
-    |> User.insert_changeset(attrs)
+    |> User.insert_changeset(Map.put(attrs, :is_inactive, false))
     |> Repo.insert()
   end
 

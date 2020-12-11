@@ -43,6 +43,18 @@ defmodule Chatpi.UsersTest do
       assert Users.get_user_by_auth_key_cached(user.auth_key) == expected_user
     end
 
+    test "get_user_by_auth_key_and_org/1 should get user if org matches" do
+      {:ok, user, organization} = user_fixture()
+
+      assert {:ok, user} = Users.get_user_by_auth_key_and_org(user.auth_key, organization.id)
+    end
+
+    test "get_user_by_auth_key_and_org/1 should error if org doesn't match" do
+      {:ok, user, organization} = user_fixture()
+
+      assert {:error, error} = Users.get_user_by_auth_key_and_org(user.auth_key, user.id)
+    end
+
     test "create_user/1 with valid data creates user" do
       {:ok, organization} = organization_fixture()
 
@@ -56,6 +68,7 @@ defmodule Chatpi.UsersTest do
                })
 
       assert Users.list_users() |> length == 4
+      assert user.is_inactive == false
     end
 
     test "create_or_update_user/2 creates or updates user" do

@@ -5,6 +5,8 @@ defmodule ChatpiWeb.ChatControllerTest do
   import Chatpi.FixtureConstants
   use ChatpiWeb.ConnCase
 
+  alias TestUtils
+
   use Chatpi.Fixtures, [:organization, :user, :chat]
 
   setup_with_mocks([
@@ -40,6 +42,8 @@ defmodule ChatpiWeb.ChatControllerTest do
         |> put_req_header("authorization", "Bearer " <> "authorized_bearer")
         |> get(Routes.chat_path(conn, :index))
         |> json_response(200)
+
+      TestUtils.forget(result)
 
       assert %{
                "chats" => [

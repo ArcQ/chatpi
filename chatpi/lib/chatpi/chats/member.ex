@@ -15,9 +15,10 @@ defmodule Chatpi.Chats.Member do
 
     belongs_to(:message_seen, Chatpi.Messages.Message, type: Ecto.UUID)
 
-    field(:is_muted, :boolean)
+    field(:is_muted, :boolean, default: false)
 
-    field(:unread_messages, :integer)
+    # negative one will stand for just added user, maybe show a notification without a number?
+    field(:unread_messages, :integer, default: -1)
   end
 
   @doc false
@@ -25,7 +26,8 @@ defmodule Chatpi.Chats.Member do
     member
     |> cast(attrs, [:chat_id, :user_auth_key])
     |> validate_required([:chat_id, :user_auth_key])
-    |> put_change(:id, Ecto.UUID.bingenerate())
+
+    # |> put_change(:id, Ecto.UUID.bingenerate())
   end
 
   @doc false

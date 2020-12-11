@@ -14,8 +14,8 @@ defmodule Chatpi.ChatsTest do
     use Chatpi.Fixtures, [:organization, :user, :chat, :message]
     import Chatpi.FixtureConstants
 
-    alias Chatpi.Chats.Chat
-    alias Chatpi.Chats.Member
+    alias Chatpi.Chats.{Chat, Member}
+    alias Chatpi.Users
 
     test "list_chats_for_user/1 returns all chats for user" do
       {:ok, user, chat, _organization} = chat_fixture()
@@ -111,13 +111,58 @@ defmodule Chatpi.ChatsTest do
                )
     end
 
-    test "get_member/1 gets member by query" do
-      {:ok, user, _chat, message, _organization} = message_fixture()
-      message_id = message.id
+    test "add_chat_member adds chat member to chat" do
+      {:ok, _user, chat, _message, organization} = message_fixture()
 
-      assert member = Chats.get_member(%{message_id: message_id, user_auth_key: user.auth_key})
-      assert member.chat_id == message.chat_id
-      assert member.user_auth_key == user.auth_key
+      {:ok, new_user} =
+        Users.create_user(%{
+          auth_key: "some auth key",
+          username: "new_username_2",
+          organization: organization
+        })
+
+      Chats.add_chat_member(organization.id, %{user_auth_key: new_user.auth_key, chat_id: chat.id})
+
+      member = Chats.get_member(%{chat_id: chat.id, user_auth_key: new_user.auth_key})
+      expected_user = TestUtils.forget(new_user, :organization)
+      assert member.user == expected_user
+    end
+
+    test "add_chat_member returns error if not in same org" do
+      {:ok, _user, chat, _message, organization} = message_fixture()
+
+      {:ok, new_user} =
+        Users.create_user(%{
+          auth_key: "some auth key",
+          username: "new_username_2",
+          organization: organization
+        })
+
+      assert {:error, "User does not belong to this organization"} =
+               Chats.add_chat_member(new_user.id, %{
+                 user_auth_key: new_user.auth_key,
+                 chat_id: chat.id
+               })
+
+      assert Chats.get_member(%{chat_id: chat.id, user_auth_key: new_user.auth_key}) == nil
+    end
+
+    test "remove_chat_members/1 removes chat member from chat" do
+      {:ok, _user, chat, _message, organization} = message_fixture()
+
+      {:ok, new_user} =
+        Users.create_user(%{
+          auth_key: "some auth key",
+          username: "new_username_2",
+          organization: organization
+        })
+
+      Chats.add_chat_member(organization.id, %{user_auth_key: new_user.auth_key, chat_id: chat.id})
+
+      Chats.remove_chat_members(%{user_auth_keys: [new_user.auth_key]})
+
+      member = Chats.get_member(%{chat_id: chat.id, user_auth_key: new_user.auth_key})
+      assert member == nil
     end
   end
 end
