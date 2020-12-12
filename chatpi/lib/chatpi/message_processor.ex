@@ -26,15 +26,32 @@ defmodule Chatpi.MessageProcessor do
     end
   end
 
-  defp handle_message("add-member-to-chat-entity", _context, %{entity: user_attr}) do
-    Chats.add_chat_members(user_attr)
+  defp handle_message("add-member-to-chat-entity", context, %{
+         entity: %{
+           user_auth_key: user_auth_key,
+           chat_id: chat_id
+         }
+       }) do
+    Chats.add_chat_member(context.organization.id, %{
+      user_auth_key: user_auth_key,
+      chat_id: chat_id
+    })
   end
 
-  defp handle_message("remove-member-from-chat-entity", _context, %{entity: user_attr}) do
-    Chats.remove_chat_members(user_attr)
+  defp handle_message("remove-members-from-chat-entity", context, %{
+         entity: %{
+           users: users,
+           chat_id: chat_id
+         }
+       }) do
+    Chats.remove_chat_members(
+      context.organization.id,
+      chat_id,
+      Enum.map(users, & &1.auth_key)
+    )
   end
 
-  defp handle_message("add-system-message", _organization, %{entity: system_message}) do
+  defp handle_message("add-system-message", _context, %{entity: system_message}) do
     Messages.create_message(%{system_message | is_system: true})
   end
 

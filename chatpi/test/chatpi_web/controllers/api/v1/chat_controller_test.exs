@@ -43,8 +43,6 @@ defmodule ChatpiWeb.ChatControllerTest do
         |> get(Routes.chat_path(conn, :index))
         |> json_response(200)
 
-      TestUtils.forget(result)
-
       assert %{
                "chats" => [
                  %{
@@ -55,7 +53,7 @@ defmodule ChatpiWeb.ChatControllerTest do
                "detail" => [
                  %{
                    "message_seen_id" => nil,
-                   "unread_messages" => 0
+                   "unread_messages" => -1
                  }
                ]
              } = result

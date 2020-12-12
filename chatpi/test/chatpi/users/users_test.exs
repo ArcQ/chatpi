@@ -26,7 +26,7 @@ defmodule Chatpi.UsersTest do
     # end
 
     test "get_user_by_auth_key_cached should save into cache if not exists, and get from cache if it exists" do
-      {:ok, user, organization} = user_fixture()
+      {:ok, user, _organization} = user_fixture()
       # user = Map.put(user, :organization, nil)
       # assert Users.get_user_by_auth_key_cached(user.auth_key) |> Map.put(:organization, nil) ==
       #          user
@@ -50,7 +50,7 @@ defmodule Chatpi.UsersTest do
     end
 
     test "get_user_by_auth_key_and_org/1 should error if org doesn't match" do
-      {:ok, user, organization} = user_fixture()
+      {:ok, user, _organization} = user_fixture()
 
       assert {:error, error} = Users.get_user_by_auth_key_and_org(user.auth_key, user.id)
     end

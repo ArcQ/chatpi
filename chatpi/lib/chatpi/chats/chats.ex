@@ -119,14 +119,14 @@ defmodule Chatpi.Chats do
     |> Repo.update()
   end
 
-  def add_chat_member(org_id, %{user_auth_key: user_auth_key, chat_id: chat_id} = attrs) do
+  def add_chat_member(org_id, %{user_auth_key: user_auth_key, chat_id: _chat_id} = attrs) do
     case Users.get_user_by_auth_key_and_org(user_auth_key, org_id) do
       {:ok, _user} ->
         %Member{}
         |> Member.changeset(attrs)
         |> Repo.insert()
 
-      {:error, error} ->
+      {:error, _error} ->
         {:error, "User does not belong to this organization"}
     end
   end
@@ -137,9 +137,12 @@ defmodule Chatpi.Chats do
     |> Repo.update()
   end
 
-  def remove_chat_members(%{user_auth_keys: user_auth_keys}) do
+  def remove_chat_members(org_id, chat_id, user_auth_keys) do
     Member
-    |> where([member], member.user_auth_key in ^user_auth_keys)
+    |> join(:inner, [member], chat in Chat,
+      on: chat.id == ^chat_id and chat.organization_id == ^org_id
+    )
+    |> where([member], member.user_auth_key in ^user_auth_keys and member.chat_id == ^chat_id)
     |> Repo.delete_all()
   end
 

@@ -159,10 +159,29 @@ defmodule Chatpi.ChatsTest do
 
       Chats.add_chat_member(organization.id, %{user_auth_key: new_user.auth_key, chat_id: chat.id})
 
-      Chats.remove_chat_members(%{user_auth_keys: [new_user.auth_key]})
+      Chats.remove_chat_members(organization.id, chat.id, [new_user.auth_key])
 
       member = Chats.get_member(%{chat_id: chat.id, user_auth_key: new_user.auth_key})
       assert member == nil
+    end
+
+    test "remove_chat_members/1 does nothing organiaztion ids don't match" do
+      {:ok, _user, chat, _message, organization} = message_fixture()
+
+      {:ok, new_user} =
+        Users.create_user(%{
+          auth_key: "some auth key",
+          username: "new_username_2",
+          organization: organization
+        })
+
+      Chats.add_chat_member(organization.id, %{user_auth_key: new_user.auth_key, chat_id: chat.id})
+
+      Chats.remove_chat_members(new_user.id, chat.id, [new_user.auth_key])
+
+      member = Chats.get_member(%{chat_id: chat.id, user_auth_key: new_user.auth_key})
+      expected_user = TestUtils.forget(new_user, :organization)
+      assert member.user == expected_user
     end
   end
 end
