@@ -8,18 +8,12 @@ defmodule ChatpiWeb.ChatChannel do
   alias ChatpiWeb.{Constants, NotificationFactory}
 
   @doc false
-  def join("chat:touchbase:lobby", socket) do
-    if authorized?(socket, "touchbbase", "lobby") do
-      send(self(), :after_join)
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
-  end
+  def join("chat:" <> api_key_and_id, %{"query" => query}, socket) do
+    [api_key, chat_id] =
+      api_key_and_id
+      |> String.split(":")
 
-  @doc false
-  def join("chat:touchbase:" <> chat_id, %{"query" => query}, socket) do
-    if authorized?(socket, "touchbase", chat_id) do
+    if authorized?(socket, api_key, chat_id) do
       send(self(), :after_join)
 
       response_payload = %{
@@ -37,8 +31,12 @@ defmodule ChatpiWeb.ChatChannel do
   end
 
   @doc false
-  def join("chat:touchbase:" <> chat_id, %{}, socket) do
-    if authorized?(socket, "touchbase", chat_id) do
+  def join("chat:" <> api_key_and_id, %{}, socket) do
+    [api_key, chat_id] =
+      api_key_and_id
+      |> String.split(":")
+
+    if authorized?(socket, api_key, chat_id) do
       send(self(), :after_join)
       {:ok, socket}
     else
