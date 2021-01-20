@@ -10,17 +10,35 @@
 
 ### Properties
 
+* [customDetails](_types_.message.md#customdetails)
 * [files](_types_.message.md#files)
+* [reactions](_types_.message.md#reactions)
 * [replyTargetId](_types_.message.md#replytargetid)
 * [text](_types_.message.md#text)
 
 ## Properties
 
+###  customDetails
+
+• **customDetails**: *any*
+
+*Defined in [types.ts:46](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L46)*
+
+___
+
 ###  files
 
 • **files**: *Array‹string›*
 
-*Defined in [types.ts:39](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L39)*
+*Defined in [types.ts:44](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L44)*
+
+___
+
+###  reactions
+
+• **reactions**: *Array‹[Reaction](_types_.reaction.md)›*
+
+*Defined in [types.ts:47](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L47)*
 
 ___
 
@@ -28,7 +46,7 @@ ___
 
 • **replyTargetId**: *string*
 
-*Defined in [types.ts:40](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L40)*
+*Defined in [types.ts:45](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L45)*
 
 ___
 
@@ -36,4 +54,4 @@ ___
 
 • **text**: *string*
 
-*Defined in [types.ts:38](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L38)*
+*Defined in [types.ts:43](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L43)*

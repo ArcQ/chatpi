@@ -18,7 +18,7 @@
 
 • **CRY**: = "CRY"
 
-*Defined in [types.ts:50](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L50)*
+*Defined in [types.ts:57](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L57)*
 
 ___
 
@@ -26,7 +26,7 @@ ___
 
 • **LAUGH**: = "LAUGH"
 
-*Defined in [types.ts:49](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L49)*
+*Defined in [types.ts:56](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L56)*
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 • **LOVE**: = "LOVE"
 
-*Defined in [types.ts:52](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L52)*
+*Defined in [types.ts:59](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L59)*
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 • **SMILE**: = "SMILE"
 
-*Defined in [types.ts:51](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L51)*
+*Defined in [types.ts:58](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L58)*
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 • **UNHAPPY**: = "UNHAPPY"
 
-*Defined in [types.ts:53](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L53)*
+*Defined in [types.ts:60](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L60)*

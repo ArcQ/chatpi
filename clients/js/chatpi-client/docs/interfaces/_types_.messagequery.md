@@ -19,7 +19,7 @@
 
 • **after**: *string*
 
-*Defined in [types.ts:22](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L22)*
+*Defined in [types.ts:22](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L22)*
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 • **before**: *string*
 
-*Defined in [types.ts:21](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L21)*
+*Defined in [types.ts:21](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L21)*

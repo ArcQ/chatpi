@@ -15,6 +15,7 @@
 * [ConnectionConfig](../interfaces/_types_.connectionconfig.md)
 * [Message](../interfaces/_types_.message.md)
 * [MessageQuery](../interfaces/_types_.messagequery.md)
+* [Reaction](../interfaces/_types_.reaction.md)
 * [SendOptions](../interfaces/_types_.sendoptions.md)
 * [SendReactionOptions](../interfaces/_types_.sendreactionoptions.md)
 * [onMessageReceive](../interfaces/_types_.onmessagereceive.md)
@@ -30,4 +31,4 @@
 
 Ƭ **ChannelId**: *string*
 
-*Defined in [types.ts:6](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L6)*
+*Defined in [types.ts:6](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L6)*

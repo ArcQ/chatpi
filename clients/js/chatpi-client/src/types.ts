@@ -42,7 +42,8 @@ export interface Reaction {
 export interface Message {
   text: string;
   files: Array<string>;
-  reply: string;
+  replyTargetId: string;
+  customDetails: any;
   reactions: Array<Reaction>;
 }
 

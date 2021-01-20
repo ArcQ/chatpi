@@ -115,6 +115,7 @@ export class Connection {
         .push(BroadcastAction.NEW_MESSAGE, {
           text: message.text,
           reply_target_id: message.replyTargetId,
+          custom_details: message.customDetails,
           files: message.files,
         })
         .receive('ok', () => resolve('ok'))

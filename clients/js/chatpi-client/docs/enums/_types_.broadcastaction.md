@@ -15,7 +15,7 @@
 
 • **NEW_MESSAGE**: = "message:new"
 
-*Defined in [types.ts:2](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L2)*
+*Defined in [types.ts:2](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L2)*
 
 ___
 
@@ -23,4 +23,4 @@ ___
 
 • **NEW_REACTION**: = "reaction:new"
 
-*Defined in [types.ts:3](https://github.com/ArcQ/chatpi/blob/1a5d982/clients/js/chatpi-client/src/types.ts#L3)*
+*Defined in [types.ts:3](https://github.com/ArcQ/chatpi/blob/8af0fd6/clients/js/chatpi-client/src/types.ts#L3)*
