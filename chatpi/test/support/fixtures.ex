@@ -57,7 +57,12 @@ defmodule Chatpi.Fixtures do
     alias Chatpi.Chats.{Member, Chat}
 
     quote do
-      @valid_chat_attrs %{id: "somechatid", name: "fixture chat 1", members: []}
+      @valid_chat_attrs %{
+        id: "somechatid",
+        name: "fixture chat 1",
+        members: [],
+        is_inactive: false
+      }
 
       @update_chat_attrs %{name: "some updated name"}
 

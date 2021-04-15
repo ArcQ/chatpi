@@ -27,6 +27,17 @@ defmodule Chatpi.ChatsTest do
       assert result |> Map.get(:members) |> List.first() |> Map.get(:user) == expected_user
     end
 
+    test "list_chats_for_user/1 returns all chats for user not for inactive" do
+      {:ok, user, chat, _organization} = chat_fixture()
+
+      chat
+      |> Chats.update_chat(%{is_inactive: true})
+
+      expected_user = TestUtils.forget(user, :organization)
+      result = auth_key_c() |> Chats.list_chats_for_user() |> List.first()
+      assert result == nil
+    end
+
     test "get_chat/1 returns the chat with given id" do
       {:ok, user, chat, _organization} = chat_fixture()
       result = Chats.get_chat(chat.id)
@@ -35,6 +46,16 @@ defmodule Chatpi.ChatsTest do
       assert result |> Map.get(:name) == chat.name
 
       assert result |> Map.get(:members) |> List.first() |> Map.get(:user) == expected_user
+    end
+
+    test "get_chat/1 returns the chat with given id not for inactive" do
+      {:ok, user, chat, _organization} = chat_fixture()
+
+      chat
+      |> Chats.update_chat(%{is_inactive: true})
+
+      result = Chats.get_chat(chat.id)
+      assert result == nil
     end
 
     test "create_chat/1 with valid data creates a chat" do

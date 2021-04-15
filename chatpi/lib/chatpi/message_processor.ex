@@ -26,6 +26,13 @@ defmodule Chatpi.MessageProcessor do
     end
   end
 
+  defp handle_message("delete-chat-entity", %{organization: organization}, %{entity: chat_attr}) do
+    Logger.info("MessageProcessor deleting chat")
+
+    # TODO make chat inactive
+    Chats.update_chat(%{is_inactive: true})
+  end
+
   defp handle_message("add-member-to-chat-entity", context, %{
          entity: %{
            user_auth_key: user_auth_key,

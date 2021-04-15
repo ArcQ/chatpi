@@ -7,6 +7,8 @@ defmodule Chatpi.Chats.Chat do
   schema "chat" do
     field(:name, :string)
 
+    field(:is_inactive, :boolean)
+
     has_many(:members, Chatpi.Chats.Member)
 
     belongs_to(:organization, Chatpi.Organizations.Organization, type: Ecto.UUID)
@@ -26,7 +28,7 @@ defmodule Chatpi.Chats.Chat do
   @doc false
   def update_changeset(chat, attrs) do
     chat
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :is_inactive])
     |> put_assoc(:members, attrs[:members] || chat.members)
   end
 end

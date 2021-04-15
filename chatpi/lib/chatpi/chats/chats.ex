@@ -12,14 +12,14 @@ defmodule Chatpi.Chats do
     Chat
     |> distinct(true)
     |> join(:inner, [chat], member in Member, on: member.user_auth_key == ^auth_key)
-    |> where([chat, member], chat.id == member.chat_id)
+    |> where([chat, member], chat.id == member.chat_id and chat.is_inactive == false)
     |> preload(members: :user)
     |> Repo.all()
   end
 
   def get_chat(id) do
     Chat
-    |> where([chat], chat.id == ^id)
+    |> where([chat], chat.id == ^id and chat.is_inactive == false)
     |> preload(members: :user)
     |> Repo.all()
     |> List.first()
@@ -39,20 +39,26 @@ defmodule Chatpi.Chats do
         inner_join: m1 in assoc(c, :members),
         inner_join: m2 in assoc(c, :members),
         on: m2.user_auth_key == ^cauth_key,
-        where: m1.user_auth_key == ^auth_key
+        where: m1.user_auth_key == ^auth_key and c.is_inactive == false
       )
     )
   end
 
   def list_user_expo_tokens_for_chat(chat_id) do
-    Repo.all(
-      from(user in User,
-        select: user.push_token,
-        distinct: true,
-        inner_join: member in assoc(user, :members),
-        on: member.user_auth_key == user.auth_key and member.chat_id == ^chat_id
-      )
-    )
+    case get_chat(chat_id) do
+      nil ->
+        []
+
+      _ ->
+        Repo.all(
+          from(user in User,
+            select: user.push_token,
+            distinct: true,
+            inner_join: member in assoc(user, :members),
+            on: member.user_auth_key == user.auth_key and member.chat_id == ^chat_id
+          )
+        )
+    end
   end
 
   def create_chat_with_members(%{name: name, members: user_auth_keys, organization: organization}) do
