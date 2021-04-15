@@ -30,7 +30,8 @@ defmodule Chatpi.MessageProcessor do
     Logger.info("MessageProcessor deleting chat")
 
     # TODO make chat inactive
-    Chats.update_chat(%{is_inactive: true})
+    Chats.get_chat(chat_attr.chat_id)
+    |> Chats.update_chat(%{is_inactive: true})
   end
 
   defp handle_message("add-member-to-chat-entity", context, %{

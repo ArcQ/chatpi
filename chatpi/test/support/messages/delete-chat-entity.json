@@ -1,0 +1,12 @@
+{
+  "data": {
+    "entity": {
+      "users": [{"authKey":"892130df-f45b-46b3-b766-2101db28ea62"}],
+      "chatId": "d285cb4d-1c74-46af-9e3e-6e04aca83ffa"
+    },
+    "apiKey": "some api key",
+    "apiSecret": "some api secret"
+  },
+  "publishedAt": "2020-10-21T00:43:25.811749",
+  "publisher": "touchbase"
+}

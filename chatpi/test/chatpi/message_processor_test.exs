@@ -46,6 +46,28 @@ defmodule ChatpiWeb.MessageProcessorTest do
       assert user.auth_key |> Chats.list_chats_for_user() |> length == 1
     end
 
+    test "delete-chat-entity", %{} do
+      {:ok, user, organization} = user_fixture()
+      chat_id = "d285cb4d-1c74-46af-9e3e-6e04aca83ffa"
+
+      Repo.insert(%Chat{
+        organization: organization,
+        id: chat_id,
+        name: "chat_1"
+      })
+
+      MessageProcessor.handle_messages([
+        %{
+          key: "delete-chat-entity",
+          value: get_json("test/support/messages/delete-chat-entity.json")
+        }
+      ])
+
+      assert Chats.get_chat(chat_id) == nil
+      Chat |> Repo.get_by(id: chat_id)
+      assert Chat |> Repo.get_by(id: chat_id) |> Map.get(:is_inactive) == true
+    end
+
     test "add-member-to-chat-entity", %{} do
       {:ok, user, organization} = user_fixture()
 
