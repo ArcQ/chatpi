@@ -60,7 +60,7 @@ defmodule Chatpi.MixProject do
       {:bcrypt_elixir, "~> 1.0"},
       {:guardian, "~> 1.1"},
       {:comeonin, "~> 4.0"},
-      {:joken, "~> 2.2"},
+      {:joken, "~> 2.3"},
       {:joken_jwks, "~> 1.3.1"},
 
       # Use arc and arc_ecto for upload and process images with imagemagick
@@ -77,7 +77,7 @@ defmodule Chatpi.MixProject do
       {:ex_aws_s3, "~> 2.0"},
       {:exponent_server_sdk, "~> 0.2.0"},
       # {:hackney, "~> 1.9"},
-      {:hackney, "~> 1.15.2"},
+      {:hackney, "~> 1.16.0", override: true},
       {:sweet_xml, "~> 0.6.5"},
       {:timex, "~> 3.6.2"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},

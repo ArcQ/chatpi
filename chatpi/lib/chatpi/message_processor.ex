@@ -67,6 +67,7 @@ defmodule Chatpi.MessageProcessor do
   def handle_messages(messages) do
     for %{key: key, value: value} = _message <- messages do
       {:ok, decoded_map} = Jason.decode(value)
+      Logger.info(inspect(decoded_map))
 
       params = recursively_format_message(decoded_map)
 
