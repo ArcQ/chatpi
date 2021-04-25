@@ -15,7 +15,11 @@ defmodule Chatpi.MessagePublisher do
         "data" => %{
           "entity" => %{
             "chatId" => chat.id,
-            "containerReferenceId" => chat.container_reference_id
+            "containerReferenceId" =>
+              case Map.has_key?(chat, :container_reference_id) do
+                true -> chat.container_reference_id
+                false -> nil
+              end
           }
         }
       })

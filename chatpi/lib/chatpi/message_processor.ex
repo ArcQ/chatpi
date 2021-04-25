@@ -13,13 +13,13 @@ defmodule Chatpi.MessageProcessor do
 
   defp handle_message("upsert-chat-entity", %{organization: organization}, %{entity: chat_attr}) do
     Logger.info("MessageProcessor upserting chat")
-    Logger.info(inspect(chat_attr))
 
     if Map.has_key?(chat_attr, :id) do
       Cachex.del(:chats_cache, chat_attr.chat_id)
       # TODO update chats
     else
       Chats.create_chat_with_members(%{
+        container_reference_id: chat_attr.container_reference_id,
         name: chat_attr.name,
         members: Enum.map(chat_attr.members, & &1.user.auth_key),
         organization: organization

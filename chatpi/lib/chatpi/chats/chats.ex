@@ -61,13 +61,24 @@ defmodule Chatpi.Chats do
     end
   end
 
-  def create_chat_with_members(%{name: name, members: user_auth_keys, organization: organization}) do
+  def create_chat_with_members(%{
+        name: name,
+        members: user_auth_keys,
+        organization: organization,
+        container_reference_id: container_reference_id
+      }) do
     users =
       user_auth_keys
       |> Users.list_users_by_ids()
 
     if length(users) == length(users) do
-      {:ok, chat} = create_chat(%{name: name, members: [], organization: organization})
+      {:ok, chat} =
+        create_chat(%{
+          name: name,
+          members: [],
+          organization: organization,
+          container_reference_id: container_reference_id
+        })
 
       members =
         users
