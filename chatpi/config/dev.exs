@@ -70,7 +70,7 @@ config :arc,
 config :kaffe,
   producer: [
     endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
-    topics: ["chatpi-out"],
+    topics: ["chatpi-out-dev"],
     ssl: true,
     partition_strategy: :md5,
     sasl: %{
@@ -81,7 +81,7 @@ config :kaffe,
   ],
   consumer: [
     endpoints: [{System.get_env("KAFKA_HOST"), 9092}],
-    topics: ["chatpi"],
+    topics: ["chatpi-dev"],
     consumer_group: "chatpi-consumer",
     message_handler: Chatpi.MessageProcessor,
     offset_reset_policy: :reset_to_latest,

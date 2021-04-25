@@ -13,6 +13,7 @@ defmodule Chatpi.MessageProcessor do
 
   defp handle_message("upsert-chat-entity", %{organization: organization}, %{entity: chat_attr}) do
     Logger.info("MessageProcessor upserting chat")
+    Logger.info(inspect(chat_attr))
 
     if Map.has_key?(chat_attr, :id) do
       Cachex.del(:chats_cache, chat_attr.chat_id)
@@ -67,7 +68,6 @@ defmodule Chatpi.MessageProcessor do
   def handle_messages(messages) do
     for %{key: key, value: value} = _message <- messages do
       {:ok, decoded_map} = Jason.decode(value)
-      Logger.info(inspect(decoded_map))
 
       params = recursively_format_message(decoded_map)
 

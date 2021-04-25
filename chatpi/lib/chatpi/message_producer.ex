@@ -3,9 +3,25 @@ defmodule Chatpi.MessagePublisher do
   process messages from kafka
   """
   require Logger
+  require Poison
+
+  # defstruct [:data, :entity, :chat_id]
 
   def publish("created-chat", chat) do
     Logger.info("MessagePublisher produce message: " <> inspect(chat))
-    Kaffe.Producer.produce_sync("chatpi_out", [{"key", "created-chat"}, {"chat", chat}])
+
+    value =
+      Poison.encode!(%{
+        "data" => %{
+          "entity" => %{
+            "chatId" => chat.id,
+            "containerReferenceId" => chat.container_reference_id
+          }
+        }
+      })
+
+    Kaffe.Producer.produce_sync(System.get_env("TOPIC_CHAT_OUT"), [
+      {"created-chat", value}
+    ])
   end
 end

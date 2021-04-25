@@ -84,7 +84,8 @@ defmodule Chatpi.MixProject do
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:kaffe, "~> 1.0"},
       {:cachex, "~> 3.3"},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0", only: :test},
+      {:poison, "~> 3.1"}
     ]
   end
 
