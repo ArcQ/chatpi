@@ -9,8 +9,8 @@
   "module": "dist/chatpi-client.module.js",
   "unpkg": "dist/chatpi-client.umd.js",
   "dependencies": {
-    "phoenix": "^1.5.4",
-    "is-svg": ">=4.2.2"
+    "is-svg": ">=4.2.2",
+    "phoenix": "^1.5.4"
   },
   "devDependencies": {
     "@types/phoenix": "^1.5.0",

@@ -71,7 +71,7 @@ defmodule Chatpi.Chats do
       user_auth_keys
       |> Users.list_users_by_ids()
 
-    if length(users) == length(users) do
+    if length(user_auth_keys) == length(users) do
       {:ok, chat} =
         create_chat(%{
           name: name,
